@@ -1,13 +1,9 @@
 <template>
-  <div>
-    Dental Clinic CRM
-  </div>
+    <RouterView />
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
 
 <style lang="scss">
-@import './assets/scss/main.scss';
+@import "./assets/scss/main.scss";
 </style>
