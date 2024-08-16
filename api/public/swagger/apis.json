@@ -13,6 +13,10 @@
     {
       "name": "Auth",
       "description": "Authentication"
+    },
+    {
+      "name": "OTPCode",
+      "description": "OTP Code"
     }
   ],
   "paths": {
@@ -22,7 +26,7 @@
           "Auth"
         ],
         "requestBody": {
-          "description": "Login to system by emial or phone",
+          "description": "Login to system by email or phone",
           "content": {
             "application/json": {
               "schema": {
@@ -43,11 +47,7 @@
                   "password": {
                     "type": "string"
                   }
-                },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                }
               }
             }
           },
@@ -64,7 +64,7 @@
                     "token": {
                       "type": "string"
                     },
-                    "expires_in": {
+                    "expires_at": {
                       "type": "string"
                     }
                   }
@@ -187,6 +187,127 @@
             "bearerAuth": []
           }
         ]
+      }
+    },
+    "/otp-code": {
+      "get": {
+        "tags": [
+          "OTPCode"
+        ],
+        "requestBody": {
+          "description": "Send OTPCode to email or phone",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "is email or phone"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "required if type be email"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "required if type be phone"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "expires_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "OTPCode"
+        ],
+        "requestBody": {
+          "description": "Verify OTPCode and generate token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "is email or phone"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "required if type be email"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "required if type be phone"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "sent code to email or phone"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "expires_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          }
+        }
       }
     }
   },
