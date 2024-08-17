@@ -17,6 +17,10 @@
     {
       "name": "OTPCode",
       "description": "OTP Code"
+    },
+    {
+      "name": "Password",
+      "description": "Password"
     }
   ],
   "paths": {
@@ -189,8 +193,8 @@
         ]
       }
     },
-    "/otp-code": {
-      "get": {
+    "/otp-code/generate": {
+      "post": {
         "tags": [
           "OTPCode"
         ],
@@ -245,7 +249,9 @@
             "description": "Too Many Requests"
           }
         }
-      },
+      }
+    },
+    "/otp-code/verify": {
       "post": {
         "tags": [
           "OTPCode"
@@ -290,6 +296,118 @@
                     "token": {
                       "type": "string"
                     },
+                    "expires_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          }
+        }
+      }
+    },
+    "/password/reset": {
+      "post": {
+        "tags": [
+          "Password"
+        ],
+        "requestBody": {
+          "description": "Send OTPCode to email or phone",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "description": "is email or phone"
+                  },
+                  "confirm_passord": {
+                    "type": "string",
+                    "description": "required if type be email"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "expires_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Validation exception"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          }
+        }
+      }
+    },
+    "/password/change": {
+      "post": {
+        "tags": [
+          "Password"
+        ],
+        "requestBody": {
+          "description": "Send OTPCode to email or phone",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "old_password": {
+                    "type": "string",
+                    "description": "is email or phone"
+                  },
+                  "new_password": {
+                    "type": "string",
+                    "description": "is email or phone"
+                  },
+                  "confirm_passord": {
+                    "type": "string",
+                    "description": "required if type be email"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
                     "expires_at": {
                       "type": "string"
                     }

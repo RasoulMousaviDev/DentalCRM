@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('otp_codes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
+            $table->integer('code');
+            $table->enum('type', ['email', 'phone']);
+            $table->timestamp('expires_at');
             $table->timestamps();
         });
     }

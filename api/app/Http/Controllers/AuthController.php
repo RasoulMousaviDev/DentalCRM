@@ -13,7 +13,9 @@ class AuthController extends Controller
     {
         $type = $request->input('type'); // email or phone
 
-        $executed = RateLimiter::attempt('login:' . $request->ip, $maxAttempts = 5, function () {}, $decaySeconds = 300, $perMinute = 2);
+        $key = 'login:' . $request->ip;
+
+        $executed = RateLimiter::attempt($key, $maxAttempts = 5, function () {}, $decaySeconds = 300, $perMinute = 2);
 
         if (!$executed) {
             return response()->json(['message' => __('errors.toManyAttempts')], 429);

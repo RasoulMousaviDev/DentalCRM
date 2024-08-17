@@ -12,6 +12,6 @@ Route::controller(AuthController::class)->middleware('auth:api')->prefix('auth')
 });
 
 Route::controller(OTPCodeController::class)->prefix('otp-code')->group(function () {
-    Route::get('', 'generate');
-    Route::post('', 'verify');
+    Route::post('generate', 'generate');
+    Route::post('verify', 'verify');
 });
