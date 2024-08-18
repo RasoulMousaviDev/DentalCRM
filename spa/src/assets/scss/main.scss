@@ -11,3 +11,12 @@
     @tailwind components;
     @tailwind utilities;
 }
+
+html {
+    font-size: 14px;
+}
+
+
+body{
+    @apply flex h-screen bg-slate-50;
+}
