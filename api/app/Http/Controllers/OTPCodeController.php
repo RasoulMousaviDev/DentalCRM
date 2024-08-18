@@ -70,7 +70,7 @@ class OTPCodeController extends Controller
                 $is_available = Carbon::parse($expires_at)->timestamp - time() > 0;
 
                 if ($is_available) {
-                    $token = auth()->claims(['foo' => 'bar'])->login($user);
+                    $token = auth()->claims(['type' => 'otp'])->login($user);
 
                     $ttl = auth()->factory()->getTTL() * 60;
                     $expires_at = Carbon::now()->addSeconds($ttl)->toString();

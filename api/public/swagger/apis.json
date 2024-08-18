@@ -332,7 +332,7 @@
                     "type": "string",
                     "description": "is email or phone"
                   },
-                  "confirm_passord": {
+                  "password_confirmation": {
                     "type": "string",
                     "description": "required if type be email"
                   }
@@ -367,7 +367,12 @@
           "429": {
             "description": "Too Many Requests"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/password/change": {
@@ -382,7 +387,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "old_password": {
+                  "current_password": {
                     "type": "string",
                     "description": "is email or phone"
                   },
@@ -390,7 +395,7 @@
                     "type": "string",
                     "description": "is email or phone"
                   },
-                  "confirm_passord": {
+                  "new_password_confirmation": {
                     "type": "string",
                     "description": "required if type be email"
                   }
@@ -425,7 +430,12 @@
           "429": {
             "description": "Too Many Requests"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
