@@ -1,5 +1,6 @@
+@import 'primeicons/primeicons.css';
+@import './layout.scss';
 @import './font.scss';
-
 
 @layer tailwind-base, primevue, tailwind-utilities;
 
@@ -11,11 +12,6 @@
     @tailwind components;
     @tailwind utilities;
 }
-
-html {
-    font-size: 14px;
-}
-
 
 body{
     @apply flex h-screen bg-slate-50;

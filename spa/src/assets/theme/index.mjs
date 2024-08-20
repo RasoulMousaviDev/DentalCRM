@@ -1,88 +1,88 @@
-import accordion from '@primevue/themes/aura/accordion';
-import autocomplete from '@primevue/themes/aura/autocomplete';
-import avatar from '@primevue/themes/aura/avatar';
-import badge from '@primevue/themes/aura/badge';
-import blockui from '@primevue/themes/aura/blockui';
-import breadcrumb from '@primevue/themes/aura/breadcrumb';
-import button from '@primevue/themes/aura/button';
-import card from '@primevue/themes/aura/card';
-import carousel from '@primevue/themes/aura/carousel';
-import cascadeselect from '@primevue/themes/aura/cascadeselect';
-import checkbox from '@primevue/themes/aura/checkbox';
-import chip from '@primevue/themes/aura/chip';
-import colorpicker from '@primevue/themes/aura/colorpicker';
-import confirmdialog from '@primevue/themes/aura/confirmdialog';
-import confirmpopup from '@primevue/themes/aura/confirmpopup';
-import contextmenu from '@primevue/themes/aura/contextmenu';
-import datatable from '@primevue/themes/aura/datatable';
-import dataview from '@primevue/themes/aura/dataview';
-import datepicker from '@primevue/themes/aura/datepicker';
-import dialog from '@primevue/themes/aura/dialog';
-import divider from '@primevue/themes/aura/divider';
-import dock from '@primevue/themes/aura/dock';
-import drawer from '@primevue/themes/aura/drawer';
-import editor from '@primevue/themes/aura/editor';
-import fieldset from '@primevue/themes/aura/fieldset';
-import fileupload from '@primevue/themes/aura/fileupload';
-import floatlabel from '@primevue/themes/aura/floatlabel';
-import galleria from '@primevue/themes/aura/galleria';
-import iconfield from '@primevue/themes/aura/iconfield';
-import image from '@primevue/themes/aura/image';
-import inlinemessage from '@primevue/themes/aura/inlinemessage';
-import inplace from '@primevue/themes/aura/inplace';
-import inputchips from '@primevue/themes/aura/inputchips';
-import inputgroup from '@primevue/themes/aura/inputgroup';
-import inputnumber from '@primevue/themes/aura/inputnumber';
-import inputtext from '@primevue/themes/aura/inputtext';
-import knob from '@primevue/themes/aura/knob';
-import listbox from '@primevue/themes/aura/listbox';
-import megamenu from '@primevue/themes/aura/megamenu';
-import menu from '@primevue/themes/aura/menu';
-import menubar from '@primevue/themes/aura/menubar';
-import message from '@primevue/themes/aura/message';
-import metergroup from '@primevue/themes/aura/metergroup';
-import multiselect from '@primevue/themes/aura/multiselect';
-import orderlist from '@primevue/themes/aura/orderlist';
-import organizationchart from '@primevue/themes/aura/organizationchart';
-import overlaybadge from '@primevue/themes/aura/overlaybadge';
-import paginator from '@primevue/themes/aura/paginator';
-import panel from '@primevue/themes/aura/panel';
-import panelmenu from '@primevue/themes/aura/panelmenu';
-import password from '@primevue/themes/aura/password';
-import picklist from '@primevue/themes/aura/picklist';
-import popover from '@primevue/themes/aura/popover';
-import progressbar from '@primevue/themes/aura/progressbar';
-import progressspinner from '@primevue/themes/aura/progressspinner';
-import radiobutton from '@primevue/themes/aura/radiobutton';
-import rating from '@primevue/themes/aura/rating';
-import ripple from '@primevue/themes/aura/ripple';
-import scrollpanel from '@primevue/themes/aura/scrollpanel';
-import select from '@primevue/themes/aura/select';
-import selectbutton from '@primevue/themes/aura/selectbutton';
-import skeleton from '@primevue/themes/aura/skeleton';
-import slider from '@primevue/themes/aura/slider';
-import speeddial from '@primevue/themes/aura/speeddial';
-import splitbutton from '@primevue/themes/aura/splitbutton';
-import splitter from '@primevue/themes/aura/splitter';
-import stepper from '@primevue/themes/aura/stepper';
-import steps from '@primevue/themes/aura/steps';
-import tabmenu from '@primevue/themes/aura/tabmenu';
-import tabs from '@primevue/themes/aura/tabs';
-import tabview from '@primevue/themes/aura/tabview';
-import tag from '@primevue/themes/aura/tag';
-import terminal from '@primevue/themes/aura/terminal';
-import textarea from '@primevue/themes/aura/textarea';
-import tieredmenu from '@primevue/themes/aura/tieredmenu';
-import timeline from '@primevue/themes/aura/timeline';
-import toast from '@primevue/themes/aura/toast';
-import togglebutton from '@primevue/themes/aura/togglebutton';
-import toggleswitch from '@primevue/themes/aura/toggleswitch';
-import toolbar from '@primevue/themes/aura/toolbar';
-import tooltip from '@primevue/themes/aura/tooltip';
-import tree from '@primevue/themes/aura/tree';
-import treeselect from '@primevue/themes/aura/treeselect';
-import treetable from '@primevue/themes/aura/treetable';
-import virtualscroller from '@primevue/themes/aura/virtualscroller';
+import accordion from './accordion';
+import autocomplete from './autocomplete';
+import avatar from './avatar';
+import badge from './badge';
+import blockui from './blockui';
+import breadcrumb from './breadcrumb';
+import button from './button';
+import card from './card';
+import carousel from './carousel';
+import cascadeselect from './cascadeselect';
+import checkbox from './checkbox';
+import chip from './chip';
+import colorpicker from './colorpicker';
+import confirmdialog from './confirmdialog';
+import confirmpopup from './confirmpopup';
+import contextmenu from './contextmenu';
+import datatable from './datatable';
+import dataview from './dataview';
+import datepicker from './datepicker';
+import dialog from './dialog';
+import divider from './divider';
+import dock from './dock';
+import drawer from './drawer';
+import editor from './editor';
+import fieldset from './fieldset';
+import fileupload from './fileupload';
+import floatlabel from './floatlabel';
+import galleria from './galleria';
+import iconfield from './iconfield';
+import image from './image';
+import inlinemessage from './inlinemessage';
+import inplace from './inplace';
+import inputchips from './inputchips';
+import inputgroup from './inputgroup';
+import inputnumber from './inputnumber';
+import inputtext from './inputtext';
+import knob from './knob';
+import listbox from './listbox';
+import megamenu from './megamenu';
+import menu from './menu';
+import menubar from './menubar';
+import message from './message';
+import metergroup from './metergroup';
+import multiselect from './multiselect';
+import orderlist from './orderlist';
+import organizationchart from './organizationchart';
+import overlaybadge from './overlaybadge';
+import paginator from './paginator';
+import panel from './panel';
+import panelmenu from './panelmenu';
+import password from './password';
+import picklist from './picklist';
+import popover from './popover';
+import progressbar from './progressbar';
+import progressspinner from './progressspinner';
+import radiobutton from './radiobutton';
+import rating from './rating';
+import ripple from './ripple';
+import scrollpanel from './scrollpanel';
+import select from './select';
+import selectbutton from './selectbutton';
+import skeleton from './skeleton';
+import slider from './slider';
+import speeddial from './speeddial';
+import splitbutton from './splitbutton';
+import splitter from './splitter';
+import stepper from './stepper';
+import steps from './steps';
+import tabmenu from './tabmenu';
+import tabs from './tabs';
+import tabview from './tabview';
+import tag from './tag';
+import terminal from './terminal';
+import textarea from './textarea';
+import tieredmenu from './tieredmenu';
+import timeline from './timeline';
+import toast from './toast';
+import togglebutton from './togglebutton';
+import toggleswitch from './toggleswitch';
+import toolbar from './toolbar';
+import tooltip from './tooltip';
+import tree from './tree';
+import treeselect from './treeselect';
+import treetable from './treetable';
+import virtualscroller from './virtualscroller';
 
 var index = {
   primitive: {
@@ -394,17 +394,17 @@ var index = {
     iconSize: '1rem',
     anchorGutter: '2px',
     primary: {
-      50: '{surface.50}',
-      100: '{surface.100}',
-      200: '{surface.200}',
-      300: '{surface.300}',
-      400: '{surface.400}',
-      500: '{surface.500}',
-      600: '{surface.600}',
-      700: '{surface.700}',
-      800: '{surface.800}',
-      900: '{surface.900}',
-      950: '{surface.950}'
+      50: '{emerald.50}',
+      100: '{emerald.100}',
+      200: '{emerald.200}',
+      300: '{emerald.300}',
+      400: '{emerald.400}',
+      500: '{emerald.500}',
+      600: '{emerald.600}',
+      700: '{emerald.700}',
+      800: '{emerald.800}',
+      900: '{emerald.900}',
+      950: '{emerald.950}'
     },
     formField: {
       paddingX: '0.75rem',
@@ -494,10 +494,10 @@ var index = {
           950: '{slate.950}'
         },
         primary: {
-          color: '{primary.950}',
+          color: '{primary.500}',
           contrastColor: '#ffffff',
-          hoverColor: '{primary.800}',
-          activeColor: '{primary.600}'
+          hoverColor: '{primary.600}',
+          activeColor: '{primary.700}'
         },
         highlight: {
           background: '{primary.50}',
