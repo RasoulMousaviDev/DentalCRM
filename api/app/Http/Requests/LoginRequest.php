@@ -21,4 +21,9 @@ class LoginRequest extends FormRequest
             'password' => 'required|min:8',
         ];
     }
+
+    public function attributes()
+    {
+        return ['type' => ' '];
+    }
 }

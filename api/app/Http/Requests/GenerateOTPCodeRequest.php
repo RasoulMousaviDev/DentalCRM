@@ -21,4 +21,9 @@ class GenerateOTPCodeRequest extends FormRequest
             'phone' => 'required_if:type,phone|numeric|digits:11|starts_with:09|exists:users,phone',
         ];
     }
+
+    public function attributes()
+    {
+        return ['type' => ' '];
+    }
 }

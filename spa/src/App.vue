@@ -1,7 +1,7 @@
 <template>
     <RouterView />
     <DynamicDialog />
-    <Toast />
+    <Toast position="bottom-left"/>
 </template>
 
 <script setup>

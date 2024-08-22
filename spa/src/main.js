@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, watch } from "vue";
 import { createPinia } from "pinia";
 
 import App from "./App.vue";
@@ -15,6 +15,7 @@ import Password from "primevue/password";
 import Checkbox from "primevue/checkbox";
 import InputOtp from "primevue/inputotp";
 import Divider from "primevue/divider";
+import Message from 'primevue/message';
 
 import StyleClass from 'primevue/styleclass';
 import Ripple from 'primevue/ripple'
@@ -31,7 +32,7 @@ pinia.use(({ store }) => {
     store.axios = axios
 })
 
-const baseURL = '/api'
+const baseURL = 'http://127.0.0.1:8000/api'
 
 const axios = Axios.create({ baseURL })
 
@@ -50,6 +51,7 @@ app.component('Password', Password)
 app.component('Checkbox', Checkbox)
 app.component('InputOtp', InputOtp)
 app.component('Divider', Divider)
+app.component('Message', Message)
 
 app.directive('styleclass', StyleClass);
 app.directive('ripple', Ripple)
@@ -61,11 +63,11 @@ pinia.state.value = JSON.parse(localStorage.getItem('state') || '{}')
 
 axios.interceptors.request.use((config) => {
     const token = pinia.state.value.auth.token
-    if (token) config.headers.Authorization = `Token ${token}`
+    if (token) config.headers.Authorization = `Bearer ${token}`
     return config
 })
 
-// axios.interceptors.response.use(
-//     (res) => {},
-//     (err) => {}
-// )
+axios.interceptors.response.use(
+    (res) => res,
+    (err) => err.response
+)

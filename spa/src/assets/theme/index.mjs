@@ -390,7 +390,7 @@ var index = {
       offset: '2px',
       shadow: 'none'
     },
-    disabledOpacity: '0.6',
+    disabledOpacity: '0.4',
     iconSize: '1rem',
     anchorGutter: '2px',
     primary: {

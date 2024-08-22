@@ -33,7 +33,7 @@ class OTPCodeController extends Controller
             $is_available = Carbon::parse($expires_at)->timestamp - time() > 0;
 
             if ($is_available)
-                return response()->json(['message' => 'ok', 'expires_at' => $expires_at]);
+                return response()->json(['expires_at' => $expires_at]);
 
             $user->OTPCode->delete();
         }
@@ -44,7 +44,7 @@ class OTPCodeController extends Controller
 
         $user->OTPCode()->create(compact(['code', 'type', 'expires_at']));
 
-        return response()->json(['message' => 'ok', 'expires_at' => $expires_at]);
+        return response()->json(['expires_at' => $expires_at]);
     }
 
 
@@ -61,9 +61,9 @@ class OTPCodeController extends Controller
 
         $user = User::firstWhere($type, $request->get($type));
 
-        if ($user->otpCode) {
+        if ($user->OTPCode) {
 
-            if ($user->OTPCode->code === $request->get('code')) {
+            if ($user->OTPCode->code == $request->get('code')) {
 
                 $expires_at = $user->OTPCode->expires_at;
 
