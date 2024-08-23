@@ -7,7 +7,7 @@ var index = {
     borderColor: '{datatable.border.color}',
     color: '{content.color}',
     borderWidth: '0 0 1px 0',
-    padding: '0.75rem 1rem'
+    padding: '0 0 0.75rem 0'
   },
   headerCell: {
     background: '{content.background}',
@@ -47,7 +47,7 @@ var index = {
   },
   bodyCell: {
     borderColor: '{datatable.border.color}',
-    padding: '0.75rem 1rem'
+    padding: '0.75rem 1rem',
   },
   footerCell: {
     background: '{content.background}',

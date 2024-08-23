@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import AuthLayout from '@/layout/Auth.vue';
+import AuthLayout from '@/layouts/Auth.vue';
 import { useOTPCodeStore } from '@/stores/otp-code';
 import { usePasswordStore } from '@/stores/password';
 import { computed, inject, reactive, ref, watch } from 'vue';

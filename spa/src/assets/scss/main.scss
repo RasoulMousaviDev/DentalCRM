@@ -1,4 +1,5 @@
 @import 'primeicons/primeicons.css';
+@import './components.scss';
 @import './layout.scss';
 @import './font.scss';
 
@@ -11,8 +12,4 @@
 @layer tailwind-utilities {
     @tailwind components;
     @tailwind utilities;
-}
-
-body{
-    @apply flex h-screen bg-slate-50;
 }

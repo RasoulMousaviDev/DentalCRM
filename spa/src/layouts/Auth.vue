@@ -8,7 +8,7 @@
                     <div class="mb-8 transition-opacity duration-500 has-[+.fade-leave-to]:opacity-0">
                         <Button v-if="back" icon="pi pi-arrow-right" rounded text size="large"
                             class="!absolute translate-x-4 translate-y-2 scale-125" @click="back()" />
-                        <IconSikai />
+                        <IconSikai class="mb-8" />
                         <div class="text-center text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
                             {{ title }}
                         </div>

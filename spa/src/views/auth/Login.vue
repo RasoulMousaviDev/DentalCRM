@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import AuthLayout from '@/layout/Auth.vue';
+import AuthLayout from '@/layouts/Auth.vue';
 import { useAuthStore } from '@/stores/auth';
 import { computed, inject, reactive, ref, watch } from 'vue';
 
