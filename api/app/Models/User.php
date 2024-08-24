@@ -13,9 +13,9 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
-    protected $hidden = ['password'];
-
-    public $fillable = ['password'];
+    public $fillable = ['name', 'phone', 'email', 'status','password'];
+    
+    protected $hidden = [ 'password'];
 
     protected $casts = [
         'created_at' => JDate::class,

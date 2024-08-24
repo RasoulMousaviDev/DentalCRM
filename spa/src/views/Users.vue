@@ -21,12 +21,13 @@
             <Column field="email" :header="$t('email')" />
             <Column :field="({ roles }) => roles.map(({ title }) => title).join(' | ')" :header="$t('roles')" />
             <Column field="status" :header="$t('status')">
-                <template #body>
-                    <Tag severity="danger" value="غیرفعال"></Tag>
+                <template #body="{ data: { status } }">
+                    <Tag v-if="status" severity="success" :value="$t('active')" />
+                    <Tag v-else severity="danger" :value="$t('deative')" />
                 </template>
             </Column>
-            <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" />
-            <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" />
+            <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
+            <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44"  />
 
             <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20">
                 <template #body>

@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('roles:id,title')->paginate(10);
+        $users = User::latest()->with('roles:id,title')->paginate(10);
 
         return response()->json($this->paginate($users));
     }
@@ -30,14 +30,15 @@ class UserController extends Controller
     {
         $form = $request->only(['name', 'phone', 'email', 'status']);
 
-        $roles = [];
-        foreach ($request->get('roles') as $id)
-            $roles[] = Role::find($id);
+        $form['password'] = $this->generatePassword(8);
 
-        $password = Str::random(10);
-        $form['password'] = Hash::make($password);
+        $roles = $request->get('roles');
 
-        $user = User::create($form)->roles()->attach($roles)->save();
+        $user = User::create($form);
+
+        $user->roles()->attach($roles);
+
+        $user->load('roles:id,title');
 
         return response()->json(['user' => $user]);
     }
@@ -72,5 +73,17 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    private function generatePassword($length = 8) {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$()_-';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+
+        for ($i = 0; $i < 8; $i++) 
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        
+        return $randomString;
+    
     }
 }
