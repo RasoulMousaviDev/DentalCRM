@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Casts\JDate;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -14,6 +17,10 @@ class User extends Authenticatable implements JWTSubject
 
     public $fillable = ['password'];
 
+    protected $casts = [
+        'created_at' => JDate::class,
+        'updated_at' => JDate::class,
+    ];
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -35,8 +42,13 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function OTPCode(){
+    public function OTPCode(): HasOne
+    {
         return $this->hasOne(OTPCode::class);
     }
 
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
 }

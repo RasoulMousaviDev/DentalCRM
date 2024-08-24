@@ -1,0 +1,79 @@
+<template>
+    <form @submit.prevent="handleSubmit()" class="flex flex-col gap-4 w-full md:w-[30rem]">
+        <div class="flex flex-col gap-2">
+            <label class="has-[+*+small]:text-red-500">{{ $t('name') }}</label>
+            <InputText v-model="form.name" class="w-full has-[+small]:!border-red-500" />
+            <small v-if="errors.name" v-text="errors.name[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="has-[+*+small]:text-red-500">
+                {{ $t('phone') }}
+            </label>
+            <InputText v-model="form.phone" class="ltr w-full has-[+small]:!border-red-500" />
+            <small v-if="errors.phone" v-text="errors.phone[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class=" has-[+*+small]:text-red-500">{{ $t('email') }}</label>
+            <InputText v-model="form.email" class="ltr w-full has-[+small]:!border-red-500" />
+            <small v-if="errors.email" v-text="errors.email[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="has-[+*+small]:text-red-500"> {{ $t('roles') }}</label>
+            <MultiSelect v-model="form.roles" display="chip" :options="roles.items" :loading="roles.fetching"
+                optionLabel="title" optionValue="id":showToggleAll="false" fluid class="has-[+small]:!border-red-500" />
+            <small v-if="errors.roles" v-text="errors.roles[0]" class="text-red-500" />
+        </div>
+        <div class="flex justify-between items-center mt-2">
+            <label> {{ $t('status') }}</label>
+            <ToggleButton v-model="form.status" class="w-20" :onLabel="$t('active')" :offLabel="$t('deative')" />
+        </div>
+        <div class="flex justify-between gap-2 mt-8">
+            <Button :label="$t('back')" severity="secondary" @click="dialogRef.close()" />
+            <Button icon="pi pi-save" :label="$t('save')" type="submit" severity="success" :loading="loading" />
+        </div>
+    </form>
+</template>
+
+<script setup>
+import { useRolesStore } from '@/stores/roles';
+import { useUsersStore } from '@/stores/users';
+import { computed, inject, reactive, ref, watch } from 'vue';
+
+const { toast, } = inject('service')
+
+const dialogRef = inject('dialogRef')
+const form = reactive({ status: true })
+const errors = ref({})
+const loading = ref(false)
+
+const roles = useRolesStore()
+if (roles.items.length === 0)
+    roles.index()
+
+const users = useUsersStore()
+
+const handleSubmit = async () => {
+    loading.value = true
+
+    const { status, statusText, data } = await users.store(form)
+
+    loading.value = false
+
+    if (statusText === 'OK')
+        dialogRef.value.close();
+    else if (status === 422)
+        errors.value = data.errors
+    else
+        toast.add()
+
+}
+
+
+watch(computed(() => Object.assign({}, form)), (value, old) => {
+    Object.keys(form).forEach((key) => {
+        if (value[key] != old[key]) delete errors.value[key]
+    })
+})
+</script>
+
+<style lang="scss" scoped></style>

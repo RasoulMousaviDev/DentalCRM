@@ -1,3 +1,4 @@
+import { useCookie } from "@/composables/cookie";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -24,13 +25,26 @@ const router = createRouter({
                     component: import("@/views/Dashboard.vue"),
                 },
                 {
-                  name: "Users",
-                  path: "/users",
-                  component: import("@/views/Users.vue"),
-              },
+                    name: "Users",
+                    path: "/users",
+                    component: import("@/views/Users.vue"),
+                },
             ],
         },
     ],
+});
+
+router.beforeEach((to, from, next) => {
+    const cookie = useCookie();
+    const token = cookie.get('token');
+    console.log(token);
+    
+    if (token && (to.path === "/auth/login" || to.path === "/password/forget"))
+        return next("/");
+    else if (!token && !(to.path === "/auth/login" || to.path === "/password/forget")) 
+        return next("/auth/login");
+
+    next();
 });
 
 export default router;

@@ -4,16 +4,18 @@
             <label class="text-surface-900 dark:text-surface-0 text-xl font-medium has-[+*+small]:text-red-500">
                 {{ $t('phone-or-email') }}
             </label>
-            <InputText v-model="emailOrPhone" :name="form.type" dir="ltr" class="w-full mt-2 mb-1 has-[+small]:!border-red-500" />
+            <InputText v-model="emailOrPhone" :name="form.type"
+                class="ltr w-full mt-2 mb-1 has-[+small]:!border-red-500" />
             <small v-if="errors.type" v-text="errors.type[0]" class="text-red-500" />
             <small v-else-if="errors.phone" v-text="errors.phone[0]" class="text-red-500" />
             <small v-else-if="errors.email" v-text="errors.email[0]" class="text-red-500" />
 
-            <label class="text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-7 has-[+*+small]:text-red-500">
+            <label
+                class="text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-7 has-[+*+small]:text-red-500">
                 {{ $t('password') }}
             </label>
-            <Password v-model="form.password" dir="ltr" toggleMask fluid :feedback="false"
-                class="[&_input]:has-[+small]:!border-red-500 mb-1" />
+            <Password v-model="form.password" toggleMask fluid :feedback="false"
+                class="ltr [&_input]:has-[+small]:!border-red-500 mb-1" />
             <small v-if="errors.password" v-text="errors.password[0]" class="text-red-500" />
 
             <Button :label="$t('forgot-password') + '؟'" class="!px-0 my-6 self-end" link as="router-link"
@@ -45,12 +47,12 @@ const handleSubmit = async () => {
     loading.value = false
 
     if (statusText == 'OK')
-        router.push('/dashboard');
-    else if (status === 422) 
+        router.push('/');
+    else if (status === 422)
         errors.value = data.errors
-    else if (status === 400 || status === 429) 
-        toast.add({ severity: 'error', summary: 'Error', detail:  data.message, life: 5000 });
-    
+    else if (status === 400 || status === 429)
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+
 }
 
 watch(emailOrPhone, (v) => {
@@ -63,7 +65,7 @@ watch(emailOrPhone, (v) => {
     if (v.startsWith('09')) type = 'phone'
     else if (v.includes('@')) type = 'email'
 
-    if(type){
+    if (type) {
         form.type = type
         form[type] = v
     }

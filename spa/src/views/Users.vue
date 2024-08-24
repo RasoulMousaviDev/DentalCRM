@@ -1,29 +1,32 @@
 <template>
     <div class="card">
-        <DataTable :value="products" tableStyle="min-width: 50rem">
+        <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
             <template #header>
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold">
+                    <span class="text-2xl font-bold ml-auto">
                         {{ $t('users') }}
                     </span>
-                    <Button icon="pi pi-refresh" rounded text class="ml-auto" />
-                    <Button icon="pi pi-plus" :label="$t('new-user')" severity="success" />
+                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" />
+                    <Button icon="pi pi-plus" :label="$t('new-user')" severity="success" @click="create()" />
                 </div>
             </template>
             <template #empty>
-                <p class="text-center text-sm opacity-60">{{ $t('not-found') }}</p>
+                <p class="text-center text-sm opacity-60">
+                    {{ store.fetching ? $t('loading') : $t('not-found') }}
+                </p>
             </template>
-            <Column field="name" filterField="name" :header="$t('name')" sortable  :showFilterMatchModes="false" :showFilterOperator="false">
-            </Column>
+            <Column field="id" :header="$t('id')" />
+            <Column field="name" :header="$t('name')" />
             <Column field="phone" :header="$t('phone')" />
             <Column field="email" :header="$t('email')" />
+            <Column :field="({ roles }) => roles.map(({ title }) => title).join(' | ')" :header="$t('roles')" />
             <Column field="status" :header="$t('status')">
                 <template #body>
                     <Tag severity="danger" value="غیرفعال"></Tag>
                 </template>
             </Column>
-            <Column field="created_at" :header="$t('created_at')" />
-            <Column field="updated_at" :header="$t('updated_at')" />
+            <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" />
+            <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" />
 
             <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20">
                 <template #body>
@@ -38,19 +41,25 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { useUsersStore } from '@/stores/users';
+import { defineAsyncComponent, inject } from 'vue';
 
-const products = reactive([
-    // {
-    //     id: '1000',
-    //     name: 'رسول موسوی',
-    //     phone: '09102836220',
-    //     email: 'rasoulmousavidev@gmail.com',
-    //     created_at: '1403/05/02',
-    //     updated_at: '1403/05/02',
-    // }
-])
+const { dialog, t } = inject('service')
 
+const store = useUsersStore()
+
+if (store.items.length === 0)
+    store.index()
+
+const UserForm = defineAsyncComponent(() => import('@/components/UserFrom.vue'));
+
+const create = async () => {
+    dialog.open(UserForm, {
+        props: {
+            header: t('createNewUser'), modal: true
+        },
+    })
+}
 
 </script>
 

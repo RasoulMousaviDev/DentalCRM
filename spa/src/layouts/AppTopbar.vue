@@ -17,7 +17,7 @@ const { t } = inject('service')
             </button>
             <router-link to="/" class="layout-topbar-logo">
                 <IconSikai class="" />
-                <span>{{ t('dental-clinic-crm') }}</span>
+                <span class="text-primary">{{ t('dental-clinic-crm') }}</span>
             </router-link>
         </div>
 

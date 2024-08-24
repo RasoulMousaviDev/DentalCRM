@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
 
 class UserController extends Controller
 {
@@ -13,23 +17,29 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::with('roles:id,title')->paginate(10);
+
+        return response()->json($this->paginate($users));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreUserRequest $request)
     {
-        //
+        $form = $request->only(['name', 'phone', 'email', 'status']);
+
+        $roles = [];
+        foreach ($request->get('roles') as $id)
+            $roles[] = Role::find($id);
+
+        $password = Str::random(10);
+        $form['password'] = Hash::make($password);
+
+        $user = User::create($form)->roles()->attach($roles)->save();
+
+        return response()->json(['user' => $user]);
     }
 
     /**

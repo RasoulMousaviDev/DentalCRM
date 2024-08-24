@@ -20,9 +20,12 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
-import Tag from 'primevue/tag';
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
+import Tag from "primevue/tag";
+import IconField from "primevue/iconfield";
+import InputIcon from "primevue/inputicon";
+import Select from "primevue/select";
+import MultiSelect from 'primevue/multiselect';
+import ToggleButton from 'primevue/togglebutton';
 
 import StyleClass from "primevue/styleclass";
 import Ripple from "primevue/ripple";
@@ -32,6 +35,7 @@ import ToastService from "primevue/toastservice";
 
 import { createI18n } from "vue-i18n";
 import fa from "./locales/fa.json";
+import { useCookie } from "./composables/cookie";
 
 const i18n = createI18n({ legacy: false, locale: "fa", messages: { fa } });
 const pinia = createPinia();
@@ -68,24 +72,30 @@ app.component("Row", Row);
 app.component("Tag", Tag);
 app.component("IconField", IconField);
 app.component("InputIcon", InputIcon);
+app.component("Select", Select);
+app.component("MultiSelect", MultiSelect);
+app.component("ToggleButton", ToggleButton);
 
 app.directive("styleclass", StyleClass);
 app.directive("ripple", Ripple);
 
 app.mount("body");
 
-watch(pinia.state, (v) => localStorage.setItem("state", JSON.stringify(v)), {
-    deep: true,
-});
-pinia.state.value = JSON.parse(localStorage.getItem("state") || "{}");
-
+const cookie = useCookie();
 axios.interceptors.request.use((config) => {
-    const token = pinia.state.value.auth.token;
+    const token = cookie.get('token');
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
 
 axios.interceptors.response.use(
     (res) => res,
-    (err) => err.response
+    (err) => {        
+        if (err?.response?.status === 401) {
+            cookie.set('token', '', 'Thu, 01 Jan 1970 00:00:01 GMT');
+            router.push("/auth/login");
+        }
+
+        return err.response || {};
+    }
 );

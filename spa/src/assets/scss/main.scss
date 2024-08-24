@@ -12,4 +12,12 @@
 @layer tailwind-utilities {
     @tailwind components;
     @tailwind utilities;
+
+    .ltr{
+        direction: ltr;
+    }
+
+    .rtl{
+        direction: rtl;
+    }
 }

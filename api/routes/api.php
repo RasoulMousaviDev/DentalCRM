@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OTPCodeController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
@@ -22,4 +24,19 @@ Route::middleware('auth:api')->group(function () {
         Route::post('reset', 'reset');
         Route::post('change', 'change');
     });
+
+    Route::controller(UserController::class)->prefix('users')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::patch('/{user}', 'update');
+        Route::delete('/{user}', 'destroy');
+    });
+
+    Route::controller(RoleController::class)->prefix('roles')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::patch('/{user}', 'update');
+        Route::delete('/{user}', 'destroy');
+    });
+
 });

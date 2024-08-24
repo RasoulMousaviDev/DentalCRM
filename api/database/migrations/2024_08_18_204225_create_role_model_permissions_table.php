@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('role_model_permissions', function (Blueprint $table) {
             $table->foreignId('role_id')->constrained('roles');
-            $table->foreignId('model_id')->constrained('model');
+            $table->foreignId('model_id')->constrained('models');
             $table->foreignId('permission_id')->constrained('permissions');
             $table->timestamps();
         });

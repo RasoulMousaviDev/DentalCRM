@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth";
+import { useCookie } from "@/composables/cookie";
 
 export const useOTPCodeStore = defineStore("otp-code", {
     state: () => ({}),
@@ -11,9 +12,10 @@ export const useOTPCodeStore = defineStore("otp-code", {
             const res = await this.axios.post("/otp-code/verify", form);
 
             if (res.statusText === "OK") {
-                const auth = useAuthStore();
-                auth.token = res.data.token;
-                auth.expires_at = res.data.expires_at;
+                const { token, expires_at } = res.data;
+
+                const cookie = useCookie();
+                cookie.set("token", token, expires_at);
             }
             return res;
         },
