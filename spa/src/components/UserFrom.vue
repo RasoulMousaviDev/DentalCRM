@@ -20,7 +20,8 @@
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('roles') }}</label>
             <MultiSelect v-model="form.roles" display="chip" :options="roles.items" :loading="roles.fetching"
-                optionLabel="title" optionValue="id":showToggleAll="false" fluid class="has-[+small]:!border-red-500" />
+                optionLabel="title" optionValue="id" :showToggleAll="false" fluid
+                class="has-[+small]:!border-red-500" />
             <small v-if="errors.roles" v-text="errors.roles[0]" class="text-red-500" />
         </div>
         <div class="flex justify-between items-center mt-2">
@@ -37,12 +38,14 @@
 <script setup>
 import { useRolesStore } from '@/stores/roles';
 import { useUsersStore } from '@/stores/users';
-import { computed, inject, reactive, ref, watch } from 'vue';
+import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
 const { toast, } = inject('service')
 
 const dialogRef = inject('dialogRef')
-const form = reactive({ status: true })
+const { user } = dialogRef.value.data || {}
+
+const form = reactive({ name: '', phone: '', email: '', roles: [], status: true })
 const errors = ref({})
 const loading = ref(false)
 
@@ -55,7 +58,13 @@ const users = useUsersStore()
 const handleSubmit = async () => {
     loading.value = true
 
-    const { status, statusText, data } = await users.store(form)
+    let result;
+    if (user)
+        result = await users.update(user.id, form)
+    else
+        result = await users.store(form)
+
+    const { status, statusText, data } = result
 
     loading.value = false
 
@@ -64,7 +73,7 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else
-        toast.add()
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 
 }
 
@@ -73,6 +82,11 @@ watch(computed(() => Object.assign({}, form)), (value, old) => {
     Object.keys(form).forEach((key) => {
         if (value[key] != old[key]) delete errors.value[key]
     })
+})
+
+onMounted(() => {
+    if (user)
+        Object.keys(form).forEach((key) => form[key] = user[key])
 })
 </script>
 

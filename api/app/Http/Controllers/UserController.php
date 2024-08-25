@@ -40,23 +40,7 @@ class UserController extends Controller
 
         $user->load('roles:id,title');
 
-        return response()->json(['user' => $user]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
+        return response()->json($user);
     }
 
     /**
@@ -64,7 +48,19 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $form = $request->only(['name', 'phone', 'email', 'status']);
+
+        $user->roles()->detach();
+
+        $roles = $request->get('roles');
+
+        $user->roles()->attach($roles);
+
+        $user->update($form);
+
+        $user->load('roles:id,title');
+
+        return response()->json($user);
     }
 
     /**
@@ -72,7 +68,12 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->roles()->detach();
+
+        $user->delete();
+
+        return response()->json(['message' => __('messages.deleted-successfully')]);
+
     }
 
     private function generatePassword($length = 8) {

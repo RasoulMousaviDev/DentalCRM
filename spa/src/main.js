@@ -30,6 +30,7 @@ import ToggleButton from 'primevue/togglebutton';
 import StyleClass from "primevue/styleclass";
 import Ripple from "primevue/ripple";
 
+import ConfirmationService from 'primevue/confirmationservice';
 import DialogService from "primevue/dialogservice";
 import ToastService from "primevue/toastservice";
 
@@ -55,8 +56,9 @@ app.use(PrimeVue, {
 app.use(pinia);
 app.use(router);
 app.use(i18n);
-app.use(DialogService);
 app.use(ToastService);
+app.use(DialogService);
+app.use(ConfirmationService);
 
 app.component("Button", Button);
 app.component("InputText", InputText);

@@ -23,8 +23,27 @@ export const useUsersStore = defineStore("users", {
         async store(form) {
             const res = await this.axios.post("/users", form);
 
+            if (res.statusText === "OK") 
+                this.items.unshift(res.data)
+
+            return res;
+        },
+        async update(id, form) {
+            const res = await this.axios.patch(`/users/${id}`, form);
+
             if (res.statusText === "OK") {
-                this.items.unshift(res.data.user)
+               const index = this.items.findIndex((user) => user.id === id)
+               this.items[index] = res.data
+            }
+
+            return res;
+        },
+        async destroy(id) {
+            const res = await this.axios.delete(`/users/${id}`);
+
+            if (res.statusText === "OK") {
+               const index = this.items.findIndex((user) => user.id === id)
+               this.items.splice(index, 1);
             }
 
             return res;

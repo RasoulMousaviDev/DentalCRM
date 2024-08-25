@@ -18,6 +18,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [ 'password'];
 
     protected $casts = [
+        'status' => 'boolean',
         'created_at' => JDate::class,
         'updated_at' => JDate::class,
     ];
