@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\JDate;
+use App\Events\UserCreated;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,6 +22,10 @@ class User extends Authenticatable implements JWTSubject
         'status' => 'boolean',
         'created_at' => JDate::class,
         'updated_at' => JDate::class,
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => UserCreated::class,
     ];
 
     /**

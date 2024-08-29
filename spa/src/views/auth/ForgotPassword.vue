@@ -82,7 +82,7 @@ const { t, toast, router } = inject('service')
 const state = ref(0)
 
 const headers = reactive([
-    { title: t('change-password'), subTitle: t('change-password-desc') },
+    { title: t('change-password'), subTitle: t('change-password-desc'), back: () => router.replace({ name: 'Login' }) },
     { title: t('enter-otp-code'), subTitle: '', back: () => state.value = 0 },
     { title: t('change-password'), subTitle: t('password-rule-8-charcter') },
 ])

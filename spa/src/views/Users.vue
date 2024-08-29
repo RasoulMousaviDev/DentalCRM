@@ -73,7 +73,7 @@ const edit = async (data) => {
     })
 }
 
-const destroy = (data) => {
+const destroy = (user) => {
     confirm.require({
         message: t('delete-confirm-question'),
         header: t('danger-zone'),
@@ -89,9 +89,9 @@ const destroy = (data) => {
             severity: 'danger',
         },
         accept: async () => {
-            data.loading = true
+            user.loading = true
 
-            const { statusText, data } = await store.destroy(data.id);
+            const { statusText, data } = await store.destroy(user.id);
 
             if (statusText == 'OK')
                 toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });

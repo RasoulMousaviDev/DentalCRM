@@ -39,9 +39,9 @@ router.beforeEach((to, from, next) => {
     const token = cookie.get('token');
     console.log(token);
     
-    if (token && (to.path === "/auth/login" || to.path === "/password/forget"))
+    if (token && (to.path === "/auth/login" || to.path === "/password/forot"))
         return next("/");
-    else if (!token && !(to.path === "/auth/login" || to.path === "/password/forget")) 
+    else if (!token && !(to.path === "/auth/login" || to.path === "/password/forgot")) 
         return next("/auth/login");
 
     next();
