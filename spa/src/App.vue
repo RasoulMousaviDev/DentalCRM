@@ -14,7 +14,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useDialog } from 'primevue/usedialog'
 import { useToast } from 'primevue/usetoast'
-import { provide } from 'vue'
+import { provide, watch } from 'vue'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -26,6 +26,8 @@ const confirm = useConfirm();
 const service = { toast, dialog, confirm, router, route, t }
 
 provide('service', service)
+
+watch(route, () => dialog.close());
 </script>
 
 <style lang="scss">

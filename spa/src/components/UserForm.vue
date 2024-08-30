@@ -50,8 +50,7 @@ const errors = ref({})
 const loading = ref(false)
 
 const roles = useRolesStore()
-if (roles.items.length === 0)
-    roles.index()
+roles.index()
 
 const users = useUsersStore()
 

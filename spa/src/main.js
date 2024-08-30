@@ -26,6 +26,12 @@ import InputIcon from "primevue/inputicon";
 import Select from "primevue/select";
 import MultiSelect from 'primevue/multiselect';
 import ToggleButton from 'primevue/togglebutton';
+import Chip from 'primevue/chip';
+import AutoComplete from 'primevue/autocomplete';
+import DatePicker from 'primevue/datepicker';
+import SelectButton from 'primevue/selectbutton';
+
+
 
 import StyleClass from "primevue/styleclass";
 import Ripple from "primevue/ripple";
@@ -77,6 +83,10 @@ app.component("InputIcon", InputIcon);
 app.component("Select", Select);
 app.component("MultiSelect", MultiSelect);
 app.component("ToggleButton", ToggleButton);
+app.component("Chip", Chip);
+app.component("AutoComplete", AutoComplete);
+app.component("DatePicker", DatePicker);
+app.component("SelectButton", SelectButton);
 
 app.directive("styleclass", StyleClass);
 app.directive("ripple", Ripple);
@@ -95,6 +105,7 @@ axios.interceptors.response.use(
     (err) => {        
         if (err?.response?.status === 401) {
             cookie.set('token', '', 'Thu, 01 Jan 1970 00:00:01 GMT');
+            localStorage.removeItem('state')
             router.push("/auth/login");
         }
 

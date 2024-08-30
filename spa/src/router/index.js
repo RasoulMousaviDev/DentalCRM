@@ -1,4 +1,5 @@
 import { useCookie } from "@/composables/cookie";
+import { inject } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -42,12 +43,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const cookie = useCookie();
     const token = cookie.get('token');
-    console.log(token);
     
     if (token && (to.path === "/auth/login" || to.path === "/password/forot"))
         return next("/");
-    else if (!token && !(to.path === "/auth/login" || to.path === "/password/forgot")) 
+    else if (!token && !(to.path === "/auth/login" || to.path === "/password/forgot")){
+        localStorage.removeItem('state')
         return next("/auth/login");
+    }
 
     next();
 });

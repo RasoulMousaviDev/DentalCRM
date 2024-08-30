@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
+        <DataTable :value="store.items" class="[&_td]:cursor-pointer" tableStyle="min-width: 50rem" removable-sort row-hover @row-click="$router.push('/')" >
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
@@ -17,17 +17,17 @@
             </template>
             <Column field="id" :header="$t('id')" />
             <Column field="name" :header="$t('name')" />
-            <Column field="mobiles" :header="$t('mobiles')">
-                <template #body="{ data: { mobiles } }">
-                    <Chip v-for="(mobile, i) in mobiles" :key="i" :label="mobile" />
-                </template>
-            </Column>
-            <Column field="national_code" :header="$t('email')" />
-            <Column :field="({ roles }) => roles.map(({ title }) => title).join(' | ')" :header="$t('roles')" />
+            <Column :field="({ mobiles }) => mobiles.map(({ number }) => number).join(' | ')" :header="$t('mobile')"
+                body-class="ltr !text-left" />
+            <Column field="national_code" :header="$t('national_code')" body-class="ltr !text-left" />
+            <Column field="birthday" :header="$t('birthday')" body-class="ltr !text-left" />
+            <Column :field="({gender}) => $t(gender)" :header="$t('gender')" />
+            <Column field="province.title" :header="$t('province')" />
+            <Column field="city.title" :header="$t('city')" />
+            <Column field="lead_source.title" :header="$t('lead_source')" />
             <Column field="status" :header="$t('status')">
                 <template #body="{ data: { status } }">
-                    <Tag v-if="status" severity="success" :value="$t('active')" />
-                    <Tag v-else severity="danger" :value="$t('deative')" />
+                    <Tag v-bind="status" />
                 </template>
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
@@ -47,37 +47,43 @@
 </template>
 
 <script setup>
-import { useUsersStore } from '@/stores/users';
+import { usePatientsStore } from '@/stores/patients';
 import { defineAsyncComponent, inject } from 'vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
-const store = useUsersStore()
+const store = usePatientsStore()
 
 if (store.items.length === 0)
     store.index()
 
-const UserForm = defineAsyncComponent(() => import('@/components/UserFrom.vue'));
+const PatientForm = defineAsyncComponent(() => import('@/components/PatientForm.vue'));
 
 const create = async () => {
-    dialog.open(UserForm, {
+    dialog.open(PatientForm, {
         props: {
-            header: t('createNewUser'), modal: true
+            header: t('createNewPatient'), modal: true
         },
     })
 }
 
 const edit = async (data) => {
-    const user = Object.assign({}, data)
-    user.roles = user.roles.map(({ id }) => id)
+    console.log(data);
+    
+    const patient = Object.assign({}, data)
+    patient.mobiles = patient.mobiles.map(({ number }) => number)
+    patient.province = patient.province.id
+    patient.city = patient.city.id
+    patient.status = patient.status.id
+    patient.lead_source = patient.lead_source.id
 
-    dialog.open(UserForm, {
-        props: { header: t('editUser'), modal: true },
-        data: { user }
+    dialog.open(PatientForm, {
+        props: { header: t('editPatient'), modal: true },
+        data: { patient }
     })
 }
 
-const destroy = (user) => {
+const destroy = (patient) => {
     confirm.require({
         message: t('delete-confirm-question'),
         header: t('danger-zone'),
@@ -93,9 +99,9 @@ const destroy = (user) => {
             severity: 'danger',
         },
         accept: async () => {
-            user.loading = true
+            patient.loading = true
 
-            const { statusText, data } = await store.destroy(user.id);
+            const { statusText, data } = await store.destroy(patient.id);
 
             if (statusText == 'OK')
                 toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });

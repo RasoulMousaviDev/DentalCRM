@@ -53,7 +53,7 @@ const store = useUsersStore()
 if (store.items.length === 0)
     store.index()
 
-const UserForm = defineAsyncComponent(() => import('@/components/UserFrom.vue'));
+const UserForm = defineAsyncComponent(() => import('@/components/UserForm.vue'));
 
 const create = async () => {
     dialog.open(UserForm, {

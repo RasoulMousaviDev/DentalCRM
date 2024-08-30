@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\OTPCodeController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PatientStatusController;
+use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -32,11 +37,17 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{user}', 'destroy');
     });
 
-    Route::controller(RoleController::class)->prefix('roles')->group(function () {
+    Route::get('roles', [RoleController::class, 'index']);
+
+    Route::controller(PatientController::class)->prefix('patients')->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
-        Route::patch('/{user}', 'update');
-        Route::delete('/{user}', 'destroy');
+        Route::patch('/{patient}', 'update');
+        Route::delete('/{patient}', 'destroy');
     });
 
+    Route::get('provinces', [ProvinceController::class, 'index']);
+    Route::get('cities', [CityController::class, 'index']);
+    Route::get('lead-sources', [LeadSourceController::class, 'index']);
+    Route::get('patient-statuses', [PatientStatusController::class, 'index']);
 });

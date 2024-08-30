@@ -58,8 +58,6 @@ class UserController extends Controller
 
         $user->update($form);
 
-        $user->load('roles:id,title');
-
         return response()->json($user);
     }
 
