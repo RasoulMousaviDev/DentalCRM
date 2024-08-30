@@ -28,7 +28,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $form = $request->only(['name', 'phone', 'email', 'status']);
+        $form = $request->only(['name', 'mobile', 'email', 'status']);
 
         $form['password'] = $this->generatePassword(8);
 
@@ -48,7 +48,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $form = $request->only(['name', 'phone', 'email', 'status']);
+        $form = $request->only(['name', 'mobile', 'email', 'status']);
 
         $user->roles()->detach();
 

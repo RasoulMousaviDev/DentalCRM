@@ -26,9 +26,9 @@ class SendOTPCode
     {
         $otpCode = $event->OTPCode;
 
-        if ($otpCode->type === 'phone'){
+        if ($otpCode->type === 'mobile'){
             $message = __('messages.opt-code-created', ['code' => $otpCode->code]);
-            SendSMS::dispatch($otpCode->user->phone, $message);
+            SendSMS::dispatch($otpCode->user->mobile, $message);
         }
         else if ($otpCode->type === 'email') {
             $message = (new MailOTPCodeCreated($otpCode))->onQueue('emails');

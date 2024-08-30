@@ -11,7 +11,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $type = $request->input('type'); // email or phone
+        $type = $request->input('type'); // email or mobile
 
         $key = 'login:' . $request->ip;
 

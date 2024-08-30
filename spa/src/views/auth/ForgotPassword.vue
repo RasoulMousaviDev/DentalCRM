@@ -4,12 +4,12 @@
             <template v-if="state === 0">
                 <form @submit.prevent="generateCode()" class="flex flex-col w-full md:w-[30rem]">
                     <label class="text-surface-900 dark:text-surface-0 text-xl font-medium has-[+*+small]:text-red-500">
-                        {{ $t('phone-or-email') }}
+                        {{ $t('mobile-or-email') }}
                     </label>
-                    <InputText v-model="emailOrPhone" :name="form.type" dir="ltr"
+                    <InputText v-model="emailOrMobile" :name="form.type" dir="ltr"
                         class="w-full mt-2 mb-1 has-[+small]:!border-red-500" />
                     <small v-if="errors.type" v-text="errors.type[0]" class="text-red-500" />
-                    <small v-else-if="errors.phone" v-text="errors.phone[0]" class="text-red-500" />
+                    <small v-else-if="errors.mobile" v-text="errors.mobile[0]" class="text-red-500" />
                     <small v-else-if="errors.email" v-text="errors.email[0]" class="text-red-500" />
 
                     <Button :label="$t('confirmation')" class="w-full mt-8" type="submit"
@@ -89,7 +89,7 @@ const headers = reactive([
 const header = ref(headers[0])
 const loading = reactive({ generating: false, verifing: false, resetting: false })
 const form = reactive({ code: '' })
-const emailOrPhone = ref('')
+const emailOrMobile = ref('')
 const errors = ref({})
 
 const otpCode = useOTPCodeStore()
@@ -172,14 +172,14 @@ watch(state, (v) => {
     if (v !== 1) stopCountdown()
 })
 
-watch(emailOrPhone, (v) => {
+watch(emailOrMobile, (v) => {
     delete errors.value.type
     delete form.email
-    delete form.phone
+    delete form.mobile
     delete form.type
 
     let type = ''
-    if (v.startsWith('09')) type = 'phone'
+    if (v.startsWith('09')) type = 'mobile'
     else if (v.includes('@')) type = 'email'
 
     if (type) {

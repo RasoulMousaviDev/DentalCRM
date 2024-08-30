@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->integer('code');
-            $table->enum('type', ['email', 'phone']);
+            $table->enum('type', ['email', 'mobile']);
             $table->timestamp('expires_at');
             $table->timestamps();
         });

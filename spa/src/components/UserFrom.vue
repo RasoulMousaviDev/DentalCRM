@@ -7,10 +7,10 @@
         </div>
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500">
-                {{ $t('phone') }}
+                {{ $t('mobile') }}
             </label>
-            <InputText v-model="form.phone" class="ltr w-full has-[+small]:!border-red-500" />
-            <small v-if="errors.phone" v-text="errors.phone[0]" class="text-red-500" />
+            <InputText v-model="form.mobile" class="ltr w-full has-[+small]:!border-red-500" />
+            <small v-if="errors.mobile" v-text="errors.mobile[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2">
             <label class=" has-[+*+small]:text-red-500">{{ $t('email') }}</label>
@@ -45,7 +45,7 @@ const { toast, } = inject('service')
 const dialogRef = inject('dialogRef')
 const { user } = dialogRef.value.data || {}
 
-const form = reactive({ name: '', phone: '', email: '', roles: [], status: true })
+const form = reactive({ name: '', mobile: '', email: '', roles: [], status: true })
 const errors = ref({})
 const loading = ref(false)
 

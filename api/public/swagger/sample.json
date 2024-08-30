@@ -1075,7 +1075,7 @@
             "type": "string",
             "example": "12345"
           },
-          "phone": {
+          "mobile": {
             "type": "string",
             "example": "12345"
           },

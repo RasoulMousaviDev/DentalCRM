@@ -10,11 +10,11 @@ class SMS
     /**
      * Create a new class instance.
      */
-    public static function send($phone, $text)
+    public static function send($mobile, $text)
     {
-        if (gettype($phone) == 'array')
-            $phones = $phone;
-        else $phones = [$phone];
+        if (gettype($mobile) == 'array')
+            $mobiles = $mobile;
+        else $mobiles = [$mobile];
 
         try {
             $recId = [0];
@@ -24,7 +24,7 @@ class SMS
                 'userName' => env('SMS_USERNAME', 'empty'),
                 'password' => env('SMS_PASSWORD', 'empty'),
                 'fromNumber' => env('SMS_NUMBER', 'empty'),
-                'toNumbers' => $phones,
+                'toNumbers' => $mobiles,
                 'messageContent' => $text,
                 'isFlash' => false,
                 'recId' => &$recId,

@@ -16,7 +16,7 @@ class OTPCodeController extends Controller
     public function generate(GenerateOTPCodeRequest $request)
     {
 
-        $type = $request->get('type'); // email or phone
+        $type = $request->get('type'); // email or mobile
 
         $key = 'otp-code-generate:' . $request->ip;
 
@@ -50,7 +50,7 @@ class OTPCodeController extends Controller
 
     public function verify(VerifyOTPCodeRequest $request)
     {
-        $type = $request->get('type'); // email or phone
+        $type = $request->get('type'); // email or mobile
 
         $key = 'otp-code-verify:' . $request->ip;
 

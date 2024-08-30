@@ -29,7 +29,7 @@ class SendLoginCredentials
         
         $message = __('messages.login-credentials', $user->toArray());
 
-        SendSMS::dispatch($user->phone, $message);
+        SendSMS::dispatch($user->mobile, $message);
 
         $user->update(['password' => Hash::make($user->password)]);
     }

@@ -4,10 +4,10 @@
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
-                        {{ $t('users') }}
+                        {{ $t('patients') }}
                     </span>
                     <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" />
-                    <Button icon="pi pi-plus" :label="$t('new-user')" severity="success" @click="create()" />
+                    <Button icon="pi pi-plus" :label="$t('new-patient')" severity="success" @click="create()" />
                 </div>
             </template>
             <template #empty>
@@ -17,8 +17,12 @@
             </template>
             <Column field="id" :header="$t('id')" />
             <Column field="name" :header="$t('name')" />
-            <Column field="mobile" :header="$t('mobile')" />
-            <Column field="email" :header="$t('email')" />
+            <Column field="mobiles" :header="$t('mobiles')">
+                <template #body="{ data: { mobiles } }">
+                    <Chip v-for="(mobile, i) in mobiles" :key="i" :label="mobile" />
+                </template>
+            </Column>
+            <Column field="national_code" :header="$t('email')" />
             <Column :field="({ roles }) => roles.map(({ title }) => title).join(' | ')" :header="$t('roles')" />
             <Column field="status" :header="$t('status')">
                 <template #body="{ data: { status } }">

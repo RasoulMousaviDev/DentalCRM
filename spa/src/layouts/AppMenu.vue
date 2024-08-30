@@ -11,6 +11,7 @@ const model = ref([
         label: 'Users',
         items: [
             { label: 'Users List', icon: 'pi pi-fw pi-id-card', to: '/users' },
+            { label: 'Patients List', icon: 'pi pi-fw pi-id-card', to: '/patients' },
         ]
     },
 ]);

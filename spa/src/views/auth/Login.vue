@@ -2,12 +2,12 @@
     <AuthLayout :title="$t('welcome')" :sub-title="$t('login-to-continue')">
         <form @submit.prevent="handleSubmit()" class="flex flex-col w-full md:w-[30rem]">
             <label class="text-surface-900 dark:text-surface-0 text-xl font-medium has-[+*+small]:text-red-500">
-                {{ $t('phone-or-email') }}
+                {{ $t('mobile-or-email') }}
             </label>
-            <InputText v-model="emailOrPhone" :name="form.type"
+            <InputText v-model="emailOrMobile" :name="form.type"
                 class="ltr w-full mt-2 mb-1 has-[+small]:!border-red-500" />
             <small v-if="errors.type" v-text="errors.type[0]" class="text-red-500" />
-            <small v-else-if="errors.phone" v-text="errors.phone[0]" class="text-red-500" />
+            <small v-else-if="errors.mobile" v-text="errors.mobile[0]" class="text-red-500" />
             <small v-else-if="errors.email" v-text="errors.email[0]" class="text-red-500" />
 
             <label
@@ -33,7 +33,7 @@ import { computed, inject, reactive, ref, watch } from 'vue';
 
 const { router, toast } = inject('service')
 
-const emailOrPhone = ref('')
+const emailOrMobile = ref('')
 const form = reactive({})
 const errors = ref({})
 const loading = ref(false)
@@ -55,14 +55,14 @@ const handleSubmit = async () => {
 
 }
 
-watch(emailOrPhone, (v) => {
+watch(emailOrMobile, (v) => {
     delete errors.value.type
     delete form.email
-    delete form.phone
+    delete form.mobile
     delete form.type
 
     let type = ''
-    if (v.startsWith('09')) type = 'phone'
+    if (v.startsWith('09')) type = 'mobile'
     else if (v.includes('@')) type = 'email'
 
     if (type) {

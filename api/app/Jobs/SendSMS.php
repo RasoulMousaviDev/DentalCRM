@@ -18,7 +18,7 @@ class SendSMS implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        public $phone,
+        public $mobile,
         public $text
     ) {}
 
@@ -27,6 +27,6 @@ class SendSMS implements ShouldQueue
      */
     public function handle(): void
     {
-        SMS::send($this->phone, $this->text);
+        SMS::send($this->mobile, $this->text);
     }
 }
