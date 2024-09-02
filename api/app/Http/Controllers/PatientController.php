@@ -29,7 +29,8 @@ class PatientController extends Controller
             'province',
             'city',
             'lead_source',
-            'status'
+            'status',
+            'desc'
         ]);
 
         $mobiles = $request->get('mobiles');
@@ -46,16 +47,7 @@ class PatientController extends Controller
 
     public function update(UpdatePatientRequest $request, Patient $patient)
     {
-        $form = $request->only([
-            'name',
-            'national_code',
-            'birthday',
-            'gender',
-            'province',
-            'city',
-            'lead_source',
-            'status'
-        ]);
+        $form = $request->only($patient->fillable);
 
         $patient->mobiles()->delete();
 

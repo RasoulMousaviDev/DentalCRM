@@ -1,6 +1,7 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" class="[&_td]:cursor-pointer" tableStyle="min-width: 50rem" removable-sort row-hover @row-click="$router.push('/')" >
+        <DataTable :value="store.items" class="[&_td]:cursor-pointer" tableStyle="min-width: 50rem" removable-sort
+            row-hover @row-click="showPatientDetails">
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
@@ -21,7 +22,7 @@
                 body-class="ltr !text-left" />
             <Column field="national_code" :header="$t('national_code')" body-class="ltr !text-left" />
             <Column field="birthday" :header="$t('birthday')" body-class="ltr !text-left" />
-            <Column :field="({gender}) => $t(gender)" :header="$t('gender')" />
+            <Column :field="({ gender }) => $t(gender)" :header="$t('gender')" />
             <Column field="province.title" :header="$t('province')" />
             <Column field="city.title" :header="$t('city')" />
             <Column field="lead_source.title" :header="$t('lead_source')" />
@@ -50,7 +51,7 @@
 import { usePatientsStore } from '@/stores/patients';
 import { defineAsyncComponent, inject } from 'vue';
 
-const { dialog, confirm, toast, t } = inject('service')
+const { dialog, confirm, toast, router, t } = inject('service')
 
 const store = usePatientsStore()
 
@@ -68,8 +69,6 @@ const create = async () => {
 }
 
 const edit = async (data) => {
-    console.log(data);
-    
     const patient = Object.assign({}, data)
     patient.mobiles = patient.mobiles.map(({ number }) => number)
     patient.province = patient.province.id
@@ -106,12 +105,14 @@ const destroy = (patient) => {
             if (statusText == 'OK')
                 toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else {
-                data.loading = false
+                patient.loading = false
                 toast.add({ severity: 'info', summary: 'Error', detail: data.message, life: 3000 });
             }
         }
     });
 }
+
+const showPatientDetails = ({ data: { id } }) => router.push({ name: 'PatientDetails', params: { id } })
 </script>
 
 <style lang="scss"></style>

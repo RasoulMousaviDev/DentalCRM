@@ -23,7 +23,8 @@ class StorePatientRequest extends FormRequest
             'province' => 'required|exists:provinces,id',
             'city' => 'required|exists:cities,id',
             'lead_source' => 'required|exists:lead_sources,id',
-            'status' => 'required|exists:patient_statuses,id'
+            'status' => 'required|exists:patient_statuses,id',
+            'desc' => 'nullable|string'
         ];
     }
 

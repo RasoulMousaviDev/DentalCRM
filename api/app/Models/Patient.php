@@ -17,7 +17,15 @@ class Patient extends Model
     use HasFactory;
 
     public $fillable = [
-        'name', 'national_code', 'birthday', 'gender', 'province', 'city', 'lead_source', 'status'
+        'name',
+        'national_code',
+        'birthday',
+        'gender',
+        'province',
+        'city',
+        'lead_source',
+        'status',
+        'desc'
     ];
 
     protected $casts = [
@@ -35,7 +43,7 @@ class Patient extends Model
 
     protected $load = [
         'mobiles',
-       
+
     ];
 
     public function mobiles(): HasMany
@@ -58,9 +66,8 @@ class Patient extends Model
         return $this->belongsTo(LeadSource::class, 'lead_source');
     }
 
-     public function status(): BelongsTo
+    public function status(): BelongsTo
     {
         return $this->belongsTo(PatientStatus::class, 'status');
     }
-
 }

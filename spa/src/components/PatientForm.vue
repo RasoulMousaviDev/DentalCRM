@@ -1,6 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit()" @keypress.enter="" class="grid grid-cols-2 gap-4 w-full md:w-[30rem]">
-
+    <form @submit.prevent="handleSubmit()" class="grid grid-cols-2 gap-4 w-full md:w-[30rem]">
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500">{{ $t('name') }}</label>
             <InputText v-model="form.name" class="w-full has-[+small]:!border-red-500" />
@@ -70,6 +69,10 @@
             </Select>
             <small v-if="errors.status" v-text="errors.status[0]" class="text-red-500" />
         </div>
+        <div class="flex flex-col gap-2 col-span-2">
+            <label class="has-[+*+small]:text-red-500"> {{ $t('desc') }}</label>
+            <Textarea v-model="form.desc" fluid rows="5" cols="30" />
+        </div>
         <div class="flex justify-between col-span-2 gap-2 mt-8">
             <Button :label="$t('back')" severity="secondary" @click="dialogRef.close()" />
             <Button icon="pi pi-save" :label="$t('save')" type="submit" severity="success" :loading="loading" />
@@ -99,14 +102,15 @@ const form = reactive({
     province: '',
     city: '',
     lead_source: '',
-    status: ''
+    status: '',
+    desc: ''
 })
 
 const date = computed({
     get: () => {
         if (form.birthday) {
-            const dateParts = form.birthday.split('/');
-            return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            const d = form.birthday.split('/');
+            return new Date(d[0], d[1] - 1, d[2]);
         }
         return null
     },

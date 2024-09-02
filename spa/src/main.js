@@ -30,7 +30,14 @@ import Chip from 'primevue/chip';
 import AutoComplete from 'primevue/autocomplete';
 import DatePicker from 'primevue/datepicker';
 import SelectButton from 'primevue/selectbutton';
-
+import Textarea from 'primevue/textarea';
+import Tabs from 'primevue/tabs';
+import TabList from 'primevue/tablist';
+import Tab from 'primevue/tab';
+import TabPanels from 'primevue/tabpanels';
+import TabPanel from 'primevue/tabpanel';
+import Galleria from 'primevue/galleria';
+import Menu from 'primevue/menu';
 
 
 import StyleClass from "primevue/styleclass";
@@ -87,6 +94,14 @@ app.component("Chip", Chip);
 app.component("AutoComplete", AutoComplete);
 app.component("DatePicker", DatePicker);
 app.component("SelectButton", SelectButton);
+app.component("Textarea", Textarea);
+app.component("Tabs", Tabs);
+app.component("TabList", TabList);
+app.component("Tab", Tab);
+app.component("TabPanels", TabPanels);
+app.component("TabPanel", TabPanel);
+app.component("Galleria", Galleria);
+app.component("Menu", Menu);
 
 app.directive("styleclass", StyleClass);
 app.directive("ripple", Ripple);
