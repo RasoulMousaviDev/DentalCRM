@@ -41,14 +41,19 @@ class Patient extends Model
         'status:id,value,severity'
     ];
 
-    protected $load = [
-        'mobiles',
-
-    ];
-
     public function mobiles(): HasMany
     {
         return $this->hasMany(PatientMobile::class);
+    }
+
+    public function calls(): HasMany
+    {
+        return $this->hasMany(Call::class);
+    }
+
+    public function followups(): HasMany
+    {
+        return $this->hasMany(Followup::class);
     }
 
     public function province(): BelongsTo

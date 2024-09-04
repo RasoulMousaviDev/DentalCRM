@@ -10,7 +10,7 @@
             <TabPanels class="!px-0">
                 <TabPanel v-for="(tab, i) in tabs" :key="i" :value="i">
                     <PatientCalls v-if="tab == 'calls'" />
-                    <PatientFollowUps v-else-if="tab == 'follow-ups'" />
+                    <PatientFollowups v-else-if="tab == 'follow-ups'" />
                     <PatientAppointments v-else-if="tab == 'appointments'" />
                     <PatientDocuments v-else-if="tab == 'documents'" />
                     <PatientTreatmentPlans v-else-if="tab == 'treatment-plans'" />
@@ -24,7 +24,7 @@
 import PatientAppointments from '@/components/PatientAppointments.vue';
 import PatientCalls from '@/components/PatientCalls.vue';
 import PatientDocuments from '@/components/PatientDocuments.vue';
-import PatientFollowUps from '@/components/PatientFollowUps.vue';
+import PatientFollowups from '@/components/PatientFollowups.vue';
 import PatientInfo from '@/components/PatientInfo.vue';
 import PatientTreatmentPlans from '@/components/PatientTreatmentPlans.vue';
 import { usePatientsStore } from '@/stores/patients';

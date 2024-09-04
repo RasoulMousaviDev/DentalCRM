@@ -2,6 +2,7 @@
 
 namespace App\Casts;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +15,7 @@ class JDate implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return jdate(strtotime($value))->format('Y/m/d - H:i');
+        return jdate(Carbon::parse($value)->setTimezone('Asia/Tehran'))->toDateTimeString('minute');
     }
 
     /**

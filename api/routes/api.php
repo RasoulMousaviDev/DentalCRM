@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CallController;
+use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\FollowupController;
 use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\OTPCodeController;
 use App\Http\Controllers\PasswordController;
@@ -50,4 +53,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('cities', [CityController::class, 'index']);
     Route::get('lead-sources', [LeadSourceController::class, 'index']);
     Route::get('patient-statuses', [PatientStatusController::class, 'index']);
+    Route::get('call-statuses', [CallStatusController::class, 'index']);
+
+    Route::controller(CallController::class)->prefix('calls')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+    });
+
+    Route::get('followups', [FollowupController::class, 'index']);
 });
