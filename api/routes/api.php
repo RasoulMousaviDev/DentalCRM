@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CallController;
 use App\Http\Controllers\CallStatusController;
@@ -10,8 +11,10 @@ use App\Http\Controllers\OTPCodeController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientStatusController;
+use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,4 +64,23 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::get('followups', [FollowupController::class, 'index']);
+    
+    Route::controller(TreatmentController::class)->prefix('treatments')->group(function () {
+        Route::get('', 'index');
+    });
+
+
+    Route::controller(AppointmentController::class)->prefix('appointments')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::patch('/{appointment}', 'update');
+    });
+
+    Route::controller(PhotoController::class)->prefix('photos')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::get('/{photo}', 'show');
+        Route::post('/{photo}', 'update');
+        Route::delete('/{photo}', 'destroy');
+    });
 });

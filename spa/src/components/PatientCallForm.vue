@@ -3,7 +3,7 @@
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('call_status') }}</label>
             <Select v-model="form.status" :options="callStatuses.items" :loading="callStatuses.fetching"
-                optionValue="id" fluid checkmark class="has-[+small]:!border-red-500">
+                optionValue="id" fluid checkmark :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="callStatuses.items.find(({ id }) => value == id)" />
                 </template>
@@ -21,14 +21,14 @@
         </div>
         <div class="flex flex-col gap-2 col-span-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('desc') }}</label>
-            <Textarea v-model="form.desc" fluid rows="5" cols="30" class="has-[+small]:!border-red-500"/>
+            <Textarea v-model="form.desc" fluid rows="5" cols="30" class="has-[+small]:!border-red-500" />
             <small v-if="errors.desc" v-text="errors.desc[0]" class="text-red-500" />
         </div>
         <hr class="col-span-2">
         <div class="flex flex-col gap-2" :class="{ 'col-span-2': !followup }">
             <label class="has-[+*+small]:text-red-500"> {{ $t('patient_status') }}</label>
             <Select v-model="form.patient_status" :options="patientStatuses.items" :loading="patientStatuses.fetching"
-                optionValue="id" fluid checkmark class="has-[+small]:!border-red-500">
+                optionValue="id" fluid checkmark :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="patientStatuses.items.find(({ id }) => value == id)" />
                 </template>
@@ -41,14 +41,15 @@
         <template v-if="followup">
             <div class="flex flex-col gap-2">
                 <label class="has-[+*+small]:text-red-500">{{ $t('followup-date') }}</label>
-                <DatePicker v-model="form.followup.due_date" class="w-full [&>input]:has-[+small]:!border-red-500" inputClass="ltr"
+                <DatePicker v-model="form.followup.due_date" class="w-full [&>input]:has-[+small]:!border-red-500"
+                    :placeholder="$t('choose')" :inputClass="{ 'ltr': form.due_date }"
                     panelClass="ltr -translate-x-10" dateFormat="yy/mm/dd" showTime hourFormat="24" />
                 <small v-if="errors['followup.due_date']" v-text="errors['followup.due_date'][0]"
                     class="text-red-500" />
             </div>
             <div class="flex flex-col gap-2 col-span-2">
                 <label class="has-[+*+small]:text-red-500"> {{ $t('followup-desc') }}</label>
-                <Textarea v-model="form.followup.desc" fluid rows="5" cols="30" class="has-[+small]:!border-red-500"/>
+                <Textarea v-model="form.followup.desc" fluid rows="5" cols="30" class="has-[+small]:!border-red-500" />
                 <small v-if="errors['followup.desc']" v-text="errors['followup.desc'][0]" class="text-red-500" />
             </div>
         </template>
@@ -73,7 +74,7 @@ const { id } = route.params
 
 const dialogRef = inject('dialogRef')
 
-const form = reactive({ })
+const form = reactive({})
 const errors = ref({})
 const loading = ref(false)
 
@@ -91,7 +92,7 @@ const patient = reactive(patientStore.items.find((item) => item.id == id))
 form.patient = id
 form.patient_status = patient.status.id
 
-if(dialogRef.value.data)
+if (dialogRef.value.data)
     form.followup_id = dialogRef.value.data
 
 if (patient.mobiles.length === 1)

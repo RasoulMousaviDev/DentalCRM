@@ -58,6 +58,8 @@ class PatientController extends Controller
 
         $patient->update($form);
 
+        $patient->refresh();
+
         return response()->json($patient);
     }
 

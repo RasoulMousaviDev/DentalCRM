@@ -23,7 +23,7 @@
 <script setup>
 import PatientAppointments from '@/components/PatientAppointments.vue';
 import PatientCalls from '@/components/PatientCalls.vue';
-import PatientDocuments from '@/components/PatientDocuments.vue';
+import PatientDocuments from '@/components/PatientPhotos.vue';
 import PatientFollowups from '@/components/PatientFollowups.vue';
 import PatientInfo from '@/components/PatientInfo.vue';
 import PatientTreatmentPlans from '@/components/PatientTreatmentPlans.vue';

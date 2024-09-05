@@ -2,8 +2,8 @@
 
 <template>
     <div class="layout-footer" dir="ltr">
-        Developed <i class="pi pi-heart text-red-500"></i> by
-        <a href="https://primevue.org" target="_blank" rel="noopener noreferrer" class="text-primary font-bold hover:underline">
+        Developed with <i class="pi pi-heart text-red-500 !text-xl"></i> by
+        <a href="tg://resolve?domain=RasoulMousaviDev" target="_blank" rel="noopener noreferrer" class="text-primary font-bold hover:underline">
             Rasoul Mousavi
         </a>
     </div>

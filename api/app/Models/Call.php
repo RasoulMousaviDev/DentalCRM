@@ -15,7 +15,6 @@ class Call extends Model
 
     public $hidden = ['patient_id', 'updated_at'];
 
-
     protected $casts = [
         'created_at' => JDate::class,
     ];

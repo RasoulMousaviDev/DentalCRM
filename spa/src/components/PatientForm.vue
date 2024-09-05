@@ -12,14 +12,14 @@
         </div>
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500">{{ $t('birthday') }}</label>
-            <DatePicker v-model="date" class="w-full [&>input]:has-[+small]:!border-red-500" inputClass="ltr"
-                panelClass="ltr -translate-x-10" dateFormat="yy/mm/dd" />
+            <DatePicker v-model="date" class="w-full [&>input]:has-[+small]:!border-red-500" :placeholder="$t('choose')"
+                :inputClass="{ 'ltr': form.due_date }" panelClass="ltr -translate-x-10" dateFormat="yy/mm/dd" />
             <small v-if="errors.birthday" v-text="errors.birthday[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2 grow">
             <label class="has-[+*+small]:text-red-500">{{ $t('gender') }}</label>
             <Select v-model="form.gender" :options="genders" :optionLabel="(opt) => $t(opt)" fluid checkmark
-                class="has-[+small]:!border-red-500" />
+                :placeholder="$t('choose')" class="has-[+small]:!border-red-500" />
             <small v-if="errors.gender" v-text="errors.gender[0]" class="text-red-500" />
         </div>
 
@@ -40,20 +40,21 @@
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('province') }}</label>
             <Select v-model="form.province" :options="provinces.items" :loading="provinces.fetching" optionLabel="title"
-                optionValue="id" fluid checkmark class="has-[+small]:!border-red-500" />
+                optionValue="id" fluid checkmark :placeholder="$t('choose')" class="has-[+small]:!border-red-500" />
             <small v-if="errors.province" v-text="errors.province[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('city') }}</label>
             <Select v-model="form.city" :options="cities.items" :loading="cities.fetching"
                 :emptyMessage="$t('first-select-province')" optionLabel="title" optionValue="id" fluid checkmark
-                class="has-[+small]:!border-red-500" />
+                :placeholder="$t('choose')" class="has-[+small]:!border-red-500" />
             <small v-if="errors.city" v-text="errors.city[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('lead_source') }}</label>
             <Select v-model="form.lead_source" :options="leadSources.items" :loading="leadSources.fetching"
-                optionLabel="title" optionValue="id" fluid checkmark class="has-[+small]:!border-red-500" />
+                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')"
+                class="has-[+small]:!border-red-500" />
             <small v-if="errors.lead_source" v-text="errors.lead_source[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2">

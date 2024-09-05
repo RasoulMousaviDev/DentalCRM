@@ -56,6 +56,16 @@ class Patient extends Model
         return $this->hasMany(Followup::class);
     }
 
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function photos(): HasMany
+    {
+        return $this->hasMany(Photo::class);
+    }
+
     public function province(): BelongsTo
     {
         return $this->belongsTo(Province::class, 'province');

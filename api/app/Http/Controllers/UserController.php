@@ -58,6 +58,8 @@ class UserController extends Controller
 
         $user->update($form);
 
+        $user->refresh();
+
         return response()->json($user);
     }
 
