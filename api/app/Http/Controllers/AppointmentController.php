@@ -15,10 +15,19 @@ class AppointmentController extends Controller
     {
         $patient = $request->get('patient');
 
-        $calls = Appointment::where('patient_id', $patient)
-            ->latest()->with('treatment:id,title')->paginate(10);
+        $appointments = Appointment::latest()->with('treatment:id,title');
+        if ($patient)
+            $appointments = $appointments->where('patient', $patient);
+        else
+            $appointments = $appointments->with(['patient' => fn($q) => $q->without([
+                'mobiles',
+                'city',
+                'province',
+                'leadSource',
+                'status'
+            ])->select('id','name')]);
 
-        return response()->json($this->paginate($calls));
+        return response()->json($this->paginate($appointments->paginate(10)));
     }
 
     public function store(StoreAppointmentRequest $request)

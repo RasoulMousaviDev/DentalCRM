@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Appointment extends Model
 {
@@ -21,9 +22,19 @@ class Appointment extends Model
         'updated_at' => JDate::class,
     ];
 
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class, 'patient');
+    }
+
     public function treatment(): BelongsTo
     {
         return $this->belongsTo(Treatment::class, 'treatment');
+    }
+
+    public function deposits(): HasMany
+    {
+        return $this->hasMany(Deposit::class,'appointment');
     }
 
     protected function dueDate(): Attribute

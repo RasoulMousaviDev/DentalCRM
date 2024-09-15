@@ -96,7 +96,7 @@ const destroy = (user) => {
             if (statusText == 'OK')
                 toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else {
-                data.loading = false
+                user.loading = false
                 toast.add({ severity: 'info', summary: 'Error', detail: data.message, life: 3000 });
             }
         }

@@ -31,10 +31,10 @@ export const useAppointmentsStore = defineStore("appointments", {
         async update(id, form) {
             const res = await this.axios.patch(`/appointments/${id}`, form);
 
-            // if (res.statusText === "OK") {
-            //    const index = this.items.findIndex((patient) => patient.id === id)
-            //    this.items[index] = res.data
-            // }
+            if (res.statusText === "OK") {
+               const index = this.items.findIndex((appointment) => appointment.id === id)
+               this.items[index].status = res.data.status
+            }
 
             return res;
         },

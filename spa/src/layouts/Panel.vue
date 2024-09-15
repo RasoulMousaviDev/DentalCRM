@@ -1,10 +1,10 @@
 <template>
     <div class="layout-wrapper" :class="containerClass">
-        <AppTopbar/>
-        <AppSidebar/>
+        <AppTopbar />
+        <AppSidebar />
         <div class="layout-main-container">
             <div class="layout-main">
-                <RouterView/>
+                <RouterView />
             </div>
             <AppFooter />
         </div>

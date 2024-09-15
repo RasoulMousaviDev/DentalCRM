@@ -1,5 +1,4 @@
 import { useCookie } from "@/composables/cookie";
-import { inject } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -8,38 +7,48 @@ const router = createRouter({
         {
             name: "Login",
             path: "/auth/login",
-            component: () => import("../views/auth/Login.vue"),
+            component: () => import("@/views/auth/Login.vue"),
         },
         {
             name: "ForgotPassword",
             path: "/password/forgot",
-            component: () => import("../views/auth/ForgotPassword.vue"),
+            component: () => import("@/views/auth/ForgotPassword.vue"),
         },
         {
             name: "Panel",
             path: "/",
-            component: import("@/layouts/Panel.vue"),
+            component: () => import("@/layouts/Panel.vue"),
             children: [
                 {
                     name: "Dashboard",
                     path: "/",
-                    component: import("@/views/Dashboard.vue"),
+                    component: () => import("@/views/Dashboard.vue"),
                 },
                 {
                     name: "Users",
                     path: "/users",
-                    component: import("@/views/Users.vue"),
+                    component: () => import("@/views/Users.vue"),
                 },
                 {
                     name: "Patients",
                     path: "/patients",
-                    component: import("@/views/Patients.vue"),
+                    component: () => import("@/views/Patients.vue"),
                 },
                 {
-                    name:'PatientDetails',
+                    name: "PatientDetails",
                     path: "/patient-details/:id",
-                    component: import("@/views/PatientDetails.vue"),
-                }
+                    component: () => import("@/views/PatientDetails.vue"),
+                },
+                {
+                    name: "Appointments",
+                    path: "/appointments",
+                    component: () => import("@/views/Appointments.vue"),
+                },
+                {
+                    name: "Deposits",
+                    path: "/deposits",
+                    component: () => import("@/views/Deposits.vue"),
+                },
             ],
         },
     ],
@@ -47,14 +56,15 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const cookie = useCookie();
-    const token = cookie.get('token');
-    
-    if (token && (to.path === "/auth/login" || to.path === "/password/forot"))
+    const token = cookie.get("token");
+
+    if (token && (to.path === "/auth/login" || to.path === "/password/forgot"))
         return next("/");
-    else if (!token && !(to.path === "/auth/login" || to.path === "/password/forgot")){
-        localStorage.removeItem('state')
+    else if (
+        !token &&
+        !(to.path === "/auth/login" || to.path === "/password/forgot")
+    )
         return next("/auth/login");
-    }
 
     next();
 });

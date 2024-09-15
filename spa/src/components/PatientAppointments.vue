@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { useAppointmentsStore } from '@/stores/appointment';
+import { useAppointmentsStore } from '@/stores/appointments';
 import { defineAsyncComponent, inject, reactive } from 'vue';
 
 const severities = reactive({ pending: "warn", visited: "success", missed: "danger", canceled: 'info' })

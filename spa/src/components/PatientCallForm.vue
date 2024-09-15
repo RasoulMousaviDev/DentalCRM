@@ -38,7 +38,7 @@
             </Select>
             <small v-if="errors.patient_status" v-text="errors.patient_status[0]" class="text-red-500" />
         </div>
-        <template v-if="followup">
+        <template v-if="form.followup">
             <div class="flex flex-col gap-2">
                 <label class="has-[+*+small]:text-red-500">{{ $t('followup-date') }}</label>
                 <DatePicker v-model="form.followup.due_date" class="w-full [&>input]:has-[+small]:!border-red-500"
@@ -74,7 +74,7 @@ const { id } = route.params
 
 const dialogRef = inject('dialogRef')
 
-const form = reactive({})
+const form = reactive({ })
 const errors = ref({})
 const loading = ref(false)
 
@@ -88,16 +88,6 @@ patientStatuses.index()
 
 const patientStore = usePatientsStore()
 const patient = reactive(patientStore.items.find((item) => item.id == id))
-
-form.patient = id
-form.patient_status = patient.status.id
-
-if (dialogRef.value.data)
-    form.followup_id = dialogRef.value.data
-
-if (patient.mobiles.length === 1)
-    form.mobile = patient.mobiles[0].number
-
 const followup = computed(() => [1].includes(form.patient_status))
 
 const handleSubmit = async () => {
@@ -126,6 +116,15 @@ watch(computed(() => Object.assign({}, form)), (value, old) => {
         if (value[key] != old[key]) delete errors.value[key]
     })
 })
+
+form.patient = id
+form.patient_status = patient.status.id
+
+if (dialogRef.value.data)
+    form.followup_id = dialogRef.value.data
+
+if (patient.mobiles.length === 1)
+    form.mobile = patient.mobiles[0].number
 </script>
 
 <style lang="scss" scoped></style>

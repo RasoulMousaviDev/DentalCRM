@@ -100,5 +100,18 @@
     "cancel-appointment-confirm-question": "آیا واقعا می خواهید این نوبت را لغو کنید؟",
     "be-canceled": "لغو شود",
     "canceled": "لغو شده",
-    "title": "عنوان"
+    "title": "عنوان",
+    "patient-name": "نام بیمار",
+    "visit-confirm-question": "آیا واقعا این بیمار ویزیت شده است؟",
+    "was-visited": "ویزیت شد",
+    "amount":"مبلغ",
+    "payment-date":"تاریخ پرداحت",
+    "refund-date":"تاریخ عودت",
+    "paid":"پرداحت شده",
+    "refunded":"عودت داده شده",
+    "refund": "عودت",
+    "was-refunded": "عودت داده شد",
+    "toman": "تومان",
+    "deposits": "بیعانه ها",
+    "createNewDeposit": "ایجاد بیعانه جدید"
 }

@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { useAppointmentsStore } from '@/stores/appointment';
+import { useAppointmentsStore } from '@/stores/appointments';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { computed, inject, reactive, ref, watch } from 'vue';
 

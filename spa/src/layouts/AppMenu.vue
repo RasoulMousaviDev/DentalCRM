@@ -12,6 +12,8 @@ const model = ref([
         items: [
             { label: 'Users List', icon: 'pi pi-fw pi-id-card', to: '/users' },
             { label: 'Patients List', icon: 'pi pi-fw pi-id-card', to: '/patients' },
+            { label: 'Appointments List', icon: 'pi pi-fw pi-id-card', to: '/appointments' },
+            { label: 'Deposits List', icon: 'pi pi-fw pi-id-card', to: '/deposits' },
         ]
     },
 ]);

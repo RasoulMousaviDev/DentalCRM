@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CallController;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\DepositController;
 use App\Http\Controllers\FollowupController;
 use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\OTPCodeController;
@@ -82,5 +83,12 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/{photo}', 'show');
         Route::post('/{photo}', 'update');
         Route::delete('/{photo}', 'destroy');
+    });
+
+    Route::controller(DepositController::class)->prefix('deposits')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::post('/{deposit}', 'update');
+        Route::delete('/{deposit}', 'destroy');
     });
 });

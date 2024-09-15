@@ -18,6 +18,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../api/public",
+    // outDir: "../api/public",
   },
 });

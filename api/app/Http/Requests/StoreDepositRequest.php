@@ -4,10 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAppointmentRequest extends FormRequest
+class StoreDepositRequest extends FormRequest
 {
-    
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,7 +14,9 @@ class UpdateAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|in:visited,missed,canceled'
+            'appointment' => 'required|exists:appointments,id',
+            'amount' => 'required|numeric|between:100000,100000000',
+            'payment_date' => 'required|date'
         ];
     }
 }

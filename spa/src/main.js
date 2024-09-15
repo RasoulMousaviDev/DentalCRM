@@ -24,26 +24,29 @@ import Tag from "primevue/tag";
 import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
 import Select from "primevue/select";
-import MultiSelect from 'primevue/multiselect';
-import ToggleButton from 'primevue/togglebutton';
-import Chip from 'primevue/chip';
-import AutoComplete from 'primevue/autocomplete';
-import DatePicker from 'primevue/datepicker';
-import SelectButton from 'primevue/selectbutton';
-import Textarea from 'primevue/textarea';
-import Tabs from 'primevue/tabs';
-import TabList from 'primevue/tablist';
-import Tab from 'primevue/tab';
-import TabPanels from 'primevue/tabpanels';
-import TabPanel from 'primevue/tabpanel';
-import Galleria from 'primevue/galleria';
-import Menu from 'primevue/menu';
+import MultiSelect from "primevue/multiselect";
+import ToggleButton from "primevue/togglebutton";
+import Chip from "primevue/chip";
+import AutoComplete from "primevue/autocomplete";
+import DatePicker from "primevue/datepicker";
+import SelectButton from "primevue/selectbutton";
+import Textarea from "primevue/textarea";
+import Tabs from "primevue/tabs";
+import TabList from "primevue/tablist";
+import Tab from "primevue/tab";
+import TabPanels from "primevue/tabpanels";
+import TabPanel from "primevue/tabpanel";
+import Galleria from "primevue/galleria";
+import Menu from "primevue/menu";
+import InputNumber from 'primevue/inputnumber';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
 
 
 import StyleClass from "primevue/styleclass";
 import Ripple from "primevue/ripple";
 
-import ConfirmationService from 'primevue/confirmationservice';
+import ConfirmationService from "primevue/confirmationservice";
 import DialogService from "primevue/dialogservice";
 import ToastService from "primevue/toastservice";
 
@@ -102,6 +105,9 @@ app.component("TabPanels", TabPanels);
 app.component("TabPanel", TabPanel);
 app.component("Galleria", Galleria);
 app.component("Menu", Menu);
+app.component("InputNumber", InputNumber);
+app.component("InputGroup", InputGroup);
+app.component("InputGroupAddon", InputGroupAddon);
 
 app.directive("styleclass", StyleClass);
 app.directive("ripple", Ripple);
@@ -110,17 +116,20 @@ app.mount("body");
 
 const cookie = useCookie();
 axios.interceptors.request.use((config) => {
-    const token = cookie.get('token');
+    const token = cookie.get("token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
 
 axios.interceptors.response.use(
-    (res) => res,
-    (err) => {        
+    (res) => {
+        if (res.status == 200) res.statusText = "OK";
+        return res;
+    },
+    (err) => {
         if (err?.response?.status === 401) {
-            cookie.set('token', '', 'Thu, 01 Jan 1970 00:00:01 GMT');
-            localStorage.removeItem('state')
+            cookie.set("token", "", "Thu, 01 Jan 1970 00:00:01 GMT");
+            localStorage.removeItem("state");
             router.push("/auth/login");
         }
 
