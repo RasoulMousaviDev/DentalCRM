@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDepositRequest;
+use App\Http\Requests\UpdateDepositRequest;
 use App\Models\Appointment;
 use App\Models\Deposit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DepositController extends Controller
@@ -49,5 +51,16 @@ class DepositController extends Controller
         ])->latest()->first();
 
         return response()->json($appointment);
+    }
+
+    public function update(UpdateDepositRequest $request, Deposit $deposit)
+    {
+        $form = $request->only(['status']);
+
+        $form['refund_date'] = Carbon::now()->toIso8601String();
+
+        $deposit->update($form);
+
+        return response()->json(['message' => __('messages.diposit-refunded')]);
     }
 }

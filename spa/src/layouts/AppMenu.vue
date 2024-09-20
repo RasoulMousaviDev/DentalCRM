@@ -14,6 +14,10 @@ const model = ref([
             { label: 'Patients List', icon: 'pi pi-fw pi-id-card', to: '/patients' },
             { label: 'Appointments List', icon: 'pi pi-fw pi-id-card', to: '/appointments' },
             { label: 'Deposits List', icon: 'pi pi-fw pi-id-card', to: '/deposits' },
+            { label: 'Campains List', icon: 'pi pi-fw pi-id-card', to: '/campains' },
+            { label: 'Survays List', icon: 'pi pi-fw pi-id-card', to: '/survays' },
+            { label: 'Treatment Plans List', icon: 'pi pi-fw pi-id-card', to: '/treatment-plans' },
+            { label: 'SMS Templates List', icon: 'pi pi-fw pi-id-card', to: '/sms-templates' },
         ]
     },
 ]);

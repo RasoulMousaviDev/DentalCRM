@@ -34,7 +34,7 @@
                 <template #body="{ data }">
                     <div class="flex justify-end">
                         <Button :label="$t('refund')" icon="pi pi-sign-out" outlined size="small" severity="danger"
-                            :loading="data.loading" @click="refund(data)" />
+                            v-show="data.status == 'paid'" :loading="data.loading" @click="refund(data)" />
                     </div>
                 </template>
             </Column>
@@ -57,7 +57,7 @@ if (store.items.length === 0)
 
 const refund = (appointment) => {
     confirm.require({
-        message: t('visit-confirm-question'),
+        message: t('refund-confirm-question'),
         header: t('danger-zone'),
         icon: 'pi pi-info-circle',
         rejectProps: {
@@ -72,7 +72,7 @@ const refund = (appointment) => {
         accept: async () => {
             appointment.loading = true
 
-            const { statusText, data } = await store.update(appointment.id, { status: 'visited' });
+            const { statusText, data } = await store.update(appointment.id, { status: 'refunded' });
 
             appointment.loading = false
 

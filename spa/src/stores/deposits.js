@@ -29,10 +29,10 @@ export const useDepositsStore = defineStore("deposits", {
             return res;
         },
         async update(id, form) {
-            const res = await this.axios.patch(`/appointments/${id}`, form);
+            const res = await this.axios.patch(`/deposits/${id}`, form);
 
             if (res.statusText === "OK") {
-               const index = this.items.findIndex((appointment) => appointment.id === id)
+               const index = this.items.findIndex((deposit) => deposit.id === id)
                this.items[index].status = res.data.status
             }
 

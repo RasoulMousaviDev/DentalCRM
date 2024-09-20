@@ -49,6 +49,26 @@ const router = createRouter({
                     path: "/deposits",
                     component: () => import("@/views/Deposits.vue"),
                 },
+                {
+                    name: "Campains",
+                    path: "/campains",
+                    component: () => import("@/views/Campains.vue"),
+                },
+                {
+                    name: "Survays",
+                    path: "/survays",
+                    component: () => import("@/views/Survays.vue"),
+                },
+                {
+                    name: "TreatmentPlans",
+                    path: "/treatment-plans",
+                    component: () => import("@/views/TreatmentPlans.vue"),
+                },
+                {
+                    name: "SMSTemplates",
+                    path: "/sms-templates",
+                    component: () => import("@/views/SMSTemplates.vue"),
+                },
             ],
         },
     ],

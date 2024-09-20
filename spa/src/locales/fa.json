@@ -113,5 +113,7 @@
     "was-refunded": "عودت داده شد",
     "toman": "تومان",
     "deposits": "بیعانه ها",
-    "createNewDeposit": "ایجاد بیعانه جدید"
+    "createNewDeposit": "ایجاد بیعانه جدید",
+    "refund-confirm-question": "آیا واقعا این بیعانه عودت داده شده است؟"
+
 }

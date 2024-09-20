@@ -88,7 +88,6 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(DepositController::class)->prefix('deposits')->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
-        Route::post('/{deposit}', 'update');
-        Route::delete('/{deposit}', 'destroy');
+        Route::patch('/{deposit}', 'update');
     });
 });
