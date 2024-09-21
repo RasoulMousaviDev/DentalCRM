@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 
-export const useCampainsStore = defineStore("campains", {
+export const useSurvayQuetionsStore = defineStore("survay-quetions", {
     state: () => ({
+        id: null,
         items: [],
         pagiantor: {},
         fetching: true,
@@ -10,7 +11,7 @@ export const useCampainsStore = defineStore("campains", {
         async index(page = 1, rows = 10, query = "") {
             this.items = [];
             this.fetching = true;
-            const { statusText, data } = await this.axios.get("/campains", {
+            const { statusText, data } = await this.axios.get(`/survays/${this.id}/questions`, {
                 params: { page, rows, query },
             });
             this.fetching = false;
@@ -21,27 +22,31 @@ export const useCampainsStore = defineStore("campains", {
             }
         },
         async store(form) {
-            const res = await this.axios.post("/campains", form);
+            const res = await this.axios.post("/survays/${this.id}/questions", form);
 
             if (res.statusText === "OK") this.items.unshift(res.data);
 
             return res;
         },
         async update(id, form) {
-            const res = await this.axios.patch(`/campains/${id}`, form);
+            const res = await this.axios.patch(`/survays/${this.id}/questions/${id}`, form);
 
             if (res.statusText === "OK") {
-                const index = this.items.findIndex((campain) => campain.id === id);
+                const index = this.items.findIndex(
+                    (survay) => survay.id === id
+                );
                 this.items[index] = res.data;
             }
 
             return res;
         },
         async destroy(id) {
-            const res = await this.axios.delete(`/campains/${id}`);
+            const res = await this.axios.delete(`/survays/${this.id}/questions/${id}`);
 
             if (res.statusText === "OK") {
-                const index = this.items.findIndex((campain) => campain.id === id);
+                const index = this.items.findIndex(
+                    (survay) => survay.id === id
+                );
                 this.items.splice(index, 1);
             }
 

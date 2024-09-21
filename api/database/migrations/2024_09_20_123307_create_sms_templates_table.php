@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('sms_templates', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->string('template');
-            $table->boolean('active');
+            $table->enum('model_name', ['patient', 'call']);
+            $table->integer('model_id');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

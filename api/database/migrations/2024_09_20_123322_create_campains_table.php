@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->string('title');
             $table->string('desc');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
+            $table->string('start_date', 10);
+            $table->string('end_date', 10);
             $table->integer('budget')->nullable();
             $table->timestamps();
         });

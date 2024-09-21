@@ -20,7 +20,7 @@
                 </template>
             </Column>
             <Column field="appointment.patient.name" :header="$t('patient-name')" class="w-44" />
-            <Column :field="({ amount }) => new Intl.NumberFormat().format(amount) + ' ' + $t('toman')"
+            <Column :field="({ amount }) => [new Intl.NumberFormat().format(amount), $t('toman')].join(' ')"
                 :header="$t('amount')" class="w-44" />
             <Column field="payment_date" :header="$t('payment-date')" bodyClass="ltr" class="w-44" />
             <Column :field="({ refund_date }) => refund_date || '---'" :header="$t('refund-date')" bodyClass="ltr"

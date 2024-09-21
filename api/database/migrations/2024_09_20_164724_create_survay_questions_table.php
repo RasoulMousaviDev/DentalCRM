@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('survay_id')->constrained('survays');
             $table->string('title');
             $table->integer('order');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CallController;
 use App\Http\Controllers\CallStatusController;
+use App\Http\Controllers\CampainController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\FollowupController;
@@ -15,6 +16,9 @@ use App\Http\Controllers\PatientStatusController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SMSTemplateController;
+use App\Http\Controllers\SurvayController;
+use App\Http\Controllers\SurvayQuestionController;
 use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -89,5 +93,33 @@ Route::middleware('auth:api')->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
         Route::patch('/{deposit}', 'update');
+    });
+
+    Route::controller(CampainController::class)->prefix('campains')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::patch('/{campain}', 'update');
+        Route::delete('/{campain}', 'destroy');
+    });
+
+    Route::controller(SMSTemplateController::class)->prefix('sms-templates')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::patch('/{smsTemplate}', 'update');
+        Route::delete('/{smsTemplate}', 'destroy');
+    });
+
+    Route::controller(SurvayController::class)->prefix('survays')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::patch('/{survay}', 'update');
+        Route::delete('/{survay}', 'destroy');
+
+        Route::controller(SurvayQuestionController::class)->prefix('{survay}/questions')->group(function () {
+            Route::get('', 'index');
+            Route::post('', 'store');
+            Route::patch('/{question}', 'update');
+            Route::delete('/{question}', 'destroy');
+        });
     });
 });

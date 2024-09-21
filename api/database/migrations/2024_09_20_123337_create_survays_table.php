@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('survays', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('desx');
+            $table->string('desc');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

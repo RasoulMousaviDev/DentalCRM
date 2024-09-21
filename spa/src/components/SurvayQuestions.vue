@@ -1,13 +1,13 @@
 <template>
-    <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
+    <div class="p-4 shadow-inner rounded bg-surface-50/70">
+        <DataTable v-model:expandedRows="expandedRows" :value="store.items" class="[&_table_*]:!bg-transparent [&_.p-datatable-header]:!bg-transparent" tableStyle="min-width: 50rem"
+            removable-sort>
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
-                        {{ $t('campains') }}
+                        {{ $t('questions') }}
                     </span>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" />
-                    <Button icon="pi pi-plus" :label="$t('new-campain')" severity="success" @click="create()" />
+                    <Button icon="pi pi-plus" :label="$t('new-question')" outlined severity="success" @click="create()" />
                 </div>
             </template>
             <template #empty>
@@ -15,17 +15,19 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
-            <Column field="id" :header="$t('id')" />
-            <Column field="title" :header="$t('title')" />
-            <Column field="desc" :header="$t('desc')" />
-            <Column field="start_date" :header="$t('start-date')" />
-            <Column field="end_date" :header="$t('end-date')" />
-            <Column
-                :field="({ budget }) => budget ? [new Intl.NumberFormat().format(budget), $t('toman')].join(' ') : '---'"
-                :header="$t('budget')" />
+            <Column :header="$t('row')" class="w-20">
+                <template #body="{ index }">
+                    {{ index + 1 }}
+                </template>
+            </Column>            <Column field="title" :header="$t('title')" />
+            <Column field="status" :header="$t('status')" class="w-24">
+                <template #body="{ data: { status } }">
+                    <Tag v-if="status" severity="success" :value="$t('active')" />
+                    <Tag v-else severity="danger" :value="$t('deactive')" />
+                </template>
+            </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
-
             <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20">
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
@@ -40,32 +42,35 @@
 </template>
 
 <script setup>
-import { useCampainsStore } from '@/stores/campains';
+import { useSurvayQuetionsStore } from '@/stores/survay-questions';
 import { defineAsyncComponent, inject } from 'vue';
+
+const props = defineProps(['id'])
 
 const { dialog, confirm, toast, t } = inject('service')
 
-const store = useCampainsStore()
+const store = useSurvayQuetionsStore()
+store.id = props.id
 
 if (store.items.length === 0)
     store.index()
 
-const CampainForm = defineAsyncComponent(() => import('@/components/CampainForm.vue'));
+const SurvayQuestionForm = defineAsyncComponent(() => import('@/components/SurvayQuestionForm.vue'));
 
 const create = async () => {
-    dialog.open(CampainForm, {
+    dialog.open(SurvayQuestionForm, {
         props: {
-            header: t('createNewCampain'), modal: true
+            header: t('createNewQuestion'), modal: true
         },
     })
 }
 
 const edit = async (data) => {
-    const campain = Object.assign({}, data)
-    
-    dialog.open(CampainForm, {
-        props: { header: t('editCampain'), modal: true },
-        data: { campain }
+    const question = Object.assign({}, data)
+
+    dialog.open(SurvayQuestionForm, {
+        props: { header: t('editQuestion'), modal: true },
+        data: { question }
     })
 }
 

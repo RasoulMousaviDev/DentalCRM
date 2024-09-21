@@ -26,7 +26,7 @@
         </div>
         <div class="flex justify-between items-center mt-2">
             <label> {{ $t('status') }}</label>
-            <ToggleButton v-model="form.status" class="w-20" :onLabel="$t('active')" :offLabel="$t('deative')" />
+            <ToggleButton v-model="form.status" class="w-20" :onLabel="$t('active')" :offLabel="$t('deactive')" />
         </div>
         <div class="flex justify-between gap-2 mt-8">
             <Button :label="$t('back')" severity="secondary" @click="dialogRef.close()" />

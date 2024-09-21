@@ -23,7 +23,7 @@
             <Column field="status" :header="$t('status')">
                 <template #body="{ data: { status } }">
                     <Tag v-if="status" severity="success" :value="$t('active')" />
-                    <Tag v-else severity="danger" :value="$t('deative')" />
+                    <Tag v-else severity="danger" :value="$t('deactive')" />
                 </template>
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
