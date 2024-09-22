@@ -1,13 +1,14 @@
 <template>
     <div class="p-4 shadow-inner rounded bg-surface-50/70">
-        <DataTable v-model:expandedRows="expandedRows" :value="store.items" class="[&_table_*]:!bg-transparent [&_.p-datatable-header]:!bg-transparent" tableStyle="min-width: 50rem"
-            removable-sort>
+        <DataTable :value="store.items" @rowReorder="reorder"
+            class="[&_table_tr]:!bg-transparent [&_.p-datatable-header]:!bg-transparent" tableStyle="min-width: 50rem">
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
                         {{ $t('questions') }}
                     </span>
-                    <Button icon="pi pi-plus" :label="$t('new-question')" outlined severity="success" @click="create()" />
+                    <Button icon="pi pi-plus" :label="$t('new-question')" outlined severity="success"
+                        @click="create()" />
                 </div>
             </template>
             <template #empty>
@@ -15,11 +16,13 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
+            <Column rowReorder headerStyle="width: 3rem" />
             <Column :header="$t('row')" class="w-20">
                 <template #body="{ index }">
                     {{ index + 1 }}
                 </template>
-            </Column>            <Column field="title" :header="$t('title')" />
+            </Column>
+            <Column field="title" :header="$t('title')" />
             <Column field="status" :header="$t('status')" class="w-24">
                 <template #body="{ data: { status } }">
                     <Tag v-if="status" severity="success" :value="$t('active')" />
@@ -74,7 +77,7 @@ const edit = async (data) => {
     })
 }
 
-const destroy = (campain) => {
+const destroy = (question) => {
     confirm.require({
         message: t('delete-confirm-question'),
         header: t('danger-zone'),
@@ -90,11 +93,11 @@ const destroy = (campain) => {
             severity: 'danger',
         },
         accept: async () => {
-            campain.loading = true
+            question.loading = true
 
-            const { statusText, data } = await store.destroy(campain.id);
+            const { statusText, data } = await store.destroy(question.id);
 
-            campain.loading = false
+            question.loading = false
 
             if (statusText == 'OK')
                 toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
@@ -103,6 +106,16 @@ const destroy = (campain) => {
 
         }
     });
+}
+
+const reorder = async ({ value }) => {
+    console.log(value);
+
+    const rows = value.map(({ id }, i) => ({ id, order: i + 1 }))
+
+    await store.reorder(rows)
+
+    toast.add({ summary: t('success'), detail: t('update-successfully'), severity: 'success', life: 3000 })
 }
 </script>
 

@@ -138,5 +138,7 @@
     "createNewSurvay": "ایجاد نظرسنجی جدید",
     "editSurvay": "ویرایش نظرسنجی",
     "new-question": "سوال جدید",
-    "questions": "سوالات"
+    "questions": "سوالات",
+    "createNewQuestion":"ایجاد سوال جدید",
+    "editQuestion":"ویرایش سوال"
 }

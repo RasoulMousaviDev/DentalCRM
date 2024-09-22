@@ -118,8 +118,12 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(SurvayQuestionController::class)->prefix('{survay}/questions')->group(function () {
             Route::get('', 'index');
             Route::post('', 'store');
-            Route::patch('/{question}', 'update');
-            Route::delete('/{question}', 'destroy');
+            Route::post('/reorder', 'reorder');
         });
+    });
+
+    Route::controller(SurvayQuestionController::class)->prefix('questions')->group(function () {
+        Route::patch('/{question}', 'update');
+        Route::delete('/{question}', 'destroy');
     });
 });

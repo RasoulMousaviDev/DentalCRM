@@ -1,11 +1,11 @@
-.p-datatable-tbody > tr > td{
+.p-datatable-tbody > tr > td {
     @apply text-right !important;
 }
 
-.p-datatable-popover-filter{
+.p-datatable-popover-filter {
     @apply ml-0 mr-auto !important;
 }
 
-.p-datatable-row-expansion td{
+.p-datatable-row-expansion > td {
     @apply px-0 !important;
 }

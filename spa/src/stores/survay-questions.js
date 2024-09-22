@@ -11,9 +11,12 @@ export const useSurvayQuetionsStore = defineStore("survay-quetions", {
         async index(page = 1, rows = 10, query = "") {
             this.items = [];
             this.fetching = true;
-            const { statusText, data } = await this.axios.get(`/survays/${this.id}/questions`, {
-                params: { page, rows, query },
-            });
+            const { statusText, data } = await this.axios.get(
+                `/survays/${this.id}/questions`,
+                {
+                    params: { page, rows, query },
+                }
+            );
             this.fetching = false;
 
             if (statusText === "OK") {
@@ -22,14 +25,17 @@ export const useSurvayQuetionsStore = defineStore("survay-quetions", {
             }
         },
         async store(form) {
-            const res = await this.axios.post("/survays/${this.id}/questions", form);
+            const res = await this.axios.post(
+                `/survays/${this.id}/questions`,
+                form
+            );
 
             if (res.statusText === "OK") this.items.unshift(res.data);
 
             return res;
         },
         async update(id, form) {
-            const res = await this.axios.patch(`/survays/${this.id}/questions/${id}`, form);
+            const res = await this.axios.patch(`/questions/${id}`, form);
 
             if (res.statusText === "OK") {
                 const index = this.items.findIndex(
@@ -41,7 +47,7 @@ export const useSurvayQuetionsStore = defineStore("survay-quetions", {
             return res;
         },
         async destroy(id) {
-            const res = await this.axios.delete(`/survays/${this.id}/questions/${id}`);
+            const res = await this.axios.delete(`/questions/${id}`);
 
             if (res.statusText === "OK") {
                 const index = this.items.findIndex(
@@ -51,6 +57,17 @@ export const useSurvayQuetionsStore = defineStore("survay-quetions", {
             }
 
             return res;
+        },
+        async reorder(rows) {
+            const { statusText, data } = await this.axios.post(
+                `/survays/${this.id}/questions/reorder`,
+                { rows }
+            );
+
+            if (statusText === "OK") {
+                this.items = data.items;
+                this.pagiantor = data.pagiantor;
+            }
         },
     },
 });
