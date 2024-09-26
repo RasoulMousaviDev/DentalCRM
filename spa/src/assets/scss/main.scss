@@ -1,7 +1,7 @@
-@import 'primeicons/primeicons.css';
-@import './components.scss';
-@import './layout.scss';
-@import './font.scss';
+@import "primeicons/primeicons.css";
+@import "./components.scss";
+@import "./layout.scss";
+@import "./font.scss";
 
 @layer tailwind-base, primevue, tailwind-utilities;
 
@@ -13,11 +13,23 @@
     @tailwind components;
     @tailwind utilities;
 
-    .ltr{
-        direction: ltr;
-    }
+    @layer utilities {
+        .ltr {
+            direction: ltr;
+        }
 
-    .rtl{
-        direction: rtl;
+        .rtl {
+            direction: rtl;
+        }
     }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }

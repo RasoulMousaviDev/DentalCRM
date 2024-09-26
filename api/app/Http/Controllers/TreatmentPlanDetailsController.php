@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreTreatmentPlanDetailsRequest;
+use App\Models\Treatment;
+use App\Models\TreatmentPlan;
+use Illuminate\Http\Request;
+
+class TreatmentPlanDetailsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(TreatmentPlan $treatmentPlan)
+    {
+        $details = $treatmentPlan->details()->with('treatment')->latest()->paginate(10);
+
+        return response()->json($this->paginate($details));
+    }
+
+    public function store(StoreTreatmentPlanDetailsRequest $request, TreatmentPlan $treatmentPlan)
+    {
+        $tooth = $request->get('tooth');
+
+        $treatments = $request->get('treatments');
+
+        foreach ($treatments as $treatment) {
+            $cost = Treatment::find($treatment)->cost;
+            $treatmentPlan->details()->create(compact('tooth', 'treatment', 'cost'))->save();
+        }
+        $details = $treatmentPlan->details()->with('treatment')->latest()->limit(count($treatments))->get();
+
+        return response()->json($details);
+    }
+}

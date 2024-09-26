@@ -18,12 +18,13 @@
             <template #expansion="{ data: { id } }">
                 <SurvayQuestions :id="id" />
             </template>
-            <Column expander class="w-4 [&_button]:has-[[aria-expanded='false']]:rotate-180"/>
+            <Column expander class="w-4 [&_button]:has-[[aria-expanded='false']]:rotate-180" />
             <Column :header="$t('row')" class="w-20">
                 <template #body="{ index }">
                     {{ index + 1 }}
                 </template>
-            </Column>            <Column field="title" :header="$t('title')" />
+            </Column>
+            <Column field="title" :header="$t('title')" />
             <Column field="desc" :header="$t('desc')" />
             <Column field="status" :header="$t('status')" class="w-24">
                 <template #body="{ data: { status } }">
@@ -49,7 +50,7 @@
 <script setup>
 import SurvayQuestions from '@/components/SurvayQuestions.vue';
 import { useSurvaysStore } from '@/stores/survays';
-import { defineAsyncComponent, inject, ref } from 'vue';
+import { defineAsyncComponent, inject, ref, watch } from 'vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
@@ -109,6 +110,8 @@ const destroy = (campain) => {
         }
     });
 }
+
+watch(() => expandedRows.value.length, () => expandedRows.value = expandedRows.value.slice(-1))
 </script>
 
 <style lang="scss"></style>

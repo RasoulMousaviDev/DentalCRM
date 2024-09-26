@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('treatment_plan_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('plan_id')->constrained('treatment_plans');
-            $table->foreignId('treatment_id')->constrained('treatments');
-            $table->enum('jaw', ['upper', 'lower']);
-            $table->integer('tooth_number');
-            $table->string('desc');
-            $table->enum('status', ['pending', 'done']);
+            $table->integer('tooth');
+            $table->foreignId('treatment')->constrained('treatments');
+            $table->integer('cost');
             $table->timestamps();
         });
     }

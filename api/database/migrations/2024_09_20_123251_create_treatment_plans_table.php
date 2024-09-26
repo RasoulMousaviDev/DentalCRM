@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('treatment_plans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('patient')->constrained('patients');
-            $table->enum('status', ['running', 'stopped', 'canceled']);
+            $table->enum('payment_type', ['cash', 'installments']);
+            $table->integer('months')->default(0);
+            $table->string('desc');
+            $table->enum('status', ['editing','pending', 'done'])->default('editing');
             $table->timestamps();
         });
     }

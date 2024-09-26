@@ -20,6 +20,8 @@ use App\Http\Controllers\SMSTemplateController;
 use App\Http\Controllers\SurvayController;
 use App\Http\Controllers\SurvayQuestionController;
 use App\Http\Controllers\TreatmentController;
+use App\Http\Controllers\TreatmentPlanController;
+use App\Http\Controllers\TreatmentPlanDetailsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -125,5 +127,15 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(SurvayQuestionController::class)->prefix('questions')->group(function () {
         Route::patch('/{question}', 'update');
         Route::delete('/{question}', 'destroy');
+    });
+
+    Route::controller(TreatmentPlanController::class)->prefix('treatment-plans')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+
+        Route::controller(TreatmentPlanDetailsController::class)->prefix('{treatmentPlan}/details')->group(function () {
+            Route::get('', 'index');
+            Route::post('', 'store');
+        });
     });
 });
