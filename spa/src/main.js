@@ -60,7 +60,7 @@ pinia.use(({ store }) => {
     store.axios = axios;
 });
 
-const baseURL = "https://clinic-crm.chbk.run/api";
+const baseURL = "/api";
 
 const axios = Axios.create({ baseURL });
 
