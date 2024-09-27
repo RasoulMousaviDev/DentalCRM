@@ -19,4 +19,4 @@ jobs:
           chabok login -t $CHABOKAN_TOKEN
           mv spa api
           cd api
-          chabok deploy -s my-service
+          chabok deploy -s clinic-crm
