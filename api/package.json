@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "build": "cd spa && npm i && npm run build"
+    "build": "cd spa && npm i && npm run build --emptyOutDir"
   }
 }
