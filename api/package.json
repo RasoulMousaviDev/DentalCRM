@@ -1,5 +1,5 @@
 {
-  "dependencies": {
-    "primeicons": "^7.0.0"
+  "scripts": {
+    "build": "cd spa && npm i && npm run build"
   }
 }
