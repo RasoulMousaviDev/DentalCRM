@@ -6,7 +6,7 @@
                     <span class="text-2xl font-bold ml-auto">
                         {{ $t('sms-templates') }}
                     </span>
-                    <Button icon="pi pi-plus" :label="$t('new-campain')" severity="success" @click="create()" />
+                    <Button icon="pi pi-plus" :label="$t('new-template')" severity="success" @click="create()" />
                 </div>
             </template>
             <template #empty>
@@ -97,9 +97,9 @@ const destroy = (template) => {
             template.loading = false
 
             if (statusText == 'OK')
-                toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+                toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else
-                toast.add({ severity: 'info', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
 
         }
     });

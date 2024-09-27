@@ -6,14 +6,25 @@
                 :optionLabel="(item) => $t(item)" class="ltr" />
         </div>
         <Transition name="fade">
-            <div v-if="form.payment_type == 'installments'" class="flex flex-wrap gap-2 justify-between items-center">
-                <label class="has-[+*+small]:text-red-500"> {{ $t('repayment-period') }}</label>
-                <SelectButton v-model="form.months" :options="['3', '6', '9', '12'].reverse()"
-                    :optionLabel="(item) => [item, $t('months')].join(' ')"
-                    class="ltr [&_span]:rtl has-[+small]:border-red-500 has-[+small]:border" />
-                <small v-if="errors.months" v-text="errors.months[0]" class="text-red-500" />
+            <div v-if="form.payment_type == 'installments'">
+                <div class="flex flex-wrap gap-2 justify-between items-center">
+                    <label class="has-[+*+small]:text-red-500"> {{ $t('repayment-period') }}</label>
+                    <SelectButton v-model="form.months" :options="['3', '6', '9', '12'].reverse()"
+                        :optionLabel="(item) => [item, $t('months')].join(' ')"
+                        class="ltr [&_span]:rtl has-[+small]:border-red-500 has-[+small]:border" />
+                    <small v-if="errors.months" v-text="errors.months[0]" class="text-red-500" />
+                </div>
+                <div class="flex flex-col gap-2 mt-4">
+                    <label class="has-[+*+small]:text-red-500">{{ $t('deposit') }}</label>
+                    <InputGroup class="ltr [&_*]:has-[+small]:!border-red-500 [&>div]:has-[+small]:text-red-500">
+                        <InputGroupAddon>{{ $t('toman') }}</InputGroupAddon>
+                        <InputNumber v-model="form.deposit" class="w-full" @input="delete errors.deposit" />
+                    </InputGroup>
+                    <small v-if="errors.deposit" v-text="errors.deposit[0]" class="text-red-500" />
+                </div>
             </div>
         </Transition>
+
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('desc') }}</label>
             <Textarea v-model="form.desc" fluid rows="5" cols="30" class="has-[+small]:!border-red-500" />
@@ -58,7 +69,7 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else
-        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+        toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 
 }
 

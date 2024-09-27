@@ -19,8 +19,14 @@ class TreatmentPlanDetails extends Model
 
     protected $hidden = ['updated_at'];
 
+    public function treatmentPlan(): BelongsTo
+    {
+        return $this->belongsTo(TreatmentPlan::class, 'plan_id');
+    }
+
     public function treatment(): BelongsTo
     {
         return $this->belongsTo(Treatment::class, 'treatment');
     }
+
 }

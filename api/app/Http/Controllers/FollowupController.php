@@ -14,8 +14,21 @@ class FollowupController extends Controller
     {
         $patient = $request->get('patient');
 
-        $calls = Followup::where('patient_id', $patient)->latest()->paginate(10);
+        $followups = Followup::latest();
 
-        return response()->json($this->paginate($calls));
+        if ($patient)
+            $followups->where('patient_id', $patient);
+        else
+            $followups->with(['patient' => fn($q) => $q->without([
+                'mobiles',
+                'city',
+                'province',
+                'leadSource',
+                'status'
+            ])->select('id', 'name')]);
+
+        $followups = $followups->paginate(10);
+
+        return response()->json($this->paginate($followups));
     }
 }

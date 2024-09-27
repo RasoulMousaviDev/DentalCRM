@@ -19,6 +19,11 @@ class Call extends Model
         'created_at' => JDate::class,
     ];
 
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
     public function status(): BelongsTo
     {
         return $this->belongsTo(CallStatus::class, 'status');

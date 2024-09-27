@@ -17,7 +17,8 @@ class StoreTreatmentPlanRequest extends FormRequest
             'patient' => 'required|exists:patients,id',
             'payment_type' => 'required|in:cash,installments',
             'months' => 'required_if:payment_type,installments|integer|in:3,6,9,12',
-            'desc' => 'required|string'
+            'deposit' => 'required_if:payment_type,installments|numeric|between:100000,100000000',
+            'desc' => 'required|string',
         ];
     }
 }

@@ -12,16 +12,15 @@ class TreatmentPlan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['payment_type', 'months', 'desc'];
+    protected $fillable = ['payment_type', 'months', 'desc','status','sent_at'];
 
     protected $casts = [
         'created_at' => JDate::class,
+        'updated_at' => JDate::class,
+        'sent_at' => 'timestamp',
     ];
 
     protected $appends = ['total_cost', 'treatments_count', 'tooths_count'];
-
-    protected $hidden = ['updated_at'];
-
 
     public function patient(): BelongsTo
     {

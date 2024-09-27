@@ -69,6 +69,21 @@ const router = createRouter({
                     path: "/sms-templates",
                     component: () => import("@/views/SMSTemplates.vue"),
                 },
+                {
+                    name: "Treatments",
+                    path: "/treatments",
+                    component: () => import("@/views/Treatments.vue"),
+                },
+                {
+                    name: "Followups",
+                    path: "/follow-ups",
+                    component: () => import("@/views/Followups.vue"),
+                },
+                {
+                    name: "Calls",
+                    path: "/calls",
+                    component: () => import("@/views/Calls.vue"),
+                },
             ],
         },
     ],

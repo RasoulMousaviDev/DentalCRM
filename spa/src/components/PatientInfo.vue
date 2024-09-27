@@ -82,11 +82,11 @@ const destroy = () => {
 
             if (statusText == 'OK') {
                 router.replace({ name: 'Patients' })
-                toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+                toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             }
             else {
                 loading.value = false
-                toast.add({ severity: 'info', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
             }
         }
     });

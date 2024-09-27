@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useTreatmentPlansStore } from "./treatment-plans";
 
 export const useTreatmentPlanDetailsStore = defineStore(
     "treatment-plan-details",
@@ -33,8 +34,38 @@ export const useTreatmentPlanDetailsStore = defineStore(
                 );
 
                 if (res.statusText === "OK") {
-                    const items = res.data.reverse();
+                    const items = res.data.items.reverse();
                     items.forEach((item) => this.items.unshift(item));
+
+                    const store = useTreatmentPlansStore();
+                    const treatmentPlan = store.items.find(
+                        (item) => item.id == this.id
+                    );
+                    treatmentPlan.tooths_count += 1;
+                    treatmentPlan.treatments_count += 1;
+                    treatmentPlan.total_cost = res.data.totalCost;
+                }
+
+                return res;
+            },
+            async destroy(id) {
+                const res = await this.axios.delete(
+                    `/treatment-plans/${this.id}/details/${id}`
+                );
+
+                if (res.statusText === "OK") {
+                    const index = this.items.findIndex(
+                        (item) => item.id === id
+                    );
+                    this.items.splice(index, 1);
+
+                    const store = useTreatmentPlansStore();
+                    const treatmentPlan = store.items.find(
+                        (item) => item.id == this.id
+                    );
+                    treatmentPlan.tooths_count -= 1;
+                    treatmentPlan.treatments_count -= 1;
+                    treatmentPlan.total_cost = res.data.totalCost;
                 }
 
                 return res;

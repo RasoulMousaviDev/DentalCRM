@@ -132,10 +132,21 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(TreatmentPlanController::class)->prefix('treatment-plans')->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
+        Route::patch('/{treatmentPlan}', 'update');
+        Route::delete('/{treatmentPlan}', 'destroy');
 
         Route::controller(TreatmentPlanDetailsController::class)->prefix('{treatmentPlan}/details')->group(function () {
             Route::get('', 'index');
             Route::post('', 'store');
+            Route::delete('/{details}', 'destroy');
         });
+    });
+
+
+    Route::controller(TreatmentController::class)->prefix('treatments')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::patch('/{treatment}', 'update');
+        Route::delete('/{treatment}', 'destroy');
     });
 });

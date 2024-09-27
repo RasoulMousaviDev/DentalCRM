@@ -18,8 +18,20 @@ class CallController extends Controller
     {
         $patient = $request->get('patient');
 
-        $calls = Call::where('patient_id', $patient)
-            ->latest()->with('status:id,value,severity')->paginate(10);
+        $calls = Call::latest()->with('status:id,value,severity');
+
+        if ($patient)
+            $calls->where('patient_id', $patient);
+        else
+            $calls->with(['patient' => fn($q) => $q->without([
+                'mobiles',
+                'city',
+                'province',
+                'leadSource',
+                'status'
+            ])->select('id', 'name')]);
+
+        $calls = $calls->paginate(10);
 
         return response()->json($this->paginate($calls));
     }

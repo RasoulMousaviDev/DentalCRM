@@ -51,7 +51,7 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else if (status === 400 || status === 429)
-        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+        toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 
 }
 

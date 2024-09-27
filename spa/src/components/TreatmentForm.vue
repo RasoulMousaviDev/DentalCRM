@@ -1,11 +1,19 @@
 <template>
     <form @submit.prevent="handleSubmit()" class="flex flex-col gap-4 w-full md:w-[30rem]">
         <div class="flex flex-col gap-2">
-            <label class="has-[+*+small]:text-red-500"> {{ $t('title') }}</label>
-            <Textarea v-model="form.title" fluid rows="5" cols="30" class="has-[+small]:!border-red-500" />
+            <label class="has-[+*+small]:text-red-500">{{ $t('title') }}</label>
+            <InputText v-model="form.title" class="w-full has-[+small]:!border-red-500" />
             <small v-if="errors.title" v-text="errors.title[0]" class="text-red-500" />
         </div>
-        <div class="flex justify-between items-center mt-2">
+        <div class="flex flex-col gap-2">
+            <label class="has-[+*+small]:text-red-500">{{ $t('cost') }}</label>
+            <InputGroup class="ltr [&_*]:has-[+small]:!border-red-500 [&>div]:has-[+small]:text-red-500">
+                <InputGroupAddon>{{ $t('toman') }}</InputGroupAddon>
+                <InputNumber v-model="form.cost" class="w-full" @input="delete errors.cost" />
+            </InputGroup>
+            <small v-if="errors.cost" v-text="errors.cost[0]" class="text-red-500" />
+        </div>
+        <div class="flex justify-between items-center mt-5">
             <label> {{ $t('status') }}</label>
             <ToggleButton v-model="form.status" class="w-20" :onLabel="$t('active')" :offLabel="$t('deactive')" />
         </div>
@@ -17,32 +25,28 @@
 </template>
 
 <script setup>
-import { useSurvayQuetionsStore } from '@/stores/survay-questions';
+import { useTreatmentsStore } from '@/stores/treatments';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
-const { toast, } = inject('service')
+const { toast, t } = inject('service')
 
 const dialogRef = inject('dialogRef')
-const { question } = dialogRef.value.data || {}
+const { treatment } = dialogRef.value.data || {}
 
-const questions = useSurvayQuetionsStore()
-
-const form = reactive({
-    title: '',
-    order: questions.items.length + 1,
-    status: true
-})
+const form = reactive({ title: '', cost: null, status: true })
 const errors = ref({})
 const loading = ref(false)
+
+const treatments = useTreatmentsStore()
 
 const handleSubmit = async () => {
     loading.value = true
 
     let result;
-    if (question)
-        result = await questions.update(question.id, form)
+    if (treatment)
+        result = await treatments.update(treatment.id, form)
     else
-        result = await questions.store(form)
+        result = await treatments.store(form)
 
     const { status, statusText, data } = result
 
@@ -65,8 +69,8 @@ watch(computed(() => Object.assign({}, form)), (value, old) => {
 })
 
 onMounted(() => {
-    if (question)
-        Object.keys(form).forEach((key) => form[key] = question[key])
+    if (treatment)
+        Object.keys(form).forEach((key) => form[key] = treatment[key])
 })
 </script>
 

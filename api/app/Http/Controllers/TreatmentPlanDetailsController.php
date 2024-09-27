@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTreatmentPlanDetailsRequest;
 use App\Models\Treatment;
 use App\Models\TreatmentPlan;
+use App\Models\TreatmentPlanDetails;
 use Illuminate\Http\Request;
 
 class TreatmentPlanDetailsController extends Controller
@@ -29,8 +30,22 @@ class TreatmentPlanDetailsController extends Controller
             $cost = Treatment::find($treatment)->cost;
             $treatmentPlan->details()->create(compact('tooth', 'treatment', 'cost'))->save();
         }
-        $details = $treatmentPlan->details()->with('treatment')->latest()->limit(count($treatments))->get();
+        $items = $treatmentPlan->details()->with('treatment')->latest()->limit(count($treatments))->get();
 
-        return response()->json($details);
+        $totalCost = $treatmentPlan->totalCost;
+
+        return response()->json(compact('items', 'totalCost'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(TreatmentPlan $treatmentPlan, TreatmentPlanDetails $details)
+    {
+        $details->delete();
+
+        $totalCost = $treatmentPlan->totalCost;
+
+        return response()->json(['totalCost' => $totalCost, 'message' => __('messages.deleted-successfully')]);
     }
 }

@@ -30,5 +30,27 @@ export const useTreatmentPlansStore = defineStore("treatment-plans", {
 
             return res;
         },
+        async update(id, form) {
+            const res = await this.axios.patch(`/treatment-plans/${id}`, form);
+
+            if (res.statusText === "OK") {
+                const index = this.items.findIndex(
+                    (item) => item.id === id
+                );
+                this.items[index] = res.data;
+            }
+
+            return res;
+        },
+        async destroy(id) {
+            const res = await this.axios.delete(`/treatment-plans/${id}`);
+
+            if (res.statusText === "OK") {
+               const index = this.items.findIndex((item) => item.id === id)
+               this.items.splice(index, 1);
+            }
+
+            return res;
+        },
     },
 });

@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
+        <DataTable :value="store.items" tableStyle="min-width: 50rem">
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
@@ -94,10 +94,10 @@ const destroy = (user) => {
             const { statusText, data } = await store.destroy(user.id);
 
             if (statusText == 'OK')
-                toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+                toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else {
                 user.loading = false
-                toast.add({ severity: 'info', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
             }
         }
     });

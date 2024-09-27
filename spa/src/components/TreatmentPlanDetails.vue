@@ -1,8 +1,8 @@
 <template>
-    <DataTable :value="store.items" class="[&_table_tr]:!bg-transparent [&_.p-datatable-header]:!bg-transparent"
+    <DataTable :value="store.items" class="odd:[&_table_tr]:!bg-transparent [&_.p-datatable-header]:!bg-transparent"
         tableStyle="min-width: 50rem">
         <template #header>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 h-[2.7rem]">
                 <span class="text-2xl font-bold ml-auto">
                     {{ $t('treatment-plan-details') }}
                 </span>
@@ -23,8 +23,7 @@
         <Column :field="getPositionTooth" :header="$t('tooth')" />
         <Column field="treatment.title" :header="$t('treatment')" />
         <Column :field="({ cost }) => [new Intl.NumberFormat().format(cost), $t('toman')].join(' ')"
-            :header="$t('cost')" class="w-44" />
-        <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
+            :header="$t('cost')" />
         <Column v-if="status == 'editing'" :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20">
             <template #body="{ data }">
                 <Button icon="pi pi-trash" rounded text severity="danger" :loading="data.loading"
@@ -40,13 +39,12 @@ import { defineAsyncComponent, inject, reactive } from 'vue';
 
 const props = defineProps(['id', 'status'])
 
-const { dialog, t } = inject('service')
+const { dialog, confirm, toast, t } = inject('service')
 
 const store = useTreatmentPlanDetailsStore()
+store.$reset()
 store.id = props.id
-
-if (store.items.length === 0)
-    store.index()
+store.index()
 
 const TreatmentPlanDetailForm = defineAsyncComponent(() => import('@/components/TreatmentPlanDetailForm.vue'));
 
@@ -56,6 +54,37 @@ const create = async () => {
             header: t('createNewTreatment'), modal: true
         },
     })
+}
+
+const destroy = (details) => {
+    confirm.require({
+        message: t('delete-confirm-question'),
+        header: t('danger-zone'),
+        icon: 'pi pi-info-circle',
+        rejectProps: {
+            label: t('cancel'),
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: t('delete'),
+            icon: 'pi pi-trash',
+            severity: 'danger',
+        },
+        accept: async () => {
+            details.loading = true
+
+            const { statusText, data } = await store.destroy(details.id);
+
+            details.loading = false
+
+            if (statusText == 'OK')
+                toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+            else {
+                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+            }
+        }
+    });
 }
 
 const getPositionTooth = ({ tooth }) => {

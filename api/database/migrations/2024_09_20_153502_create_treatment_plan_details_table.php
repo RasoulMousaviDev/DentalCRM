@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('tooth');
             $table->foreignId('treatment')->constrained('treatments');
             $table->integer('cost');
+            $table->timestamp('sent_at')->nullable();
             $table->timestamps();
         });
     }

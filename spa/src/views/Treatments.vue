@@ -1,14 +1,12 @@
 <template>
-    <div class="p-4 shadow-inner rounded bg-surface-50/70">
-        <DataTable :value="store.items" @rowReorder="reorder"
-            class="[&_table_tr]:!bg-transparent [&_.p-datatable-header]:!bg-transparent" tableStyle="min-width: 50rem">
+    <div class="card">
+        <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
-                        {{ $t('questions') }}
+                        {{ $t('treatments') }}
                     </span>
-                    <Button icon="pi pi-plus" :label="$t('new-question')" outlined severity="success"
-                        @click="create()" />
+                    <Button icon="pi pi-plus" :label="$t('new-treatment')" severity="success" @click="create()" />
                 </div>
             </template>
             <template #empty>
@@ -16,13 +14,14 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
-            <Column rowReorder headerStyle="width: 3rem" />
             <Column :header="$t('row')" class="w-20">
                 <template #body="{ index }">
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column field="title" :header="$t('title')" />
+            <Column field="title" :header="$t('title')"/>
+            <Column :field="({ cost }) => [new Intl.NumberFormat().format(cost), $t('toman')].join(' ')"
+                :header="$t('cost')" class="w-44" />
             <Column field="status" :header="$t('status')" class="w-24">
                 <template #body="{ data: { status } }">
                     <Tag v-if="status" severity="success" :value="$t('active')" />
@@ -45,39 +44,38 @@
 </template>
 
 <script setup>
-import { useSurvayQuetionsStore } from '@/stores/survay-questions';
+import { useCallStatuesStore } from '@/stores/call-statuses';
+import { usePatientStatuesStore } from '@/stores/patient-statuses';
+import { useTreatmentsStore } from '@/stores/treatments';
 import { defineAsyncComponent, inject } from 'vue';
-
-const props = defineProps(['id'])
 
 const { dialog, confirm, toast, t } = inject('service')
 
-const store = useSurvayQuetionsStore()
-store.id = props.id
+const store = useTreatmentsStore()
 
 if (store.items.length === 0)
     store.index()
 
-const SurvayQuestionForm = defineAsyncComponent(() => import('@/components/SurvayQuestionForm.vue'));
+const TreatmentForm = defineAsyncComponent(() => import('@/components/TreatmentForm.vue'));
 
 const create = async () => {
-    dialog.open(SurvayQuestionForm, {
+    dialog.open(TreatmentForm, {
         props: {
-            header: t('createNewQuestion'), modal: true
+            header: t('createNewTreatment'), modal: true
         },
     })
 }
 
 const edit = async (data) => {
-    const question = Object.assign({}, data)
+    const treatment = Object.assign({}, data)
 
-    dialog.open(SurvayQuestionForm, {
-        props: { header: t('editQuestion'), modal: true },
-        data: { question }
+    dialog.open(TreatmentForm, {
+        props: { header: t('editTreatment'), modal: true },
+        data: { treatment }
     })
 }
 
-const destroy = (question) => {
+const destroy = (template) => {
     confirm.require({
         message: t('delete-confirm-question'),
         header: t('danger-zone'),
@@ -93,11 +91,11 @@ const destroy = (question) => {
             severity: 'danger',
         },
         accept: async () => {
-            question.loading = true
+            template.loading = true
 
-            const { statusText, data } = await store.destroy(question.id);
+            const { statusText, data } = await store.destroy(template.id);
 
-            question.loading = false
+            template.loading = false
 
             if (statusText == 'OK')
                 toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
@@ -106,16 +104,6 @@ const destroy = (question) => {
 
         }
     });
-}
-
-const reorder = async ({ value }) => {
-    console.log(value);
-
-    const rows = value.map(({ id }, i) => ({ id, order: i + 1 }))
-
-    await store.reorder(rows)
-
-    toast.add({  summary: t('success'), detail: t('update-successfully'), severity: 'success', life: 3000 })
 }
 </script>
 

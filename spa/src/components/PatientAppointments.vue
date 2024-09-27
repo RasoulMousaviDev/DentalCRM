@@ -90,7 +90,7 @@ const cancel = (appointment) => {
                 Object.assign(appointment, data)
             }
             else {
-                toast.add({ severity: 'info', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
             }
         }
     });

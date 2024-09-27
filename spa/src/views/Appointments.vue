@@ -78,9 +78,9 @@ const visit = (appointment) => {
             appointment.loading = false
             
             if (statusText == 'OK')
-                toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+                toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else {
-                toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
             }
         }
     });

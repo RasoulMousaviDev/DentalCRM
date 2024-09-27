@@ -52,6 +52,9 @@
     "deactive": "غیرفعال",
     "danger-zone": "منطقه خطر",
     "delete-confirm-question": "آیا واقعا می خواهید این مورد را حذف کنید؟",
+    "done-confirm-question": "آیا واقعا می خواهید وضعیت این مورد را به انجام شد تغییر دهید؟",
+    "send-confirm-question": "آیا واقعا می خواهید این طرح درمان را برای بیمار ارسال کنید؟",
+    "send": "ارسال",
     "delete": "حذف",
     "patient": "بیمار",
     "patients": "بیماران",
@@ -95,7 +98,7 @@
     "createNewAppointment": "ایجاد نوبت جدید",
     "new-appointment": "نوبت جدید",
     "pending": "در انتظار",
-    "done": "انجام شده",
+    "done": "انجام شد",
     "missed": "از دست رفته",
     "visited": "ویزیت شده",
     "choose": "انتخاب کنید",
@@ -142,8 +145,8 @@
     "createNewQuestion": "ایجاد سوال جدید",
     "editQuestion": "ویرایش سوال",
     "new-treatment-plan": "طرح درمان جدید",
-    "tooths-count": "تعداد دندانها",
-    "services-count": "تعداد خدمات",
+    "tooths-count": "تعداد دندان ها",
+    "treatments-count": "تعداد درمان ها",
     "total-cost": "هزینه کل",
     "payment-type": "نوع پرداخت",
     "createNewTreatmentPlan": "ایجاد طرح درمان جدید",
@@ -159,13 +162,18 @@
     "treatment-type": "نوع درمان",
     "cost": "هزینه",
     "details": "جزئیات",
-    "jaw":{
-        "top":"فک بالا",
-        "right":"راست",
-        "bottom":"فک پایین",
+    "jaw": {
+        "top": "فک بالا",
+        "right": "راست",
+        "bottom": "فک پایین",
         "left": "چپ"
     },
     "editing": "درحال ویرایش",
     "final-submit": "ثبت نهایی",
-    "tooth":"دندان"
+    "tooth": "دندان",
+    "sent": "ارسال شده",
+    "deposit": "پیش پرداخت",
+    "dashboard": "داشبورد",
+    "treatments": "درمان ها",
+    "editTreatment": "ویرایش درمان"
 }

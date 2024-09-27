@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('patient')->constrained('patients');
             $table->enum('payment_type', ['cash', 'installments']);
             $table->integer('months')->default(0);
+            $table->integer('deposit')->default(0);
             $table->string('desc');
-            $table->enum('status', ['editing','pending', 'done'])->default('editing');
+            $table->enum('status', ['editing','sent', 'done'])->default('editing');
             $table->timestamps();
         });
     }

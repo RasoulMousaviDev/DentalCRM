@@ -106,7 +106,7 @@ const destroy = (patient) => {
                 toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else {
                 patient.loading = false
-                toast.add({ severity: 'info', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
             }
         }
     });
