@@ -1,19 +1,19 @@
 <template>
     <form @submit.prevent="handleSubmit()" class="grid grid-cols-2 gap-4 w-full md:w-[30rem]">
         <div class="flex flex-col gap-2">
-            <label class="has-[+*+small]:text-red-500">{{ $t('name') }}</label>
-            <InputText v-model="form.name" class="w-full has-[+small]:!border-red-500" />
-            <small v-if="errors.name" v-text="errors.name[0]" class="text-red-500" />
+            <label class="has-[+*+small]:text-red-500">{{ $t('firstname') }}</label>
+            <InputText v-model="form.firstname" class="w-full has-[+small]:!border-red-500" />
+            <small v-if="errors.firstname" v-text="errors.firstname[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2">
-            <label class=" has-[+*+small]:text-red-500">{{ $t('national_code') }}</label>
-            <InputText v-model="form.national_code" class="ltr w-full has-[+small]:!border-red-500" />
-            <small v-if="errors.national_code" v-text="errors.national_code[0]" class="text-red-500" />
+            <label class=" has-[+*+small]:text-red-500">{{ $t('lastname') }}</label>
+            <InputText v-model="form.lastname" class="w-full has-[+small]:!border-red-500" />
+            <small v-if="errors.lastname" v-text="errors.lastname[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500">{{ $t('birthday') }}</label>
             <DatePicker v-model="date" class="w-full [&>input]:has-[+small]:!border-red-500" :placeholder="$t('choose')"
-                :inputClass="{ 'ltr': form.due_date }" panelClass="ltr -translate-x-10" dateFormat="yy/mm/dd" />
+                :inputClass="{ 'ltr': form.birthday }" panelClass="ltr -translate-x-10" dateFormat="yy/mm/dd" />
             <small v-if="errors.birthday" v-text="errors.birthday[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2 grow">
@@ -89,7 +89,7 @@ import { usePatientsStore } from '@/stores/patients';
 import { useProvincesStore } from '@/stores/provinces';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
-const { toast, } = inject('service')
+const { toast } = inject('service')
 
 const dialogRef = inject('dialogRef')
 const { patient } = dialogRef.value.data || {}

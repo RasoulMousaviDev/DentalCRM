@@ -8,6 +8,7 @@
                     </span>
                     <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" />
                     <Button icon="pi pi-plus" :label="$t('new-campain')" severity="success" @click="create()" />
+                    <Button icon="pi pi-file-import" :label="$t('data-entry')" severity="info" @click="dataEntry()" />
                 </div>
             </template>
             <template #empty>
@@ -52,6 +53,8 @@ if (store.items.length === 0)
 
 const CampainForm = defineAsyncComponent(() => import('@/components/CampainForm.vue'));
 
+const DataEntryForm = defineAsyncComponent(() => import('@/components/DataEntryForm.vue'));
+
 const create = async () => {
     dialog.open(CampainForm, {
         props: {
@@ -60,9 +63,17 @@ const create = async () => {
     })
 }
 
+const dataEntry = () => {
+    dialog.open(DataEntryForm, {
+        props: {
+            header: t('data-entry'), modal: true
+        },
+    })
+}
+
 const edit = async (data) => {
     const campain = Object.assign({}, data)
-    
+
     dialog.open(CampainForm, {
         props: { header: t('editCampain'), modal: true },
         data: { campain }
@@ -92,9 +103,9 @@ const destroy = (campain) => {
             campain.loading = false
 
             if (statusText == 'OK')
-                toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+                toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else
-                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
 
         }
     });

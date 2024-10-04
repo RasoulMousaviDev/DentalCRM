@@ -7,7 +7,11 @@
                     <span class="text-2xl font-bold ml-auto">
                         {{ $t('patients') }}
                     </span>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" />
+                    <IconField>
+                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
+                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
+                    </IconField>
+                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
                     <Button icon="pi pi-plus" :label="$t('new-patient')" severity="success" @click="create()" />
                 </div>
             </template>
@@ -16,11 +20,14 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
+            <template #footer>
+                <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
+            </template>
             <Column field="id" :header="$t('id')" />
-            <Column field="name" :header="$t('name')" />
+            <Column field="firstname" :header="$t('firstname')" />
+            <Column field="lastname" :header="$t('lastname')" />
             <Column :field="({ mobiles }) => mobiles.map(({ number }) => number).join(' | ')" :header="$t('mobile')"
                 body-class="ltr !text-left" />
-            <Column field="national_code" :header="$t('national_code')" body-class="ltr !text-left" />
             <Column field="birthday" :header="$t('birthday')" body-class="ltr !text-left" />
             <Column :field="({ gender }) => $t(gender)" :header="$t('gender')" />
             <Column field="province.title" :header="$t('province')" />
@@ -49,9 +56,11 @@
 
 <script setup>
 import { usePatientsStore } from '@/stores/patients';
-import { defineAsyncComponent, inject } from 'vue';
+import { defineAsyncComponent, inject, watch } from 'vue';
 
-const { dialog, confirm, toast, router, t } = inject('service')
+const { dialog, confirm, popover, toast, router, t } = inject('service')
+
+popover.value.component = defineAsyncComponent(() => import('@/components/PatientFilters.vue'));
 
 const store = usePatientsStore()
 
@@ -113,6 +122,18 @@ const destroy = (patient) => {
 }
 
 const showPatientDetails = ({ data: { id } }) => router.push({ name: 'PatientDetails', params: { id } })
+
+let timer;
+watch(() => store.filters.query, (v) => {
+    if (v != undefined) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            if (v) store.filters = { query: v }
+            else delete store.filters.query
+            store.index()
+        }, 300);
+    }
+})
 </script>
 
 <style lang="scss"></style>

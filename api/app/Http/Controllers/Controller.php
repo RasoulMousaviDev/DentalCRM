@@ -12,7 +12,8 @@ abstract class Controller
                 'totalRecords' => $paginator->total(),
                 'first' => $paginator->perPage() * ($paginator->currentPage() - 1),
                 'rows' => $paginator->perPage(),
-                'rowsPerPageOptions' => [10, 20, 30],
+                'page' => $paginator->currentPage(),
+                'rowsPerPageOptions' => [1, 10, 20, 30],
                 'currentPageReportTemplate' => __('messages.paginatorTemplate'),
                 'template' => 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown',
             ]

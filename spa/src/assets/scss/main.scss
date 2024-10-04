@@ -33,3 +33,7 @@
 .fade-leave-to {
     opacity: 0;
 }
+
+html{
+    @apply text-sm;
+}

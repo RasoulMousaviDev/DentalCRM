@@ -41,6 +41,7 @@ import Menu from "primevue/menu";
 import InputNumber from 'primevue/inputnumber';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
+import Paginator from 'primevue/paginator';
 
 
 import StyleClass from "primevue/styleclass";
@@ -60,7 +61,7 @@ pinia.use(({ store }) => {
     store.axios = axios;
 });
 
-const baseURL = "/api";
+const baseURL = "http://127.0.0.1:8000/api";
 
 const axios = Axios.create({ baseURL });
 
@@ -108,6 +109,7 @@ app.component("Menu", Menu);
 app.component("InputNumber", InputNumber);
 app.component("InputGroup", InputGroup);
 app.component("InputGroupAddon", InputGroupAddon);
+app.component("Paginator", Paginator);
 
 app.directive("styleclass", StyleClass);
 app.directive("ripple", Ripple);

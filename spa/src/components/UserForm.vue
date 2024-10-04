@@ -43,7 +43,7 @@ import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 const { toast, } = inject('service')
 
 const dialogRef = inject('dialogRef')
-const { user } = dialogRef.value.data || {}
+const { user } = dialogRef?.value.data || {}
 
 const form = reactive({ name: '', mobile: '', email: '', roles: [], status: true })
 const errors = ref({})

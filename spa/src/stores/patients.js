@@ -3,15 +3,18 @@ import { defineStore } from "pinia";
 export const usePatientsStore = defineStore("patients", {
     state: () => ({
         items: [],
-        pagiantor: {},
         fetching: true,
+        pagiantor: { totalRecords: 0 },
+        filters: {},
     }),
     actions: {
-        async index(page = 1, rows = 10, query = "") {
+        async index() {
             this.items = [];
             this.fetching = true;
+            const { page = 1, rows = 10 } = this.pagiantor;
+
             const { statusText, data } = await this.axios.get("/patients", {
-                params: { page, rows, query },
+                params: { page, rows, ...this.filters },
             });
             this.fetching = false;
 
@@ -23,8 +26,7 @@ export const usePatientsStore = defineStore("patients", {
         async store(form) {
             const res = await this.axios.post("/patients", form);
 
-            if (res.statusText === "OK") 
-                this.items.unshift(res.data)
+            if (res.statusText === "OK") this.items.unshift(res.data);
 
             return res;
         },
@@ -32,8 +34,10 @@ export const usePatientsStore = defineStore("patients", {
             const res = await this.axios.patch(`/patients/${id}`, form);
 
             if (res.statusText === "OK") {
-               const index = this.items.findIndex((patient) => patient.id === id)
-               this.items[index] = res.data
+                const index = this.items.findIndex(
+                    (patient) => patient.id === id
+                );
+                this.items[index] = res.data;
             }
 
             return res;
@@ -42,11 +46,18 @@ export const usePatientsStore = defineStore("patients", {
             const res = await this.axios.delete(`/patients/${id}`);
 
             if (res.statusText === "OK") {
-               const index = this.items.findIndex((patient) => patient.id === id)
-               this.items.splice(index, 1);
+                const index = this.items.findIndex(
+                    (patient) => patient.id === id
+                );
+                this.items.splice(index, 1);
             }
 
             return res;
+        },
+        paginate({ rows, page }) {
+            this.pagiantor.rows = rows;
+            this.pagiantor.page = page + 1;
+            return this.index();
         },
     },
 });

@@ -9,3 +9,26 @@
 .p-datatable-row-expansion > td {
     @apply p-0 !important;
 }
+
+.p-datatable-footer {
+    @apply border-0 pb-0 !important;
+}
+
+.p-paginator {
+    @apply ltr pb-0 translate-y-2 !important;
+    & > * {
+        @apply max-sm:first:order-last max-sm:last:order-last;
+    }
+}
+
+.p-datatable-filter-element-container {
+    @apply w-max grow-0 !important;
+}
+
+.p-popover{
+    @apply p-3 rounded-xl !important;
+}
+
+body:has(.p-popover)::after {
+    @apply content-['_'] absolute inset-0 bg-[var(--p-mask-background)] z-[999];
+}

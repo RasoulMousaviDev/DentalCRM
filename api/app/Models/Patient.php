@@ -17,8 +17,8 @@ class Patient extends Model
     use HasFactory;
 
     public $fillable = [
-        'name',
-        'national_code',
+        'firstname',
+        'lastname',
         'birthday',
         'gender',
         'province',

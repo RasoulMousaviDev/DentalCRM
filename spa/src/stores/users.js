@@ -3,15 +3,18 @@ import { defineStore } from "pinia";
 export const useUsersStore = defineStore("users", {
     state: () => ({
         items: [],
-        pagiantor: {},
         fetching: true,
+        pagiantor: { totalRecords: 0 },
+        filters: {},
     }),
     actions: {
-        async index(page = 1, rows = 10, query = "") {
+        async index() {
             this.items = [];
             this.fetching = true;
+            const { page = 1, rows = 10 } = this.pagiantor;
+            
             const { statusText, data } = await this.axios.get("/users", {
-                params: { page, rows, query },
+                params: { page, rows, ...this.filters },
             });
             this.fetching = false;
 
@@ -23,8 +26,7 @@ export const useUsersStore = defineStore("users", {
         async store(form) {
             const res = await this.axios.post("/users", form);
 
-            if (res.statusText === "OK") 
-                this.items.unshift(res.data)
+            if (res.statusText === "OK") this.items.unshift(res.data);
 
             return res;
         },
@@ -32,8 +34,8 @@ export const useUsersStore = defineStore("users", {
             const res = await this.axios.patch(`/users/${id}`, form);
 
             if (res.statusText === "OK") {
-               const index = this.items.findIndex((user) => user.id === id)
-               this.items[index] = res.data
+                const index = this.items.findIndex((user) => user.id === id);
+                this.items[index] = res.data;
             }
 
             return res;
@@ -42,11 +44,16 @@ export const useUsersStore = defineStore("users", {
             const res = await this.axios.delete(`/users/${id}`);
 
             if (res.statusText === "OK") {
-               const index = this.items.findIndex((user) => user.id === id)
-               this.items.splice(index, 1);
+                const index = this.items.findIndex((user) => user.id === id);
+                this.items.splice(index, 1);
             }
 
             return res;
+        },
+        paginate({ rows, page }) {
+            this.pagiantor.rows = rows;
+            this.pagiantor.page = page + 1;
+            return this.index();
         },
     },
 });

@@ -15,8 +15,8 @@ class UpdatePatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'national_code' => 'required|digits:10|unique:patients,national_code,' . $this->patient->id,
+            'firstname' => 'required|string',
+            'lastname' => 'required|string',
             'birthday' => 'required|date_format:Y/m/d',
             'gender' => 'required|in:male,female',
             'mobiles' => 'required|array|min:1',

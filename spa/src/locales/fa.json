@@ -59,7 +59,8 @@
     "patient": "بیمار",
     "patients": "بیماران",
     "new-patient": "بیمار جدید",
-    "national_code": "کدملی",
+    "firstname": "نام",
+    "lastname": "نام خانوادگی",
     "province": "استان",
     "city": "شهر",
     "lead_source": "نحوه آشنایی",
@@ -176,5 +177,10 @@
     "dashboard": "داشبورد",
     "treatments": "درمان ها",
     "editTreatment": "ویرایش درمان",
-    "user-menu": "منوی کاربری"
+    "user-menu": "منوی کاربری",
+    "data-entry": "ورود اطلاعات",
+    "consultants": "مشاوران",
+    "excel-file": "فایل اکسل",
+    "choose-file": "انتخاب فایل",
+    "clear": "پاک کردن"
 }

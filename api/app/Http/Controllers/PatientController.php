@@ -12,9 +12,11 @@ class PatientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $patients = Patient::latest()->paginate(10);
+        $rows = $request->input('rows', 10);
+
+        $patients = Patient::latest()->paginate($rows);
 
         return response()->json($this->paginate($patients));
     }
@@ -22,8 +24,8 @@ class PatientController extends Controller
     public function store(StorePatientRequest $request)
     {
         $form = $request->only([
-            'name',
-            'national_code',
+            'firstname',
+            'lastname',
             'birthday',
             'gender',
             'province',

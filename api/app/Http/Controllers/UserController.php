@@ -4,20 +4,38 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->with('roles:id,title')->paginate(10);
+        $rows = $request->input('rows', 10);
+
+        $fields = ['name', 'mobile', 'email'];
+
+        $users = User::when($request->input('query'), function ($query, $value) use ($fields) {
+            $query->whereAny($fields, 'like', "%{$value}%");
+        })->when($request->input('roles'), function ($query, $roles) {
+            $query->whereHas('roles', function (Builder $roleQuery) use ($roles) {
+                $roleQuery->whereIn('id', $roles);
+            });
+        })->when($request->filled('status'), function ($query) use ($request) {
+            $status = filter_var($request->get('status'), FILTER_VALIDATE_BOOLEAN);
+            $query->where('status', $status);
+        });
+
+        foreach ($fields as $field)
+            $users->when($request->input($field), function ($query, $value) use ($field) {
+                $query->where($field, 'like', "%{$value}%");
+            });
+
+        $users = $users->with('roles:id,title')->latest()->paginate($rows);
 
         return response()->json($this->paginate($users));
     }
@@ -73,18 +91,17 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['message' => __('messages.deleted-successfully')]);
-
     }
 
-    private function generatePassword($length = 8) {
+    private function generatePassword($length = 8)
+    {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$()_-';
         $charactersLength = strlen($characters);
         $randomString = '';
 
-        for ($i = 0; $i < 8; $i++) 
+        for ($i = 0; $i < 8; $i++)
             $randomString .= $characters[rand(0, $charactersLength - 1)];
-        
+
         return $randomString;
-    
     }
 }
