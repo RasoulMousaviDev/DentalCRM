@@ -7,15 +7,18 @@ use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
     public function index(IndexAppointmentRequest $request)
     {
+        $rows = $request->input('rows', 10);
+
         $patient = $request->get('patient');
 
-        $appointments = Appointment::latest()->with('treatment:id,title');
+        $appointments = Appointment::with('treatment:id,title');
         if ($patient)
             $appointments = $appointments->where('patient', $patient);
         else
@@ -25,9 +28,38 @@ class AppointmentController extends Controller
                 'province',
                 'leadSource',
                 'status'
-            ])->select('id','name')]);
+            ])->select('id', 'firstname', 'lastname')]);
 
-        return response()->json($this->paginate($appointments->paginate(10)));
+
+        $appointments = $appointments->when($request->input('query'), function ($query, $value) {
+            $query->whereHas('patient', function (Builder $query) use ($value) {
+                $query->whereAny(['firstname', 'lastname'], 'like', "%{$value}%");
+            })->orWhereHas('treatment', function (Builder $query) use ($value) {
+                $query->where('title', 'like', "%{$value}%");
+            })->orWhereAny(['due_date', 'desc'], 'like', "%{$value}%");
+        })->when($request->input('firstname'), function ($query, $firstname) {
+            $query->whereHas('patient', function (Builder $query) use ($firstname) {
+                $query->where('firstname', 'like', "%{$firstname}%");
+            });
+        })->when($request->input('lastname'), function ($query, $lastname) {
+            $query->whereHas('patient', function (Builder $query) use ($lastname) {
+                $query->where('lastname', 'like', "%{$lastname}%");
+            });
+        })->when($request->input('due_date'), function ($query, $due_date) {
+            $query->where('due_date', 'like', "%{$due_date}%");
+        })->when($request->input('treatment'), function ($query, $treatment) {
+            $query->whereHas('treatment', function (Builder $query) use ($treatment) {
+                $query->where('id', $treatment);
+            });
+        })->when($request->input('status'), function ($query, $status) {
+            $query->where('status', $status);
+        });
+
+
+
+        $appointments = $appointments->latest()->paginate($rows);
+
+        return response()->json($this->paginate($appointments));
     }
 
     public function store(StoreAppointmentRequest $request)

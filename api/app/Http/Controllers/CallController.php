@@ -16,6 +16,8 @@ class CallController extends Controller
      */
     public function index(IndexCallRequest $request)
     {
+        $rows = $request->input('rows', 10);
+
         $patient = $request->get('patient');
 
         $calls = Call::latest()->with('status:id,value,severity');
@@ -29,9 +31,9 @@ class CallController extends Controller
                 'province',
                 'leadSource',
                 'status'
-            ])->select('id', 'name')]);
+            ])->select('id', 'firstname', 'lastname')]);
 
-        $calls = $calls->paginate(10);
+        $calls = $calls->paginate($rows);
 
         return response()->json($this->paginate($calls));
     }

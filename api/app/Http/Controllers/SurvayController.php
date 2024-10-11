@@ -12,9 +12,15 @@ class SurvayController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $survays = Survay::latest()->paginate(10);
+        $rows = $request->input('rows', 10);
+
+        $survays = Survay::when($request->input('query'), function ($query, $value){
+            $query->whereAny(['title', 'desc'], 'like', "%{$value}%");
+        });
+
+        $survays = $survays->latest()->paginate($rows);
 
         return response()->json($this->paginate($survays));
     }

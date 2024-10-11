@@ -23,6 +23,7 @@ class Patient extends Model
         'gender',
         'province',
         'city',
+        'telephone',
         'lead_source',
         'status',
         'desc'

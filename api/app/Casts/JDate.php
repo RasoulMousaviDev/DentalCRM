@@ -15,7 +15,10 @@ class JDate implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return jdate(Carbon::parse($value)->setTimezone('Asia/Tehran'))->toDateTimeString('minute');
+        if ($value)
+            return jdate(Carbon::parse($value)->setTimezone('Asia/Tehran'))->toDateTimeString('minute');
+
+        return null;
     }
 
     /**

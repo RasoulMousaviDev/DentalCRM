@@ -16,6 +16,8 @@ class TreatmentPlanController extends Controller
      */
     public function index(IndexTreatmentPlanRequest $request)
     {
+        $rows = $request->input('rows', 10);
+
         $patient = $request->get('patient');
 
         $treatmentPlans = TreatmentPlan::latest();
@@ -29,9 +31,9 @@ class TreatmentPlanController extends Controller
                 'province',
                 'leadSource',
                 'status'
-            ])->select('id', 'name')]);
+            ])->select('id', 'firstname', 'lastname')]);
 
-        $treatmentPlans = $treatmentPlans->paginate(10);
+        $treatmentPlans = $treatmentPlans->paginate($rows);
 
         return response()->json($this->paginate($treatmentPlans));
     }

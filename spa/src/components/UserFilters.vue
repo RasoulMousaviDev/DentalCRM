@@ -5,9 +5,7 @@
             <InputText v-model="filters.name" class="w-full" />
         </div>
         <div class="flex flex-col gap-2">
-            <label>
-                {{ $t('mobile') }}
-            </label>
+            <label>{{ $t('mobile') }} </label>
             <InputText v-model="filters.mobile" class="ltr w-full" />
         </div>
         <div class="flex flex-col gap-2">
@@ -36,7 +34,7 @@
 <script setup>
 import { useRolesStore } from '@/stores/roles';
 import { useUsersStore } from '@/stores/users';
-import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
+import { inject, onMounted, reactive, watch } from 'vue';
 
 const { popover, t } = inject('service')
 

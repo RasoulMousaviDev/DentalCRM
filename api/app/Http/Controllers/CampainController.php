@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCampainRequest;
 use App\Http\Requests\UpdateCampainRequest;
 use App\Models\Campain;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class CampainController extends Controller
@@ -12,8 +13,10 @@ class CampainController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $rows = $request->input('rows', 10);
+
         $campains = Campain::latest();
 
         if (true) {
@@ -21,7 +24,11 @@ class CampainController extends Controller
             $campains = $campains->where('user_id', $user->id);
         }
 
-        $campains = $campains->paginate(10);
+        $campains = $campains->when($request->input('query'), function ($query, $value){
+            $query->whereAny(['title', 'desc', 'start_date', 'end_date'], 'like', "%{$value}%");
+        });
+
+        $campains = $campains->paginate($rows);
 
         return response()->json($this->paginate($campains));
     }

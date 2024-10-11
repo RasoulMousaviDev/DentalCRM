@@ -22,10 +22,15 @@
                 :placeholder="$t('choose')" class="has-[+small]:!border-red-500" />
             <small v-if="errors.gender" v-text="errors.gender[0]" class="text-red-500" />
         </div>
-
         <div class="flex flex-col gap-2 col-span-2">
-            <label class="has-[+*+small]:text-red-500">
-                {{ $t('mobile') }}
+            <label class="has-[+*+small]:text-red-500"> {{ $t('telephone') }}</label>
+            <InputText type="phone" v-model="form.telephone" class="ltr w-full has-[+small]:!border-red-500" />
+            <small v-if="errors.telephone" v-text="errors.telephone[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-2 col-span-2">
+            <label class="flex items-center justify-between has-[+*+small]:text-red-500">
+                <span>{{ $t('mobile') }}</span>
+                <small>{{ $t('enter-number-then-press-enter') }}</small>
             </label>
             <AutoComplete v-model="form.mobiles" multiple fluid :typeahead="false"
                 class="ltr w-full [&>ul]:has-[+small]:!border-red-500 [&_li:last-child]:w-24" @change="mobileValidate"
@@ -36,7 +41,7 @@
                     class="text-red-500 [&:not(:first-of-type)]:hidden" />
             </template>
         </div>
-
+        
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('province') }}</label>
             <Select v-model="form.province" :options="provinces.items" :loading="provinces.fetching" optionLabel="title"
@@ -60,7 +65,7 @@
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('status') }}</label>
             <Select v-model="form.status" :options="statuses.items" :loading="statuses.fetching" optionValue="id" fluid
-                checkmark class="has-[+small]:!border-red-500">
+                checkmark :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="statuses.items.find(({ id }) => value == id)" />
                 </template>
@@ -95,10 +100,11 @@ const dialogRef = inject('dialogRef')
 const { patient } = dialogRef.value.data || {}
 
 const form = reactive({
-    name: '',
-    national_code: '',
+    firstname: '',
+    lastname: '',
     birthday: '',
     gender: '',
+    telephone: '',
     mobiles: [],
     province: '',
     city: '',
@@ -155,7 +161,7 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else
-        toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 
 }
 

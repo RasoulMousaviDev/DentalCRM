@@ -29,6 +29,14 @@
     @apply p-3 rounded-xl !important;
 }
 
-body:has(.p-popover)::after {
-    @apply content-['_'] absolute inset-0 bg-[var(--p-mask-background)] z-[999];
+body:has(.p-popover){
+    @apply overflow-hidden;
+    &::after {
+        @apply content-['_'] absolute inset-0 bg-[var(--p-mask-background)] z-[999] ;
+    }
+}
+
+
+.p-select-clear-icon{
+    @apply right-auto left-10  !important;
 }

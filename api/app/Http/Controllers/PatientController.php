@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
@@ -16,7 +17,43 @@ class PatientController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $patients = Patient::latest()->paginate($rows);
+        $columns = ['firstname', 'lastname', 'telephone', 'birthday'];
+
+        $patients = Patient::when($request->input('query'), function ($query, $value) use ($columns) {
+            $query->whereAny($columns, 'like', "%{$value}%")
+                ->orWhereHas('mobiles', function (Builder $query) use ($value) {
+                    $query->where('number', 'like', "%{$value}%");
+                });
+        })->when($request->input('gender'), function ($query, $gender) {
+            $query->where('gender', $gender);
+        })->when($request->input('mobile'), function ($query, $mobile) {
+            $query->whereHas('mobiles', function (Builder $query) use ($mobile) {
+                $query->where('number', $mobile);
+            });
+        })->when($request->input('province'), function ($query, $province) {
+            $query->whereHas('province', function (Builder $query) use ($province) {
+                $query->where('id', $province);
+            });
+        })->when($request->input('city'), function ($query, $city) {
+            $query->whereHas('city', function (Builder $query) use ($city) {
+                $query->where('id', $city);
+            });
+        })->when($request->input('lead_source'), function ($query, $leadSource) {
+            $query->whereHas('lead_source', function (Builder $query) use ($leadSource) {
+                $query->where('id', $leadSource);
+            });
+        })->when($request->input('status'), function ($query, $status) {
+            $query->whereHas('status', function (Builder $query) use ($status) {
+                $query->where('id', $status);
+            });
+        });
+
+        foreach ($columns as $column)
+            $patients->when($request->input($column), function ($query, $value) use ($column) {
+                $query->where($column, 'like', "%{$value}%");
+            });
+
+        $patients = $patients->latest()->paginate($rows);
 
         return response()->json($this->paginate($patients));
     }

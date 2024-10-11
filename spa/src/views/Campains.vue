@@ -6,7 +6,10 @@
                     <span class="text-2xl font-bold ml-auto">
                         {{ $t('campains') }}
                     </span>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" />
+                    <IconField>
+                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
+                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
+                    </IconField>
                     <Button icon="pi pi-plus" :label="$t('new-campain')" severity="success" @click="create()" />
                     <Button icon="pi pi-file-import" :label="$t('data-entry')" severity="info" @click="dataEntry()" />
                 </div>
@@ -16,7 +19,14 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
-            <Column field="id" :header="$t('id')" />
+            <template #footer>
+                <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
+            </template>
+            <Column :header="$t('row')" class="w-20">
+                <template #body="{ index }">
+                    {{ index + 1 }}
+                </template>
+            </Column>
             <Column field="title" :header="$t('title')" />
             <Column field="desc" :header="$t('desc')" />
             <Column field="start_date" :header="$t('start-date')" />
@@ -42,7 +52,7 @@
 
 <script setup>
 import { useCampainsStore } from '@/stores/campains';
-import { defineAsyncComponent, inject } from 'vue';
+import { defineAsyncComponent, inject, watch } from 'vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
@@ -110,6 +120,18 @@ const destroy = (campain) => {
         }
     });
 }
+
+let timer;
+watch(() => store.filters.query, (v) => {
+    if (v != undefined) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            if (v) store.filters = { query: v }
+            else delete store.filters.query
+            store.index()
+        }, 300);
+    }
+})
 </script>
 
 <style lang="scss"></style>

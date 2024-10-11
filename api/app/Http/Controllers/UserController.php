@@ -17,22 +17,22 @@ class UserController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $fields = ['name', 'mobile', 'email'];
+        $columns = ['name', 'mobile', 'email'];
 
-        $users = User::when($request->input('query'), function ($query, $value) use ($fields) {
-            $query->whereAny($fields, 'like', "%{$value}%");
+        $users = User::when($request->input('query'), function ($query, $value) use ($columns) {
+            $query->whereAny($columns, 'like', "%{$value}%");
         })->when($request->input('roles'), function ($query, $roles) {
-            $query->whereHas('roles', function (Builder $roleQuery) use ($roles) {
-                $roleQuery->whereIn('id', $roles);
+            $query->whereHas('roles', function (Builder $query) use ($roles) {
+                $query->whereIn('id', $roles);
             });
-        })->when($request->filled('status'), function ($query) use ($request) {
-            $status = filter_var($request->get('status'), FILTER_VALIDATE_BOOLEAN);
+        })->when($request->input('status'), function ($query, $status) {
+            $status = filter_var($status, FILTER_VALIDATE_BOOLEAN);
             $query->where('status', $status);
         });
 
-        foreach ($fields as $field)
-            $users->when($request->input($field), function ($query, $value) use ($field) {
-                $query->where($field, 'like', "%{$value}%");
+        foreach ($columns as $column)
+            $users->when($request->input($column), function ($query, $value) use ($column) {
+                $query->where($column, 'like', "%{$value}%");
             });
 
         $users = $users->with('roles:id,title')->latest()->paginate($rows);

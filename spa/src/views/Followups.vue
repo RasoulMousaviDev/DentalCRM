@@ -6,7 +6,11 @@
                     <span class="text-2xl font-bold ml-auto">
                         {{ $t('follow-ups') }}
                     </span>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" />
+                    <IconField>
+                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
+                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
+                    </IconField>
+                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
                 </div>
             </template>
             <template #empty>
@@ -14,12 +18,16 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
+            <template #footer>
+                <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
+            </template>
             <Column :header="$t('row')" class="w-20">
                 <template #body="{ index }">
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column field="patient.name" :header="$t('patient-name')" />
+            <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
+                :header="$t('patient-name')" />
             <Column field="desc" :header="$t('desc')" />
             <Column field="due_date" :header="$t('due_date')" bodyClass="ltr" class="w-44" />
             <Column field="status" :header="$t('status')" class="w-32">
@@ -43,13 +51,15 @@
 
 <script setup>
 import { useFollowupsStore } from '@/stores/followups';
-import { defineAsyncComponent, inject, reactive } from 'vue';
+import { defineAsyncComponent, inject, reactive, watch } from 'vue';
 
 const PatientCallForm = defineAsyncComponent(() => import('@/components/PatientCallForm.vue'));
 
 const severities = reactive({ pending: "warn", done: "success", missed: "danger" })
 
-const { dialog, t } = inject('service')
+const { dialog, popover, t } = inject('service')
+
+popover.value.component = defineAsyncComponent(() => import('@/components/FollowupFilters.vue'));
 
 const store = useFollowupsStore()
 store.index({})
@@ -62,6 +72,18 @@ const done = async (id) => {
         data: id
     })
 }
+
+let timer;
+watch(() => store.filters.query, (v) => {
+    if (v != undefined) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            if (v) store.filters = { query: v }
+            else delete store.filters.query
+            store.index()
+        }, 300);
+    }
+})
 </script>
 
 <style lang="scss" scoped></style>

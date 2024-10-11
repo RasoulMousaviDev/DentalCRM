@@ -25,7 +25,7 @@ class FollowupController extends Controller
                 'province',
                 'leadSource',
                 'status'
-            ])->select('id', 'name')]);
+            ])->select('id', 'firstname', 'lastname')]);
 
         $followups = $followups->paginate(10);
 

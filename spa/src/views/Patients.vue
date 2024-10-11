@@ -24,10 +24,11 @@
                 <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
             </template>
             <Column field="id" :header="$t('id')" />
-            <Column field="firstname" :header="$t('firstname')" />
-            <Column field="lastname" :header="$t('lastname')" />
+            <Column :field="({ firstname, lastname }) => [firstname, lastname].join(' ')"
+                :header="$t('name-and-family')" />
             <Column :field="({ mobiles }) => mobiles.map(({ number }) => number).join(' | ')" :header="$t('mobile')"
                 body-class="ltr !text-left" />
+            <Column field="telephone" :header="$t('telephone')" body-class="ltr !text-left" />
             <Column field="birthday" :header="$t('birthday')" body-class="ltr !text-left" />
             <Column :field="({ gender }) => $t(gender)" :header="$t('gender')" />
             <Column field="province.title" :header="$t('province')" />

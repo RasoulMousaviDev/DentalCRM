@@ -26,7 +26,7 @@
 import { useDepositsStore } from '@/stores/deposits';
 import { computed, inject, reactive, ref, watch } from 'vue';
 
-const { router } = inject('service')
+const { router, toast } = inject('service')
 
 const dialogRef = inject('dialogRef')
 
@@ -49,7 +49,7 @@ const handleSubmit = async () => {
 
     if (statusText === 'OK') {
         dialogRef.value.close();
-        store.index({})
+        deposits.index({})
         router.push({ name: 'Deposits' })
     }
     else if (status === 422)

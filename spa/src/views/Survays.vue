@@ -7,6 +7,10 @@
                     <span class="text-2xl font-bold ml-auto">
                         {{ $t('survays') }}
                     </span>
+                    <IconField>
+                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
+                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
+                    </IconField>
                     <Button icon="pi pi-plus" :label="$t('new-survay')" severity="success" @click="create()" />
                 </div>
             </template>
@@ -14,6 +18,9 @@
                 <p class="text-center text-sm opacity-60">
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
+            </template>
+            <template #footer>
+                <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
             </template>
             <template #expansion="{ data: { id } }">
                 <SurvayQuestions :id="id" />
@@ -112,6 +119,18 @@ const destroy = (campain) => {
 }
 
 watch(() => expandedRows.value.length, () => expandedRows.value = expandedRows.value.slice(-1))
+
+let timer;
+watch(() => store.filters.query, (v) => {
+    if (v != undefined) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            if (v) store.filters = { query: v }
+            else delete store.filters.query
+            store.index()
+        }, 300);
+    }
+})
 </script>
 
 <style lang="scss"></style>

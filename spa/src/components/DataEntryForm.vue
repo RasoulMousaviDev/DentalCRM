@@ -7,7 +7,7 @@
             <Button v-else icon="pi pi-file-excel" :label="$t('choose-file')" severity="info" @click="() => file.click()" />
             <small v-if="errors.file" v-text="errors.file[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-2 w-44">
+        <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('consultants') }}</label>
             <MultiSelect v-model="form.roles" display="chip" :options="users.items" :loading="users.fetching"
                 optionLabel="name" optionValue="id" fluid filter class="has-[+small]:!border-red-500 overflow-x-auto"

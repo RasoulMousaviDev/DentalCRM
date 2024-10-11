@@ -1,51 +1,53 @@
 <template>
-    <form @submit.prevent="handleSubmit()" @keypress.enter.prevent="" class="grid grid-cols-2 gap-4 w-full md:w-[30rem]">
+    <form @submit.prevent="handleSubmit()" @keypress.enter.prevent=""
+        class="grid grid-cols-2 gap-4 w-full md:w-[30rem]">
         <div class="flex flex-col gap-2">
             <label>{{ $t('firstname') }}</label>
-            <InputText v-model="filters.firstname" class="w-full" />
+            <InputText v-model="filters.firstname" fluid />
         </div>
         <div class="flex flex-col gap-2">
             <label>{{ $t('lastname') }}</label>
-            <InputText v-model="filters.lastname" class="w-full" />
+            <InputText v-model="filters.lastname" fluid />
         </div>
         <div class="flex flex-col gap-2">
             <label>{{ $t('birthday') }}</label>
-            <DatePicker v-model="date" class="w-full" :placeholder="$t('choose')" :inputClass="{ 'ltr': filters.birthday }"
-                panelClass="ltr -translate-x-10" dateFormat="yy/mm/dd" />
+            <DatePicker v-model="date" class="w-full" :placeholder="$t('choose')"
+                :inputClass="{ 'ltr': filters.birthday }" panelClass="ltr" dateFormat="yy/mm/dd"
+                showButtonBar @clearClick="date = null" />
         </div>
         <div class="flex flex-col gap-2 grow">
             <label>{{ $t('gender') }}</label>
             <Select v-model="filters.gender" :options="genders" :optionLabel="(opt) => $t(opt)" fluid checkmark
-                :placeholder="$t('choose')" />
+                :placeholder="$t('choose')" show-clear />
         </div>
-
-        <div class="flex flex-col gap-2 col-span-2">
-            <label>
-                {{ $t('mobile') }}
-            </label>
-            <InputText v-model="filters.mobile" class="ltr w-full" />
+        <div class="flex flex-col gap-2">
+            <label>{{ $t('mobile') }} </label>
+            <InputText v-model="filters.mobile" type="phone" class="ltr w-full" />
         </div>
-
+        <div class="flex flex-col gap-2">
+            <label> {{ $t('telephone') }}</label>
+            <InputText v-model="filters.telephone" type="phone" class="ltr w-full" />
+        </div>
         <div class="flex flex-col gap-2">
             <label> {{ $t('province') }}</label>
-            <Select v-model="filters.province" :options="provinces.items" :loading="provinces.fetching" optionLabel="title"
-                optionValue="id" fluid checkmark :placeholder="$t('choose')" />
+            <Select v-model="filters.province" :options="provinces.items" :loading="provinces.fetching"
+                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" show-clear />
         </div>
         <div class="flex flex-col gap-2">
             <label> {{ $t('city') }}</label>
             <Select v-model="filters.city" :options="cities.items" :loading="cities.fetching"
                 :emptyMessage="$t('first-select-province')" optionLabel="title" optionValue="id" fluid checkmark
-                :placeholder="$t('choose')" />
+                :placeholder="$t('choose')" show-clear />
         </div>
         <div class="flex flex-col gap-2">
             <label> {{ $t('lead_source') }}</label>
             <Select v-model="filters.lead_source" :options="leadSources.items" :loading="leadSources.fetching"
-                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" />
+                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" show-clear />
         </div>
         <div class="flex flex-col gap-2">
             <label> {{ $t('status') }}</label>
-            <Select v-model="filters.status" :options="statuses.items" :loading="statuses.fetching" optionValue="id" fluid
-                checkmark>
+            <Select v-model="filters.status" :options="statuses.items" :loading="statuses.fetching" optionValue="id"
+                fluid checkmark :placeholder="$t('choose')" show-clear>
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="statuses.items.find(({ id }) => value == id)" />
                 </template>
@@ -53,10 +55,6 @@
                     <Tag v-bind="option" class="text-xs" />
                 </template>
             </Select>
-        </div>
-        <div class="flex flex-col gap-2 col-span-2">
-            <label> {{ $t('desc') }}</label>
-            <Textarea v-model="filters.desc" fluid rows="5" cols="30" />
         </div>
         <div class="flex justify-between col-span-2 gap-2 mt-8">
             <Button :label="$t('back')" severity="secondary" class="ml-auto" @click="popover.hide()" />
@@ -87,11 +85,14 @@ const date = computed({
         }
         return null
     },
-    set: (v) => filters.birthday = [
-        v.getFullYear(),
-        ('0' + (v.getMonth() + 1)).slice(-2),
-        ('0' + v.getDate()).slice(-2)
-    ].join('/')
+    set: (v) => {
+        if (v) filters.birthday = [
+            v.getFullYear(),
+            ('0' + (v.getMonth() + 1)).slice(-2),
+            ('0' + v.getDate()).slice(-2)
+        ].join('/')
+        else delete filters.birthday
+    }
 })
 
 const provinces = useProvincesStore()

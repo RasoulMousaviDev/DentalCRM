@@ -30,7 +30,7 @@ import PatientTreatmentPlans from '@/components/PatientTreatmentPlans.vue';
 import { usePatientsStore } from '@/stores/patients';
 import { computed, inject, reactive, ref } from 'vue';
 
-const { dialog, confirm, toast, route, router, t } = inject('service')
+const {route, router, t } = inject('service')
 
 const { id } = route.params
 

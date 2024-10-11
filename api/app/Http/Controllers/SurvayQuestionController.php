@@ -14,9 +14,15 @@ class SurvayQuestionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Survay $survay)
+    public function index(Request $request, Survay $survay)
     {
-        $questions = $survay->questions()->orderBy('order')->paginate(10);
+        $rows = $request->input('rows', 10);
+
+        $questions = $survay->questions()->when($request->input('query'), function ($query, $value){
+            $query->where('title', 'like', "%{$value}%");
+        });
+        
+        $questions = $questions->orderBy('order')->paginate($rows);
 
         return response()->json($this->paginate($questions));
     }
@@ -51,7 +57,7 @@ class SurvayQuestionController extends Controller
         foreach ($rows as $row)
             SurvayQuestion::find($row['id'])->update(['order' => $row['order']]);
 
-        return $this->index($survay);
+        return $this->index($request, $survay);
     }
 
     /**

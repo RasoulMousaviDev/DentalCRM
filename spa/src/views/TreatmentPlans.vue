@@ -4,9 +4,13 @@
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
-                        {{ $t('calls') }}
+                        {{ $t('treatment-plans') }}
                     </span>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" />
+                    <IconField>
+                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
+                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
+                    </IconField>
+                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
                 </div>
             </template>
             <template #empty>
@@ -29,10 +33,9 @@
                 </Tabs>
             </template>
             <Column expander :header="$t('details')" class="w-4 [&_button]:has-[[aria-expanded='false']]:rotate-180" />
-            <Column field="patient.name" :header="$t('patient-name')" />
+            <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
+                :header="$t('patient-name')" />
             <Column field="desc" :header="$t('desc')" body-class="truncate" />
-            <!-- <Column field="tooths_count" :header="$t('tooths-count')" class="w-32" />
-        <Column field="treatments_count" :header="$t('treatments-count')" class="w-32" /> -->
             <Column :field="({ months }) => months > 0 ? $t('installments-months', { months }) : $t('cash')"
                 :header="$t('payment-type')" class="w-36" />
             <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit), $t('toman')].join(' ')"
@@ -74,12 +77,14 @@ const tabs = reactive(['details', 'installments'])
 
 const severities = reactive({ editing: "info", sent: "warn", done: "success" })
 
-const { dialog, confirm, toast, route, t } = inject('service')
+const { dialog, confirm, toast, popover, t } = inject('service')
+
+popover.value.component = defineAsyncComponent(() => import('@/components/TreatmentPlanFilters.vue'));
 
 const expandedRows = ref([])
 
 const store = useTreatmentPlansStore()
-store.index({ })
+store.index()
 
 const TreatmentPlanForm = defineAsyncComponent(() => import('@/components/TreatmentPlanForm.vue'));
 
@@ -187,6 +192,18 @@ const done = (plan) => {
 }
 
 watch(() => expandedRows.value.length, () => expandedRows.value = expandedRows.value.slice(-1))
+
+let timer;
+watch(() => store.filters.query, (v) => {
+    if (v != undefined) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            if (v) store.filters = { query: v }
+            else delete store.filters.query
+            store.index()
+        }, 300);
+    }
+})
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,12 +1,16 @@
 <template>
     <div class="p-4 shadow-inner rounded bg-surface-50/70">
         <DataTable :value="store.items" @rowReorder="reorder"
-            class="[&_table_tr]:!bg-transparent [&_.p-datatable-header]:!bg-transparent" tableStyle="min-width: 50rem">
+            class="[&_table_tr]:!bg-transparent [&_.p-datatable-header]:!bg-transparent [&_.p-datatable-footer]:!bg-transparent" tableStyle="min-width: 50rem">
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
                         {{ $t('questions') }}
                     </span>
+                    <IconField>
+                        <InputText v-model="store.filters.query" :placeholder="$t('search')" class="!bg-transparent" />
+                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
+                    </IconField>
                     <Button icon="pi pi-plus" :label="$t('new-question')" outlined severity="success"
                         @click="create()" />
                 </div>
@@ -16,7 +20,10 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
-            <Column rowReorder headerStyle="width: 3rem" />
+            <template #footer>
+                <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" class="[&>*]:!bg-transparent [&_.p-paginator-page-selected]:!bg-white" @page="store.paginate" />
+            </template>
+            <Column v-if="!store.filters.query" rowReorder headerStyle="width: 3rem" />
             <Column :header="$t('row')" class="w-20">
                 <template #body="{ index }">
                     {{ index + 1 }}
@@ -46,7 +53,7 @@
 
 <script setup>
 import { useSurvayQuetionsStore } from '@/stores/survay-questions';
-import { defineAsyncComponent, inject } from 'vue';
+import { defineAsyncComponent, inject, watch } from 'vue';
 
 const props = defineProps(['id'])
 
@@ -109,14 +116,27 @@ const destroy = (question) => {
 }
 
 const reorder = async ({ value }) => {
-    console.log(value);
-
     const rows = value.map(({ id }, i) => ({ id, order: i + 1 }))
 
     await store.reorder(rows)
 
     toast.add({  summary: t('success'), detail: t('update-successfully'), severity: 'success', life: 3000 })
 }
+
+let timer;
+watch(() => store.filters.query, (v) => {
+    if (v != undefined) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            if (v) store.filters = { query: v }
+            else delete store.filters.query
+            store.index()
+        }, 300);
+    }
+})
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+
+
+</style>

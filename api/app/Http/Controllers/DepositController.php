@@ -7,13 +7,15 @@ use App\Http\Requests\UpdateDepositRequest;
 use App\Models\Appointment;
 use App\Models\Deposit;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class DepositController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        $rows = $request->input('rows', 10);
 
         $deposits = Deposit::with([
             'appointment' => fn($q) => $q->with([
@@ -23,9 +25,33 @@ class DepositController extends Controller
                     'province',
                     'leadSource',
                     'status'
-                ])->select('id', 'name')
+                ])->select('id', 'firstname', 'lastname')
             ])->select('id', 'patient')
-        ])->latest()->paginate(10);
+        ]);
+
+        $deposits = $deposits->when($request->input('query'), function ($query, $value) {
+            $query->whereHas('appointment.patient', function (Builder $query) use ($value) {
+                $query->whereAny(['firstname', 'lastname'], 'like', "%{$value}%");
+            })->orWhereAny(['payment_date', 'refund_date']);
+        })->when($request->input('firstname'), function ($query, $firstname) {
+            $query->whereHas('appointment.patient', function (Builder $query) use ($firstname) {
+                $query->where('firstname', 'like', "%{$firstname}%");
+            });
+        })->when($request->input('lastname'), function ($query, $lastname) {
+            $query->whereHas('appointment.patient', function (Builder $query) use ($lastname) {
+                $query->where('lastname', 'like', "%{$lastname}%");
+            });
+        })->when($request->input('payment_date'), function ($query, $payment_date) {
+            $query->where('payment_date', 'like', "%{$payment_date}%");
+        })->when($request->input('refund_date'), function ($query, $refund_date) {
+            $query->where('refund_date', 'like', "%{$refund_date}%");
+        })->when($request->input('amount'), function ($query, $amount) {
+            $query->where('amount', $amount);
+        })->when($request->input('status'), function ($query, $status) {
+            $query->where('status', $status);
+        });
+
+        $deposits = $deposits->latest()->paginate($rows);
 
         return response()->json($this->paginate($deposits));
     }
@@ -46,7 +72,7 @@ class DepositController extends Controller
                     'province',
                     'leadSource',
                     'status'
-                ])->select('id', 'name')
+                ])->select('id', 'firstname', 'lastname')
             ])->select('id', 'patient')
         ])->latest()->first();
 
