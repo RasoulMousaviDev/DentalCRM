@@ -9,15 +9,10 @@
             <InputText v-model="filters.lastname" fluid />
         </div>
         <div class="flex flex-col gap-2">
-            <label>{{ $t('appointment-date') }}</label>
+            <label>{{ $t('due_date') }}</label>
             <DatePicker v-model="date" class="w-full" :placeholder="$t('choose')"
                 :inputClass="{ 'ltr': filters.due_date }" panelClass="ltr" dateFormat="yy/mm/dd"
                 showButtonBar @clearClick="date = null" />
-        </div>
-        <div class="flex flex-col gap-2 grow">
-            <label>{{ $t('treatment') }}</label>
-            <Select v-model="filters.treatment" :options="treatments.items" :loading="treatments.fetching"
-                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" show-clear />
         </div>
         <div class="flex flex-col gap-2">
             <label> {{ $t('status') }}</label>
@@ -41,23 +36,18 @@
 </template>
 
 <script setup>
-import { useAppointmentsStore } from '@/stores/appointments';
-import { useTreatmentsStore } from '@/stores/treatments';
+import { useFollowupsStore } from '@/stores/followups';
 import { computed, inject, onMounted, reactive, watch } from 'vue';
 
 const { popover, t } = inject('service')
 
 const statuses = reactive([
     { value: 'pending', severity: 'warn' },
-    { value: 'visited', severity: 'success' },
+    { value: 'done', severity: 'success' },
     { value: 'missed', severity: 'danger' },
-    { value: 'canceled', severity: 'info' },
 ])
 
 const filters = reactive({})
-
-const treatments = useTreatmentsStore()
-treatments.index()
 
 const date = computed({
     get: () => {
@@ -77,18 +67,18 @@ const date = computed({
     }
 })
 
-const appointments = useAppointmentsStore()
+const followups = useFollowupsStore()
 
 const handleSubmit = async () => {
     popover.value.hide()
-    appointments.filters = filters
-    appointments.index()
+    followups.filters = filters
+    followups.index()
 }
 
 const clearFilters = () => {
     popover.value.hide()
-    appointments.filters = {}
-    appointments.index()
+    followups.filters = {}
+    followups.index()
 }
 
 const getTag = (value) => {
@@ -104,7 +94,7 @@ watch(filters, () => {
 }, { deep: true })
 
 onMounted(() => {
-    Object.assign(filters, appointments.filters)
+    Object.assign(filters, followups.filters)
     delete filters.query
 })
 </script>

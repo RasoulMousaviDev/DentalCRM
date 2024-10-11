@@ -56,7 +56,6 @@ class AppointmentController extends Controller
         });
 
 
-
         $appointments = $appointments->latest()->paginate($rows);
 
         return response()->json($this->paginate($appointments));

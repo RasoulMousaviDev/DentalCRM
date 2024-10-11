@@ -9,25 +9,24 @@
             <InputText v-model="filters.lastname" fluid />
         </div>
         <div class="flex flex-col gap-2">
-            <label>{{ $t('appointment-date') }}</label>
-            <DatePicker v-model="date" class="w-full" :placeholder="$t('choose')"
-                :inputClass="{ 'ltr': filters.due_date }" panelClass="ltr" dateFormat="yy/mm/dd"
-                showButtonBar @clearClick="date = null" />
+            <label>{{ $t('mobile') }} </label>
+            <InputText v-model="filters.mobile" type="phone" class="ltr w-full" />
         </div>
-        <div class="flex flex-col gap-2 grow">
-            <label>{{ $t('treatment') }}</label>
-            <Select v-model="filters.treatment" :options="treatments.items" :loading="treatments.fetching"
-                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" show-clear />
+        <div class="flex flex-col gap-2">
+            <label>{{ $t('date') }}</label>
+            <DatePicker v-model="date" class="w-full" :placeholder="$t('choose')"
+                :inputClass="{ 'ltr': filters.created_at }" panelClass="ltr" dateFormat="yy/mm/dd"
+                showButtonBar @clearClick="date = null" />
         </div>
         <div class="flex flex-col gap-2">
             <label> {{ $t('status') }}</label>
-            <Select v-model="filters.status" :options="statuses" optionValue="value" fluid checkmark
-                :placeholder="$t('choose')" show-clear>
+            <Select v-model="filters.status" :options="callStatuses.items" :loading="callStatuses.fetching"
+                optionValue="id" fluid checkmark :placeholder="$t('choose')">
                 <template #value="{ value }">
-                    <Tag v-if="value" class="text-xs" v-bind="getTag(value)" />
+                    <Tag v-if="value" class="text-xs" v-bind="callStatuses.items.find(({ id }) => value == id)" />
                 </template>
-                <template #option="{ option: { value, severity } }">
-                    <Tag :value="$t(value)" :severity="severity" class="text-xs" />
+                <template #option="{ option }">
+                    <Tag v-bind="option" class="text-xs" />
                 </template>
             </Select>
         </div>
@@ -41,8 +40,8 @@
 </template>
 
 <script setup>
-import { useAppointmentsStore } from '@/stores/appointments';
-import { useTreatmentsStore } from '@/stores/treatments';
+import { useCallStatuesStore } from '@/stores/call-statuses';
+import { useCallsStore } from '@/stores/calls';
 import { computed, inject, onMounted, reactive, watch } from 'vue';
 
 const { popover, t } = inject('service')
@@ -56,39 +55,39 @@ const statuses = reactive([
 
 const filters = reactive({})
 
-const treatments = useTreatmentsStore()
-treatments.index()
-
 const date = computed({
     get: () => {
-        if (filters.due_date) {
-            const d = filters.due_date.split('/');
+        if (filters.created_at) {
+            const d = filters.created_at.split('/');
             return new Date(d[0], d[1] - 1, d[2]);
         }
         return null
     },
     set: (v) => {
-        if (v) filters.due_date = [
+        if (v) filters.created_at = [
             v.getFullYear(),
             ('0' + (v.getMonth() + 1)).slice(-2),
             ('0' + v.getDate()).slice(-2)
         ].join('/')
-        else delete filters.due_date
+        else delete filters.created_at
     }
 })
 
-const appointments = useAppointmentsStore()
+const callStatuses = useCallStatuesStore()
+callStatuses.index()
+
+const calls = useCallsStore()
 
 const handleSubmit = async () => {
     popover.value.hide()
-    appointments.filters = filters
-    appointments.index()
+    calls.filters = filters
+    calls.index()
 }
 
 const clearFilters = () => {
     popover.value.hide()
-    appointments.filters = {}
-    appointments.index()
+    calls.filters = {}
+    calls.index()
 }
 
 const getTag = (value) => {
@@ -104,7 +103,7 @@ watch(filters, () => {
 }, { deep: true })
 
 onMounted(() => {
-    Object.assign(filters, appointments.filters)
+    Object.assign(filters, calls.filters)
     delete filters.query
 })
 </script>
