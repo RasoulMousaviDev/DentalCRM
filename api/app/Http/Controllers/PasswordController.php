@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -38,7 +39,14 @@ class PasswordController extends Controller
 
             $user->update(['password' => Hash::make($request->new_password)]);
 
-            return response()->json(['message' => 'ok']);
+            $user->refresh();
+
+            $token = auth()->login($user);
+
+            $ttl = auth()->factory()->getTTL() * 60;
+            $expires_at = Carbon::now()->addSeconds($ttl)->toString();
+
+            return response()->json(compact('token', 'expires_at'));
 
         }
         

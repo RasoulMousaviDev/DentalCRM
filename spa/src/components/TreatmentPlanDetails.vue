@@ -88,17 +88,17 @@ const destroy = (details) => {
 }
 
 const getPositionTooth = ({ tooth }) => {
-    const jaw = tooth < 17 ? 'top' : 'bottom'
+    const jaw = tooth < 15 ? 'top' : 'bottom'
 
     let horizontal;
 
-    if (tooth < 9 || (jaw == 'bottom' && tooth < 25)) horizontal = 'left'
-    else if (tooth > 24 || (jaw == 'top' && tooth > 8)) horizontal = 'right'
+    if (tooth < 8 || (jaw == 'bottom' && tooth < 22)) horizontal = 'left'
+    else if (tooth > 21 || (jaw == 'top' && tooth > 7)) horizontal = 'right'
 
     if (jaw == 'top')
-        tooth = horizontal == 'left' ? 9 - tooth : tooth - 8
+        tooth = horizontal == 'left' ? 8 - tooth : tooth - 7
     else if (jaw == 'bottom')
-        tooth = horizontal == 'left' ? 25 - tooth : tooth - 24
+        tooth = horizontal == 'left' ? 22 - tooth : tooth - 21
 
     return [t(`jaw.${jaw}`), t(`jaw.${horizontal}`), tooth].join(' > ')
 }

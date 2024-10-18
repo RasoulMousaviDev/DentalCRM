@@ -186,5 +186,11 @@
     "enter-number-then-press-enter": "شماره را وارد کنید و سپس Enter بزنید",
     "telephone": "تلفن",
     "name-and-family": "نام و نام خانوادگی",
-    "date": "تاریخ"
+    "date": "تاریخ",
+    "user-account": "حساب کاربری",
+    "logout": "خروج از حساب",
+    "logout-confirm-question": "آیا واقعا میخواهید از حساب کاری خود خارج شوید؟",
+    "i-go-out": "خارج می شوم",
+    "current-password": "رمزعبور فعلی",
+    "repeat-new-password": "تکرار رمزعبور جدید"
 }
