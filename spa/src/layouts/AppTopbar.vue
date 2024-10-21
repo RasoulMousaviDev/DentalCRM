@@ -3,17 +3,18 @@ import AppConfigurator from './AppConfigurator.vue';
 import IconSikai from '@/components/icon/Sakai.vue'
 import { useCookie } from '@/composables/cookie';
 import { useLayout } from '@/composables/layout';
+import { useAuthStore } from '@/stores/auth';
 import { defineAsyncComponent, inject, ref } from 'vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const { router, dialog, t, confirm } = inject('service')
 
 const ChangePasswordForm = defineAsyncComponent(() => import('@/components/ChangePasswordForm.vue'));
-
+const auth = useAuthStore()
 const menu = ref();
 const items = ref([
     {
-        label: t('user-account'),
+        label: `(${auth.username})`,
         items: [
             {
                 label: t('change-password'),

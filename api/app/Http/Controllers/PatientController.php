@@ -64,6 +64,7 @@ class PatientController extends Controller
             'firstname',
             'lastname',
             'birthday',
+            'telephone',
             'gender',
             'province',
             'city',
