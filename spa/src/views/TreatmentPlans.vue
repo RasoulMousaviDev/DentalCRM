@@ -11,6 +11,8 @@
                         <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
                     </IconField>
                     <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
+                    <Button icon="pi pi-plus" :label="$t('new-treatment-plan')" severity="success" as="router-link"
+                        :to="{ name: 'CreateTreatmentPlan' }" />
                 </div>
             </template>
             <template #empty>

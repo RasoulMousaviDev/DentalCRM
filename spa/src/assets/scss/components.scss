@@ -43,3 +43,15 @@ body:has(.p-popover){
 
 .p-menu{
 }
+
+
+button:has(.p-badge){
+    @apply overflow-visible;
+}
+.p-badge{
+    @apply absolute -top-2 -right-2 !bg-red-600 !text-white;
+}
+
+.p-select:has(.p-select-clear-icon) .p-select-label {
+    @apply pr-4 #{!important};
+}

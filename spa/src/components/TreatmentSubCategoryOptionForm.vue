@@ -25,28 +25,28 @@
 </template>
 
 <script setup>
-import { useTreatmentsStore } from '@/stores/treatments';
+import { useTreatmentSubCategoryOptionsStore } from '@/stores/treatment-sub-category-options';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
 const { toast } = inject('service')
 
 const dialogRef = inject('dialogRef')
-const { treatment } = dialogRef.value.data || {}
+const { option } = dialogRef.value.data || {}
 
 const form = reactive({ title: '', cost: null, status: true })
 const errors = ref({})
 const loading = ref(false)
 
-const treatments = useTreatmentsStore()
+const options = useTreatmentSubCategoryOptionsStore()
 
 const handleSubmit = async () => {
     loading.value = true
 
     let result;
-    if (treatment)
-        result = await treatments.update(treatment.id, form)
+    if (option)
+        result = await options.update(option.id, form)
     else
-        result = await treatments.store(form)
+        result = await options.store(form)
 
     const { status, statusText, data } = result
 
@@ -69,8 +69,8 @@ watch(computed(() => Object.assign({}, form)), (value, old) => {
 })
 
 onMounted(() => {
-    if (treatment)
-        Object.keys(form).forEach((key) => form[key] = treatment[key])
+    if (option)
+        Object.keys(form).forEach((key) => form[key] = option[key])
 })
 </script>
 

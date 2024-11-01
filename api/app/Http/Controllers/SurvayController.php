@@ -58,6 +58,8 @@ class SurvayController extends Controller
      */
     public function destroy(Survay $survay)
     {
+        $survay->questions()->delete();
+
         $survay->delete();
 
         return response()->json(['message' => __('messages.deleted-successfully')]);

@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Casts\JDate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Treatment extends Model
+class TreatmentSubCategory extends Model
 {
     use HasFactory;
 
-    public $fillable = ['title', 'cost', 'status'];
+    public $fillable = ['title', 'status'];
 
     protected $casts = [
         'status' => 'boolean',
@@ -19,10 +20,13 @@ class Treatment extends Model
         'updated_at' => JDate::class,
     ];
 
-
-    public function subCategories(): HasMany
+    public function treatment(): BelongsTo
     {
-        return $this->hasMany(TreatmentSubCategory::class);
+        return $this->belongsTo(Treatment::class);
     }
 
+    public function options(): HasMany
+    {
+        return $this->hasMany(TreatmentSubCategoryOption::class);
+    }
 }

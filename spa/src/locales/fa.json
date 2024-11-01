@@ -152,6 +152,7 @@
     "payment-type": "نوع پرداخت",
     "createNewTreatmentPlan": "ایجاد طرح درمان جدید",
     "createNewTreatment": "ایجاد درمان جدید",
+    "createNewSubCategory": "ایجاد زیر دسته جدید",
     "months": "ماهه",
     "cash": "نقد",
     "installments": "اقساط",
@@ -192,5 +193,13 @@
     "logout-confirm-question": "آیا واقعا میخواهید از حساب کاری خود خارج شوید؟",
     "i-go-out": "خارج می شوم",
     "current-password": "رمزعبور فعلی",
-    "repeat-new-password": "تکرار رمزعبور جدید"
+    "repeat-new-password": "تکرار رمزعبور جدید",
+    "select-treatment": "ابتدا یک درمان انتخاب کنید",
+    "sub-categires-of": "زیر دسته های {title}",
+    "new-sub-category": "زیر دسته جدید",
+    "new-option": "گزینه جدید",
+    "sub-category-empty": "هیچ زیر دسته ای برای این خدمت یافت نشد",
+    "editSubCategory": "ویرایش زیر دسته",
+    "createNewOption": "ایجاد گزینه جدید",
+    "editOption": "ویرایش گزینه"
 }

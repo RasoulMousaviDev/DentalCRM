@@ -28,9 +28,7 @@ export const useTreatmentsStore = defineStore("treatments", {
             const res = await this.axios.patch(`/treatments/${id}`, form);
 
             if (res.statusText === "OK") {
-                const index = this.items.findIndex(
-                    (item) => item.id === id
-                );
+                const index = this.items.findIndex((item) => item.id === id);
                 this.items[index] = res.data;
             }
 
@@ -40,13 +38,20 @@ export const useTreatmentsStore = defineStore("treatments", {
             const res = await this.axios.delete(`/treatments/${id}`);
 
             if (res.statusText === "OK") {
-                const index = this.items.findIndex(
-                    (item) => item.id === id
-                );
+                const index = this.items.findIndex((item) => item.id === id);
                 this.items.splice(index, 1);
             }
 
             return res;
+        },
+        async reorder(rows) {
+            const { statusText, data } = await this.axios.post(`/treatments`, {
+                rows,
+            });
+
+            if (statusText === "OK") {
+                this.items = data.items;
+            }
         },
     },
 });

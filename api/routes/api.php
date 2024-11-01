@@ -22,7 +22,11 @@ use App\Http\Controllers\SurvayQuestionController;
 use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\TreatmentPlanController;
 use App\Http\Controllers\TreatmentPlanDetailsController;
+use App\Http\Controllers\TreatmentSubCategoryController;
+use App\Http\Controllers\TreatmentSubCategoryOptionController;
 use App\Http\Controllers\UserController;
+use App\Models\TreatmentSubCategory;
+use App\Models\TreatmentSubCategoryOption;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
@@ -71,7 +75,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::get('followups', [FollowupController::class, 'index']);
-    
+
     Route::controller(TreatmentController::class)->prefix('treatments')->group(function () {
         Route::get('', 'index');
     });
@@ -146,7 +150,28 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(TreatmentController::class)->prefix('treatments')->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
+        Route::post('/reorder', 'reorder');
         Route::patch('/{treatment}', 'update');
         Route::delete('/{treatment}', 'destroy');
+
+        Route::controller(TreatmentSubCategoryController::class)->prefix('{treatment}/sub-categories')->group(function () {
+            Route::get('', 'index');
+            Route::post('', 'store');
+
+            Route::middleware('forget.parameters:treatment')->group(function () {
+                Route::patch('/{subCategory}', 'update');
+                Route::delete('/{subCategory}', 'destroy');
+
+                Route::controller(TreatmentSubCategoryOptionController::class)->prefix('{subCategory}/options')->group(function () {
+                    Route::get('', 'index');
+                    Route::post('', 'store');
+    
+                    Route::middleware('forget.parameters:subCategory')->group(function () {
+                        Route::patch('/{option}', 'update');
+                        Route::delete('/{option}', 'destroy');
+                    });
+                });
+            });
+        });
     });
 });

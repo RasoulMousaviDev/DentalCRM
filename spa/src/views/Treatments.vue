@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
+        <DataTable :value="store.items" @rowReorder="reorder" tableStyle="min-width: 50rem">
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
@@ -14,12 +14,13 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
+            <Column rowReorder headerStyle="width: 3rem" />
             <Column :header="$t('row')" class="w-20">
                 <template #body="{ index }">
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column field="title" :header="$t('title')"/>
+            <Column field="title" :header="$t('title')" />
             <Column :field="({ cost }) => [new Intl.NumberFormat().format(cost), $t('toman')].join(' ')"
                 :header="$t('cost')" class="w-44" />
             <Column field="status" :header="$t('status')" class="w-24">
@@ -30,9 +31,11 @@
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
-            <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20">
+            <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-20">
                 <template #body="{ data }">
-                    <div class="flex gap-2 justify-end">
+                    <div class="flex justify-end">
+                        <Button icon="pi pi-sitemap !text-xl" rounded text severity="secondary"
+                            @click="subCategories(data)" />
                         <Button icon="pi pi-pencil" rounded text severity="secondary" @click="edit(data)" />
                         <Button icon="pi pi-trash" rounded text severity="danger" :loading="data.loading"
                             @click="destroy(data)" />
@@ -44,8 +47,6 @@
 </template>
 
 <script setup>
-import { useCallStatuesStore } from '@/stores/call-statuses';
-import { usePatientStatuesStore } from '@/stores/patient-statuses';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { defineAsyncComponent, inject } from 'vue';
 
@@ -57,6 +58,8 @@ if (store.items.length === 0)
     store.index()
 
 const TreatmentForm = defineAsyncComponent(() => import('@/components/TreatmentForm.vue'));
+
+const TreatmentSubCategories = defineAsyncComponent(() => import('@/components/TreatmentSubCategories.vue'));
 
 const create = async () => {
     dialog.open(TreatmentForm, {
@@ -98,12 +101,19 @@ const destroy = (template) => {
             template.loading = false
 
             if (statusText == 'OK')
-                toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+                toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else
-                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
 
         }
     });
+}
+
+const subCategories = (treatment) => {
+    dialog.open(TreatmentSubCategories, {
+        props: { header: t('sub-categires-of', treatment), modal: true },
+        data: { treatment }
+    })
 }
 </script>
 

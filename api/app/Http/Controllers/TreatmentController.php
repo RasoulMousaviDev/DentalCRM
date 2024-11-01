@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReorderTreatmentRequest;
 use App\Http\Requests\StoreTreatmentRequest;
 use App\Http\Requests\UpdateTreatmentRequest;
 use App\Models\Treatment;
@@ -28,6 +29,16 @@ class TreatmentController extends Controller
         return response()->json($treatment);
     }
 
+
+    public function reorder(ReorderTreatmentRequest $request, Treatment $treatment)
+    {
+        $rows = $request->get('rows');
+
+        foreach ($rows as $row)
+            Treatment::find($row['id'])->update(['order' => $row['order']]);
+
+        return $this->index($request, $treatment);
+    }
 
     public function update(UpdateTreatmentRequest $request, Treatment $treatment)
     {

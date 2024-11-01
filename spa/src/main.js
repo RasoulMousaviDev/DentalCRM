@@ -42,7 +42,7 @@ import InputNumber from 'primevue/inputnumber';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import Paginator from 'primevue/paginator';
-
+import Listbox from 'primevue/listbox';
 
 import StyleClass from "primevue/styleclass";
 import Ripple from "primevue/ripple";
@@ -110,6 +110,7 @@ app.component("InputNumber", InputNumber);
 app.component("InputGroup", InputGroup);
 app.component("InputGroupAddon", InputGroupAddon);
 app.component("Paginator", Paginator);
+app.component("Listbox", Listbox);
 
 app.directive("styleclass", StyleClass);
 app.directive("ripple", Ripple);
