@@ -201,5 +201,22 @@
     "sub-category-empty": "هیچ زیر دسته ای برای این خدمت یافت نشد",
     "editSubCategory": "ویرایش زیر دسته",
     "createNewOption": "ایجاد گزینه جدید",
-    "editOption": "ویرایش گزینه"
+    "editOption": "ویرایش گزینه",
+    "requested-services": "خدمات درخواستی",
+    "dedicated-services": "خدمات اختصاصی",
+    "installment-terms": "شرایط اقساط",
+    "installments-n-months": "اقساط {n} ماهه",
+    "installments-every-month": "اقساط هر ماه",
+    "advance-payment": "پیش پرداخت",
+    "percent": "درصد",
+    "final-amount": "مبلغ نهایی",
+    "choice": "انتخاب",
+    "calculate": "محاسبه",
+    "calculation-head-check": "محاسبه راس چک",
+    "treatment-start-date": "تاریخ شروع درمان",
+    "payment-method": "شیوه پرداخت",
+    "nuber-of-checks": "تعداد چک",
+    "amount-of-each-check": "مبلغ هر چک",
+    "remaining": "باقی مانده",
+    "date-of-each-check": "تاریخ هر چک (راس)"
 }
