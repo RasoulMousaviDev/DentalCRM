@@ -206,7 +206,7 @@
     "dedicated-services": "خدمات اختصاصی",
     "installment-terms": "شرایط اقساط",
     "installments-n-months": "اقساط {n} ماهه",
-    "installments-every-month": "اقساط هر ماه",
+    "installment-every-month": "قسط هر ماه",
     "advance-payment": "پیش پرداخت",
     "percent": "درصد",
     "final-amount": "مبلغ نهایی",
@@ -218,5 +218,13 @@
     "nuber-of-checks": "تعداد چک",
     "amount-of-each-check": "مبلغ هر چک",
     "remaining": "باقی مانده",
-    "date-of-each-check": "تاریخ هر چک (راس)"
+    "date-of-each-check": "تاریخ هر چک (راس)",
+    "discount": "تخفیف",
+    "amount-payable": "مبلغ قابل پرداخت",
+    "save-information": "ذخیره اطلاعات",
+    "restart": "شروع مجدد",
+    "top": "بالا",
+    "bottom": "پایین",
+    "left": "چپ",
+    "right": "راست"
 }
