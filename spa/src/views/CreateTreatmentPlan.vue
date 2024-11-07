@@ -23,10 +23,9 @@
             </Tabs>
 
             <template v-if="form.treatments[`${currentTab}`]?.tooths.length > 0">
-                <div v-if="subCategories.items.length > 0"
-                    class="card">
+                <div v-if="subCategories.items.length > 0" class="card">
                     <p class="text-lg font-bold flex gap-4">
-                        <span>{{ $t('dedicated-services') }} </span>
+                        <span>{{ $t('required-services') }} </span>
                         <hr class="grow">
                     </p>
                     <ul class="flex flex-wrap gap-6">
@@ -51,18 +50,15 @@
                 <div v-if="form.payment_method == 'installments'" class="card">
                     <DataTable :value="rows"
                         class="last:[&_tr]:!bg-[var(--surface-ground)] [&_th]:!bg-[var(--surface-ground)] ">
-                        <template #header>
-                            <span class="text-lg font-bold ml-auto">
-                                {{ $t('installment-terms') }}
-                            </span>
-                        </template>
-                        <Column field="title" />
+                      
+                        <Column field="title" :header="$t('installment-terms') " :footer="$t('choice')" footer-class="!text-right"/>
                         <Column v-for="(item, i) in installments" :key="i" :field="item"
                             :header="`${item} ${$t('months')} `" class="!text-center [&_*]:justify-center">
                             <template #footer>
                                 <div class="flex justify-center ">
-                                    <Button :label="$t('choice')" :severity="form.months != item ? 'secondary' : null"
-                                        @click="form.months = item" />
+                                    <Button icon="pi pi-check" rounded
+                                        :severity="form.months != item ? 'secondary' : null"
+                                        @click="showChecks(item)" />
                                 </div>
                             </template>
                         </Column>
@@ -74,30 +70,29 @@
                         <span class="text-lg font-bold ml-auto">
                             {{ $t('calculation-head-check') }}
                         </span>
-                        <DatePicker v-model="date" class="w-[19rem]" :placeholder="$t('treatment-start-date')"
-                            :inputClass="{ 'ltr': date }" panelClass="ltr" dateFormat="yy/mm/dd" showButtonBar
-                            @clearClick="date = null" />
-                        <Button :label="$t('calculate')" />
+                        <InputGroup class="ltr !w-[27.5rem]">
+                            <DatePicker v-model="form.start_date" inputClass="ltr" panelClass="ltr"
+                                dateFormat="yy/mm/dd" :min-date="new Date()" />
+                            <InputGroupAddon>{{ $t('treatment-start-date') }}</InputGroupAddon>
+                        </InputGroup>
                     </div>
-                    <DataTable :value="rows2" class="[&_th]:!bg-[var(--surface-ground)]">
+                    <DataTable :value="checks" class="[&_th]:!bg-[var(--surface-ground)]">
                         <Column :header="$t('nuber-of-checks')" field="count" />
-                        <Column :header="$t('amount-of-each-check')"
-                            :field="({ amount }) => [new Intl.NumberFormat().format(amount), $t('toman')].join(' ')" />
-                        <Column :header="$t('date-of-each-check')">
+                        <Column :header="$t('amount-of-each-check')" field="amount" />
+                        <Column :header="$t('date-of-each-check')" header-class="*:justify-center" class="w-2/3">
                             <template #body="{ data: { dates =[] } }">
-                                <ul class="flex flex-wrap gap-2">
+                                <ul class="flex flex-wrap justify-center gap-2">
                                     <li v-for="(date, i) in dates" :key="i">
                                         <Tag severity="secondary" :value="date" />
                                     </li>
                                 </ul>
                             </template>
                         </Column>
-                        <Column :header="$t('remaining')"
-                            :field="({ remaining }) => [new Intl.NumberFormat().format(remaining), $t('toman')].join(' ')" />
-                        <Column :header="$t('actions')" class="w-16 !text-center">
-                            <template #body="{ index }">
-                                <Button icon="pi pi-check" rounded :severity="check != index ? 'secondary' : null"
-                                    @click="check = index" />
+                        <Column :header="$t('remaining')" field="remaining" />
+                        <Column :header="$t('choice')" class="w-16 !text-center">
+                            <template #body="{ data: { count } }">
+                                <Button icon="pi pi-check" rounded :severity="form.checks_count != count ? 'secondary' : null"
+                                    @click="form.checks_count = count" />
                             </template>
                         </Column>
                     </DataTable>
@@ -273,17 +268,6 @@ const rows = computed(() => {
     return list
 })
 
-const getAmount = () => '1'
-
-const type = ref()
-const check = ref()
-const date = ref()
-
-const rows2 = reactive([
-    { count: 2, amount: 10000000, dates: ['1403/02/02', '1403/03/02'], remaining: 4000 }
-])
-
-
 
 watch(currentTab, async (v) => {
     subCategories.treatment = v;
@@ -296,8 +280,15 @@ watch(() => form.treatments?.[currentTab.value]?.tooths.length, (v) => {
     if (v < 1) form.treatments[currentTab.value].services = {}
 })
 
-watch(form.payment_method, (v) => {
-    if (v == 'cash') delete form.months
+watch(() => form.payment_method, (v) => {
+    if (v == 'cash') {
+        delete form.months
+        delete form.checks_count
+        delete form.start_date
+    } else form.start_date = new Date()
+
+    console.log(v);
+
 })
 
 
@@ -328,6 +319,49 @@ const getToothsPostion = (tooths) => {
 
     return postions;
 }
+
+const checks = ref([])
+
+const getDivisors = (number) => {
+    let divisors = [];
+    for (let i = 1; i <= number; i++) {
+        if (number % i === 0) {
+            divisors.push(i);
+        }
+    }
+    return divisors;
+}
+
+const calculateDueDates = (months, count) => {
+    let dates = [];
+    const d = new Date(form.start_date);
+    for (let i = 0; i < count; i++) {
+        d.setMonth(d.getMonth() + (months / count));
+        dates.push(d.toLocaleDateString('fa-IR', { year: 'numeric', month: '2-digit', day: '2-digit' }));
+    }
+
+    return dates;
+}
+
+const showChecks = (months) => {
+    const divisors = getDivisors(months).slice(-3)
+    checks.value = []
+    const percent = percents[installments.indexOf(months)]
+    divisors.forEach(divisor => {
+        const row = {}
+        row.count = divisor
+        const diff = final_amount.value * (100 - percent) / 100
+        const amount = Math.floor((diff / divisor) / 1000) * 1000
+        row.amount = [new Intl.NumberFormat().format(amount), t('toman')].join(' ')
+        const remaining = diff - (amount * divisor)
+        row.remaining = [new Intl.NumberFormat().format(remaining), t('toman')].join(' ')
+        row.dates = calculateDueDates(months, divisor);
+        checks.value.push(row)
+    });
+
+    form.months = months
+}
+
 
 </script>
 

@@ -55,3 +55,7 @@ button:has(.p-badge){
 .p-select:has(.p-select-clear-icon) .p-select-label {
     @apply pr-4 #{!important};
 }
+
+.p-inputgroupaddon{
+    @apply text-gray-800 dark:text-gray-100 #{!important};
+}

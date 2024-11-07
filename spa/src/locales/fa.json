@@ -203,7 +203,7 @@
     "createNewOption": "ایجاد گزینه جدید",
     "editOption": "ویرایش گزینه",
     "requested-services": "خدمات درخواستی",
-    "dedicated-services": "خدمات اختصاصی",
+    "required-services": "خدمات مورد نیاز",
     "installment-terms": "شرایط اقساط",
     "installments-n-months": "اقساط {n} ماهه",
     "installment-every-month": "قسط هر ماه",
