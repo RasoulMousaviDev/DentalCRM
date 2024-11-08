@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const usePatientsStore = defineStore("patients", {
     state: () => ({
         items: [],
-        fetching: true,
+        fetching: false,
         pagiantor: { totalRecords: 0 },
         filters: {},
     }),

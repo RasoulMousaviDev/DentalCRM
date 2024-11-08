@@ -4,7 +4,9 @@ import IconSikai from '@/components/icon/Sakai.vue'
 import { useCookie } from '@/composables/cookie';
 import { useLayout } from '@/composables/layout';
 import { useAuthStore } from '@/stores/auth';
-import { defineAsyncComponent, inject, ref } from 'vue';
+import { usePatientsStore } from '@/stores/patients';
+import AutoComplete from 'primevue/autocomplete';
+import { defineAsyncComponent, inject, ref, watch } from 'vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const { router, dialog, t, confirm } = inject('service')
@@ -62,6 +64,25 @@ const toggle = (event) => {
     menu.value.toggle(event);
 };
 
+
+const store = usePatientsStore()
+
+let timer;
+watch(() => store.filters.query, (v) => {
+    clearTimeout(timer)
+    if (v != undefined) {
+        timer = setTimeout(async () => {
+            if (v) store.filters = { query: v }
+            else delete store.filters.query
+            await store.index()
+        }, 300);
+    }
+})
+
+const optionSelect = ({ value: { id } }) => {
+    delete store.filters.query
+    router.push({ name: 'PatientDetails', params: { id } })
+}
 </script>
 
 <template>
@@ -71,11 +92,17 @@ const toggle = (event) => {
                 <i class="pi pi-bars"></i>
             </button>
             <router-link to="/" class="layout-topbar-logo">
-                <IconSikai class="" />
+                <!-- <IconSikai class="" /> -->
                 <span class="text-primary">{{ $t('dental-clinic-crm') }}</span>
             </router-link>
         </div>
-
+        <IconField>
+            <AutoComplete v-model="store.filters.query" :suggestions="store.items"
+                :optionLabel="({ firstname, lastname }) => [firstname, lastname].join(' ')" optionValue="id"
+                :placeholder="$t('search-patient')" :class="{ 'ltr text-left': store.filters.query }"
+                @optionSelect="optionSelect" />
+            <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
+        </IconField>
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
                 <div class="relative">
