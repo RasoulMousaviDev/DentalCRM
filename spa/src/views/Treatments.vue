@@ -115,6 +115,14 @@ const subCategories = (treatment) => {
         data: { treatment }
     })
 }
+
+const reorder = async ({ value }) => {
+    const orders = value.map(({ id }, i) => ({ id, order: i + 1 }))
+
+    await store.reorder(orders)
+
+    toast.add({ summary: t('success'), detail: t('update-successfully'), severity: 'success', life: 3000 })
+}
 </script>
 
 <style lang="scss"></style>

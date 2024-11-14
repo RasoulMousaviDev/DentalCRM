@@ -227,5 +227,10 @@
     "bottom": "پایین",
     "left": "چپ",
     "right": "راست",
-    "search-patient": "جستجوی بیمار"
+    "search-patient": "جستجوی بیمار",
+    "valid": "معتبر",
+    "invalid": "نامعتبر",
+    "in-person": "حضوری",
+    "online": "مجازی",
+    "visit-type": "نوع ویزیت"
 }

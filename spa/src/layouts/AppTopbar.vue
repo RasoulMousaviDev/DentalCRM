@@ -64,20 +64,14 @@ const toggle = (event) => {
     menu.value.toggle(event);
 };
 
+const query = ref()
 
 const store = usePatientsStore()
 
-let timer;
-watch(() => store.filters.query, (v) => {
-    clearTimeout(timer)
-    if (v != undefined) {
-        timer = setTimeout(async () => {
-            if (v) store.filters = { query: v }
-            else delete store.filters.query
-            await store.index()
-        }, 300);
-    }
-})
+const search = ({ query }) => {
+    store.filters = { query }
+    store.index()
+}
 
 const optionSelect = ({ value: { id } }) => {
     delete store.filters.query
@@ -97,11 +91,11 @@ const optionSelect = ({ value: { id } }) => {
             </router-link>
         </div>
         <IconField>
-            <AutoComplete v-model="store.filters.query" :suggestions="store.items"
+            <AutoComplete v-model="query" :suggestions="store.items" forceSelection
                 :optionLabel="({ firstname, lastname }) => [firstname, lastname].join(' ')" optionValue="id"
-                :placeholder="$t('search-patient')" :class="{ 'ltr text-left': store.filters.query }"
-                @optionSelect="optionSelect" />
-            <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
+                :placeholder="$t('search-patient')" class="[&_input]:has-[svg]:pl-8" :class="{ 'ltr text-left': query }"
+                @complete="search" @optionSelect="optionSelect" />
+            <InputIcon class="pi pi-search" />
         </IconField>
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">

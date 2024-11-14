@@ -44,10 +44,11 @@ export const useTreatmentsStore = defineStore("treatments", {
 
             return res;
         },
-        async reorder(rows) {
-            const { statusText, data } = await this.axios.post(`/treatments`, {
-                rows,
-            });
+        async reorder(orders) {
+            const { statusText, data } = await this.axios.post(
+                `/treatments/reorder`,
+                { orders }
+            );
 
             if (statusText === "OK") {
                 this.items = data.items;

@@ -116,9 +116,9 @@ const destroy = (question) => {
 }
 
 const reorder = async ({ value }) => {
-    const rows = value.map(({ id }, i) => ({ id, order: i + 1 }))
+    const orders = value.map(({ id }, i) => ({ id, order: i + 1 }))
 
-    await store.reorder(rows)
+    await store.reorder(orders)
 
     toast.add({  summary: t('success'), detail: t('update-successfully'), severity: 'success', life: 3000 })
 }

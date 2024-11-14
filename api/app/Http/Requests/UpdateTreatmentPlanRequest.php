@@ -14,7 +14,7 @@ class UpdateTreatmentPlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|in:sent,done'
+            'status' => 'required|in:valid,invalid,done'
         ];
     }
 }

@@ -11,7 +11,7 @@ class Treatment extends Model
 {
     use HasFactory;
 
-    public $fillable = ['title', 'cost', 'status'];
+    public $fillable = ['title', 'cost', 'order', 'status'];
 
     protected $casts = [
         'status' => 'boolean',
@@ -24,5 +24,4 @@ class Treatment extends Model
     {
         return $this->hasMany(TreatmentSubCategory::class);
     }
-
 }

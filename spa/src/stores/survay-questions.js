@@ -60,10 +60,10 @@ export const useSurvayQuetionsStore = defineStore("survay-quetions", {
 
             return res;
         },
-        async reorder(rows) {
+        async reorder(orders) {
             const { statusText, data } = await this.axios.post(
                 `/survays/${this.id}/questions/reorder`,
-                { rows }
+                { orders }
             );
 
             if (statusText === "OK") {

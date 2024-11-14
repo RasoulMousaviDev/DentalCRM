@@ -14,9 +14,9 @@ class ReorderTreatmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rows' => 'required|array|min:2',
-            'rows.*.id' => 'required|exists:treatments',
-            'rows.*.order' => 'required|integer'
+            'orders' => 'required|array|min:2',
+            'orders.*.id' => 'required|exists:treatments',
+            'orders.*.order' => 'required|integer'
         ];
     }
 }

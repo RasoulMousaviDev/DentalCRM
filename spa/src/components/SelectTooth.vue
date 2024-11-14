@@ -1,6 +1,6 @@
 <template>
-    <svg v-if="model" class="select-none jaws" xmlns="http://www.w3.org/2000/svg" data-name="Layer 2" viewBox="0 0 3741.73 2125.98"
-        @click="select">
+    <svg v-if="model" class="select-none jaws" xmlns="http://www.w3.org/2000/svg" data-name="Layer 2"
+        viewBox="0 0 3741.73 2125.98" :disabled="disabled" @click="select">
         <path class="cls-9"
             d="M495.45,578.65s108.17-181.07,730.7-323.92c0,0,366.45-94.56,421.64-54.32,0,0,125.83,76.45,150.11,80.48,0,0,121.42,46.27,245.04-18.11,0,0,128.04-88.35,198.68-72.34,0,0,580.58,74.35,951.45,289.63,0,0,86.09,52.31,112.58,98.58,26.49,46.27,33.11,148.88,24.28,255.52,0,0-33.11,704.18-768.23,1001.94,0,0-699.79,283.68-1456.98-62.37C400.53,1387.45,457.92,645.04,495.45,578.65Z" />
         <path class="cls-15"
@@ -249,21 +249,23 @@
 </template>
 
 <script setup>
+const props = defineProps({ disabled: { type: Boolean, default: false } })
+
 const model = defineModel()
 
 if (model.value == undefined)
     model.value = []
 
 const select = (e) => {
-    const number = e.target.getAttribute('number');
-    if (number) {
-        if (model.value.includes(number))
-            model.value.splice(model.value.findIndex(n => n == number), 1)
-        else
-            model.value.push(number)
+    if (!props.disabled) {
+        const number = e.target.getAttribute('number');
+        if (number) {
+            if (model.value.includes(number))
+                model.value.splice(model.value.findIndex(n => n == number), 1)
+            else
+                model.value.push(number)
+        }
     }
-
-    console.log(model)
 }
 
 </script>
@@ -272,7 +274,15 @@ const select = (e) => {
 .jaws {
 
     path[active=true] {
-        fill: #ffffff;
+        fill: #ffffffbb;
+    }
+
+    [disabled=false] .cls-8 {
+        cursor: pointer;
+
+        &:hover {
+            fill: #f5f5f5;
+        }
     }
 }
 
@@ -319,11 +329,6 @@ tspan {
     fill: #f0f0f0;
     stroke: #d1d3d4;
     transition: all 0.3;
-    cursor: pointer;
-
-    &:hover {
-        fill: #f5f5f5;
-    }
 }
 
 

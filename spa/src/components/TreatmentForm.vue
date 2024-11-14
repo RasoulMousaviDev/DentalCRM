@@ -30,14 +30,15 @@ import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
 const { toast } = inject('service')
 
+const treatments = useTreatmentsStore()
+
 const dialogRef = inject('dialogRef')
 const { treatment } = dialogRef.value.data || {}
 
-const form = reactive({ title: '', cost: null, status: true })
+const form = reactive({ title: '', cost: null, order: treatments.items.length + 1, status: true })
 const errors = ref({})
 const loading = ref(false)
 
-const treatments = useTreatmentsStore()
 
 const handleSubmit = async () => {
     loading.value = true
@@ -57,7 +58,7 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else
-        toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 
 }
 

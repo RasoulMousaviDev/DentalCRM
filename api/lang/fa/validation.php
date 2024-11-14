@@ -136,7 +136,7 @@ return [
     'prohibited_unless' => ':attribute ممنوع است مگر اینکه :other در :values باشد.',
     'prohibits' => ':attribute مانع از وجود :other می‌شود.',
     'regex' => 'فرمت :attribute نامعتبر است.',
-    'required' => ':attribute الزامی است.',
+    'required' => 'الزامی است.',
     'required_array_keys' => ':attribute باید شامل ورودی‌هایی برای :values باشد.',
     'required_if' => ':attribute زمانی که :other برابر با :value است الزامی است.',
     'required_if_accepted' => ':attribute زمانی که :other پذیرفته شده الزامی است.',

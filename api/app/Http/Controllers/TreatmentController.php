@@ -13,7 +13,7 @@ class TreatmentController extends Controller
 {
     public function index()
     {
-        $treatments = Treatment::all();
+        $treatments = Treatment::orderBy('order')->get();
 
         return response()->json(['items' => $treatments]);
     }
@@ -32,7 +32,7 @@ class TreatmentController extends Controller
 
     public function reorder(ReorderTreatmentRequest $request, Treatment $treatment)
     {
-        $rows = $request->get('rows');
+        $rows = $request->get('orders');
 
         foreach ($rows as $row)
             Treatment::find($row['id'])->update(['order' => $row['order']]);
@@ -42,7 +42,7 @@ class TreatmentController extends Controller
 
     public function update(UpdateTreatmentRequest $request, Treatment $treatment)
     {
-        $form = $request->only($treatment->fillable);
+        $form = $request->only('status');
 
         $treatment->update($form);
 

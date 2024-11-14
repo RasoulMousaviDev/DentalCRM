@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Treatment;
+use App\Models\TreatmentSubCategory;
+use App\Models\TreatmentSubCategoryOption;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTreatmentPlanRequest extends FormRequest
 {
@@ -15,10 +19,17 @@ class StoreTreatmentPlanRequest extends FormRequest
     {
         return [
             'patient' => 'required|exists:patients,id',
-            'payment_type' => 'required|in:cash,installments',
-            'months' => 'required_if:payment_type,installments|integer|in:3,6,9,12',
-            'deposit' => 'required_if:payment_type,installments|numeric|between:100000,100000000',
-            'desc' => 'required|string',
+            'payment_method' => 'required|in:cash,installments',
+            'visit_type' => 'required|in:in-person,online',
+            'months_count' => 'required_if:payment_method,installments|integer|in:3,6,9,12',
+            'checks_count' => 'required_if:payment_method,installments|integer|in:3,6,9,12',
+            'deposit_amount' => 'required_if:payment_method,installments|numeric|between:100000,100000000',
+            'start_date' => 'required_if:payment_method,installments|date',
+            'total_amount' => 'required|numeric',
+            'discount_amount' => 'nullable|numeric',
+            'treatments_details' => 'required|array|min:1',
+            'treatments_details.*.tooths' => 'required|array|min:1',
+            'desc' => 'nullable|string',
         ];
     }
 }

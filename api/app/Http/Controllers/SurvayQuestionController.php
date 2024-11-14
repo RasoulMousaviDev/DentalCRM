@@ -52,7 +52,7 @@ class SurvayQuestionController extends Controller
 
     public function reorder(ReorderSurvayQuestionRequest $request, Survay $survay)
     {
-        $rows = $request->get('rows');
+        $rows = $request->get('orders');
 
         foreach ($rows as $row)
             SurvayQuestion::find($row['id'])->update(['order' => $row['order']]);

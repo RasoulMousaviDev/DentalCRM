@@ -15,9 +15,9 @@ class ReorderSurvayQuestionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rows' => 'required|array|min:2',
-            'rows.*.id' => 'required|exists:survay_questions',
-            'rows.*.order' => 'required|integer'
+            'orders' => 'required|array|min:2',
+            'orders.*.id' => 'required|exists:survay_questions',
+            'orders.*.order' => 'required|integer'
         ];
     }
 }

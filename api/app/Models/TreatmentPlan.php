@@ -12,25 +12,29 @@ class TreatmentPlan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['payment_type', 'months', 'desc','status','sent_at'];
+    protected $fillable = [
+        'payment_method',
+        'months_count',
+        'checks_count',
+        'deposit_amount',
+        'total_amount',
+        'discount_amount',
+        'start_date',
+        'treatments_details',
+        'desc',
+        'status',
+    ];
 
     protected $casts = [
         'created_at' => JDate::class,
         'updated_at' => JDate::class,
-        'sent_at' => 'timestamp',
+        'start_date' => 'timestamp',
+        'treatments_details' => 'object'
     ];
-
-    protected $appends = ['total_cost', 'treatments_count', 'tooths_count'];
 
     public function patient(): BelongsTo
     {
         return $this->belongsTo(Patient::class, 'patient');
-    }
-
-
-    public function details(): HasMany
-    {
-        return $this->hasMany(TreatmentPlanDetails::class, 'plan_id');
     }
 
 

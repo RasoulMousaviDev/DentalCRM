@@ -59,3 +59,7 @@ button:has(.p-badge){
 .p-inputgroupaddon{
     @apply text-gray-800 dark:text-gray-100 #{!important};
 }
+
+.p-autocomplete-loader{
+    @apply left-2 !right-auto;
+}

@@ -14,11 +14,17 @@ return new class extends Migration
         Schema::create('treatment_plans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient')->constrained('patients');
-            $table->enum('payment_type', ['cash', 'installments']);
-            $table->integer('months')->default(0);
-            $table->integer('deposit')->default(0);
-            $table->string('desc');
-            $table->enum('status', ['editing','sent', 'done'])->default('editing');
+            $table->enum('payment_method', ['cash', 'installments']);
+            $table->enum('visit_type', ['in-person', 'online']);
+            $table->integer('months_count')->default(0);
+            $table->integer('checks_count')->default(0);
+            $table->integer('deposit_amount')->default(0);
+            $table->integer('total_amount')->default(0);
+            $table->integer('discount_amount')->default(0);
+            $table->timestamp('start_date')->nullable();
+            $table->json('treatments_details');
+            $table->string('desc')->nullable();
+            $table->enum('status', ['invalid', 'valid', 'done'])->default('valid');
             $table->timestamps();
         });
     }

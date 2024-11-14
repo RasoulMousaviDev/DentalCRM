@@ -43,7 +43,18 @@ class TreatmentPlanController extends Controller
      */
     public function store(StoreTreatmentPlanRequest $request)
     {
-        $form = $request->only(['payment_type', 'months', 'desc', 'deposit']);
+        $form = $request->only([
+            'payment_method',
+            'months_count',
+            'checks_count',
+            'deposit_amount',
+            'total_amount',
+            'discount_amount',
+            'start_date',
+            'treatments_details',
+            'desc',
+            'status'
+        ]);
 
         $patient = Patient::find($request->get('patient'));
 
@@ -51,6 +62,11 @@ class TreatmentPlanController extends Controller
 
         $treatmentPlan = $patient->treatmentPlans()->latest()->first();
 
+        return response()->json($treatmentPlan);
+    }
+
+    public function show(TreatmentPlan $treatmentPlan)
+    {
         return response()->json($treatmentPlan);
     }
 
@@ -70,6 +86,14 @@ class TreatmentPlanController extends Controller
         $treatmentPlan->update(compact('status'));
 
         $treatmentPlan->refresh();
+
+        $treatmentPlan->load(['patient' => fn($q) => $q->without([
+            'mobiles',
+            'city',
+            'province',
+            'leadSource',
+            'status'
+        ])->select('id', 'firstname', 'lastname')]);
 
         return response()->json($treatmentPlan);
     }

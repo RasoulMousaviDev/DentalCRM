@@ -1,40 +1,43 @@
 <template>
     <div class="max-w-full flex gap-8 relative">
         <div class="grow max-w-[calc(100%_-_24rem)] flex flex-col">
-            <Tabs v-model:value="currentTab" scrollable class="grow" lazy>
-                <TabList class="ltr card !p-4 *:!shadow-none !mb-8" pt:tablist="gap-5 !border-0 px-4 py-2 rtl">
-                    <Tab v-for="(item, i) in treatments.items" :key="i" :value="item.id" asChild v-slot="{}">
-                        <Button :label="item.title" class="shrink-0"
-                            :severity="currentTab == item.id ? 'primary' : 'secondary'"
-                            @click="selectTreatment(item.id)"
-                            :badge="form.treatments[`${item.id}`]?.tooths.length || null" />
-                    </Tab>
-                </TabList>
-                <TabPanels class="card !mb-8">
-                    <TabPanel :value="null">
-                        <div class="flex justify-center items-center h-60">
-                            <Message severity="secondary" class="px-8">{{ $t('select-treatment') }}</Message>
-                        </div>
-                    </TabPanel>
-                    <TabPanel v-for="(item, i) in treatments.items" :key="i" :value="item.id">
-                        <SelectTooth v-model="form.treatments[`${item.id}`].tooths" class="h-[30rem] mx-auto" />
-                    </TabPanel>
-                </TabPanels>
-            </Tabs>
+            <Carousel :value="treatments.items" class="card !p-4" :num-visible="treatments.items.length"
+                :showIndicators="false" contentClass="!flex-row-reverse" pt:item="!p-2 !flex-none">
+                <template #item="{ data }">
+                    <Button :label="data.title" :severity="currentTab == data.id ? 'primary' : 'secondary'"
+                        :badge="form.treatments_details[`${data.id}`]?.tooths.length || null"
+                        @click="selectTreatment(data.id)" />
+                </template>
+            </Carousel>
 
-            <template v-if="form.treatments[`${currentTab}`]?.tooths.length > 0">
-                <div v-if="subCategories.items.length > 0" class="card">
+            <div class="card flex flex-col justify-center items-center border border-transparent"
+                :class="{ '!border-red-500': errors[`treatments_details.${currentTab}.tooths`] }">
+                <template v-if="currentTab">
+                    <SelectTooth v-model="form.treatments_details[`${currentTab}`].tooths" class="h-[30rem]"
+                        :disabled="disabled" />
+                    <small v-text="errors[`treatments_details.${currentTab}.tooths`]?.[0]" class="text-red-500" />
+                </template>
+
+                <div v-else class="flex justify-center items-center h-60">
+                    <Message :severity="errors.treatments_details ? 'error' : 'secondary'" class="px-8">
+                        {{ $t('select-treatment') }}
+                    </Message>
+                </div>
+            </div>
+
+            <template v-if="form.treatments_details[`${currentTab}`]?.tooths.length > 0">
+                <div v-if="getTreatment(currentTab, 'subCategories')?.length > 0" class="card">
                     <p class="text-lg font-bold flex gap-4">
                         <span>{{ $t('required-services') }} </span>
                         <hr class="grow">
                     </p>
                     <ul class="flex flex-wrap gap-6">
-                        <li v-for="(subCategory, i) in subCategories.items" :key="i">
+                        <li v-for="(subCategory, i) in getTreatment(currentTab, 'subCategories')" :key="i">
                             <div class="flex flex-col gap-2 flex-1 max-w-80 min-w-72">
                                 <label>{{ $t(subCategory.title) }}</label>
-                                <Select v-model="form.treatments[currentTab].services[`${subCategory.id}`]"
+                                <Select v-model="form.treatments_details[currentTab].services[`${subCategory.id}`]"
                                     :options="subCategory.options" optionLabel="title" optionValue="id" fluid checkmark
-                                    :placeholder="$t('choose')" show-clear>
+                                    :placeholder="$t('choose')" show-clear :disabled="disabled">
                                     <template #option="{ option: { title, cost } }">
                                         <div class="w-full flex items-center justify-between text-sm">
                                             <span>{{ title }}</span>
@@ -47,17 +50,19 @@
                     </ul>
                 </div>
 
-                <div v-if="form.payment_method == 'installments'" class="card">
+                <div v-if="form.payment_method == 'installments'" class="card border border-transparent"
+                    :class="{ '!border-red-500': errors.months_count }">
                     <DataTable :value="rows"
                         class="last:[&_tr]:!bg-[var(--surface-ground)] [&_th]:!bg-[var(--surface-ground)] ">
-                      
-                        <Column field="title" :header="$t('installment-terms') " :footer="$t('choice')" footer-class="!text-right"/>
+
+                        <Column field="title" :header="$t('installment-terms')" :footer="$t('choice')"
+                            footer-class="!text-right" />
                         <Column v-for="(item, i) in installments" :key="i" :field="item"
                             :header="`${item} ${$t('months')} `" class="!text-center [&_*]:justify-center">
                             <template #footer>
                                 <div class="flex justify-center ">
-                                    <Button icon="pi pi-check" rounded
-                                        :severity="form.months != item ? 'secondary' : null"
+                                    <Button icon="pi pi-check" rounded :disabled="disabled"
+                                        :severity="form.months_count != item ? 'secondary' : null"
                                         @click="showChecks(item)" />
                                 </div>
                             </template>
@@ -65,14 +70,15 @@
                     </DataTable>
                 </div>
 
-                <div v-if="form.months" class="card flex flex-col gap-6">
+                <div v-if="form.months_count" class="card flex flex-col gap-6 border border-transparent"
+                    :class="{ '!border-red-500': errors.checks_count }">
                     <div class="flex items-center gap-2">
                         <span class="text-lg font-bold ml-auto">
                             {{ $t('calculation-head-check') }}
                         </span>
                         <InputGroup class="ltr !w-[27.5rem]">
                             <DatePicker v-model="form.start_date" inputClass="ltr" panelClass="ltr"
-                                dateFormat="yy/mm/dd" :min-date="new Date()" />
+                                dateFormat="yy/mm/dd" :min-date="new Date()" :disabled="disabled" />
                             <InputGroupAddon>{{ $t('treatment-start-date') }}</InputGroupAddon>
                         </InputGroup>
                     </div>
@@ -91,7 +97,8 @@
                         <Column :header="$t('remaining')" field="remaining" />
                         <Column :header="$t('choice')" class="w-16 !text-center">
                             <template #body="{ data: { count } }">
-                                <Button icon="pi pi-check" rounded :severity="form.checks_count != count ? 'secondary' : null"
+                                <Button icon="pi pi-check" rounded :disabled="disabled"
+                                    :severity="form.checks_count != count ? 'secondary' : null"
                                     @click="form.checks_count = count" />
                             </template>
                         </Column>
@@ -103,14 +110,39 @@
 
         <div class="w-96 shrink-0">
             <div class="sticky top-24">
-                <div class="card !p-6  flex-col gap-6 hidden has-[li]:flex">
+                <div class="card !p-6 flex flex-col gap-4">
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <span class="text-lg font-bold">
+                            {{ $t('visit-type') }}
+                        </span>
+                        <SelectButton v-model="form.visit_type" :options="['online', 'in-person']"
+                            :optionLabel="(item) => $t(item)" class="ltr" :disabled="disabled" />
+                    </div>
+                    <div class="flex flex-col gap-2 col-span-2">
+                        <label class="has-[+*+small]:text-red-500">{{ $t('patient') }}</label>
+                        <Select v-model="form.patient" :options="patients.items" filter optionValue="id"
+                            :placeholder="$t('choose')" :filter-placeholder="$t('search-patient')" fluid
+                            :loading="patients.fetching" resetFilterOnHide autoFilterFocus
+                            :filterFields="[({ mobiles }) => mobiles.map(m => m.number).join(' ')]"
+                            :optionLabel="({ firstname, lastname }) => [firstname, lastname].join(' ')"
+                            overlayClass="[&_input:not(:placeholder-shown)]:ltr [&_input:not(:placeholder-shown)]:text-left"
+                            class="has-[+small]:!border-red-500 *:has-[+small]:!text-red-500"
+                            @filter="searchPatient($event.value)" :disabled="disabled" />
+                        <small v-if="errors.patient" v-text="errors.patient[0]" class="text-red-500" />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label> {{ $t('desc') }}</label>
+                        <Textarea v-model="form.desc" fluid rows="5" cols="30" :disabled="disabled" />
+                    </div>
+                </div>
+                <div class="card !p-6 flex-col gap-6 hidden has-[li]:flex">
                     <div class="flex justify-between items-center border-b pb-4">
                         <span class="text-lg font-bold">
                             {{ $t('requested-services') }}
                         </span>
                     </div>
                     <ul class="flex flex-col gap-4">
-                        <template v-for="(treatment, key) in form.treatments" :key="key">
+                        <template v-for="(treatment, key) in form.treatments_details" :key="key">
                             <li v-if="treatment.tooths.length > 0" class="flex flex-col gap-8">
                                 <div class="flex justify-between items-center font-bold">
                                     <span>{{ getTreatment(key, 'title') }}</span>
@@ -136,7 +168,7 @@
             <ul class="flex flex-col gap-4">
                 <li v-for="(option, service) in treatment.services" :key="service">
                     <div class="flex items-center justify-between">
-                        <span>{{ getOption(key, service, option, ' title') }}</span>
+                        <span>{{ getOption(key, service, option, 'title') }}</span>
                                                     <span>{{ [new Intl.NumberFormat().format(getOption(key, service,
                                                         option,
                                                         'cost') *
@@ -159,7 +191,7 @@
             {{ $t('payment-method') }}
         </span>
         <SelectButton v-model="form.payment_method" :options="['installments', 'cash']"
-            :optionLabel="(item) => $t(item)" class="ltr" />
+            :optionLabel="(item) => $t(item)" class="ltr" :disabled="disabled"/>
     </div>
 
     <ul v-if="form.payment_method == 'installments' && form.months" class="flex flex-col gap-6">
@@ -172,7 +204,7 @@
         <label>{{ $t('discount') }}</label>
         <InputGroup class="ltr">
             <InputGroupAddon>{{ $t('toman') }}</InputGroupAddon>
-            <InputNumber v-model="form.discount_amount" class="w-full" />
+            <InputNumber v-model="form.discount_amount" class="w-full" :disabled="disabled" />
         </InputGroup>
     </div>
     <div
@@ -183,9 +215,10 @@
         </span>
     </div>
 </div>
-<div class="flex gap-3">
-    <Button icon="pi pi-refresh" :label="$t('restart')" severity="warn" class="shrink-0" @click="" />
-    <Button icon="pi pi-save" :label="$t('save-information')" class="grow" severity="success" :loading="loading" />
+<div v-if="!disabled" class="flex gap-3">
+    <Button icon="pi pi-refresh" :label="$t('restart')" severity="warn" class="shrink-0" @click="handleReset()" />
+    <Button icon="pi pi-save" :label="$t('save-information')" class="grow" severity="success" :loading="loading"
+        @click="handleSubmit()" />
 </div>
 </div>
 </div>
@@ -196,26 +229,50 @@
 import SelectTooth from '@/components/SelectTooth.vue';
 import { useTreatmentSubCategoriesStore } from '@/stores/treatment-sub-categories';
 import { useTreatmentsStore } from '@/stores/treatments';
-import { computed, inject, reactive, ref, watch } from 'vue';
+import { usePatientsStore } from '@/stores/patients';
+import { computed, inject, onBeforeMount, onMounted, reactive, ref, watch } from 'vue';
+import { useTreatmentPlansStore } from '@/stores/treatment-plans';
+
+const { router, route, t } = inject('service')
+
+const { id } = route.params
+
+const disabled = ref(!!id)
+
+const store = useTreatmentPlansStore()
+
+const patients = usePatientsStore()
+patients.index()
 
 const treatments = useTreatmentsStore()
 treatments.index()
-
 
 const subCategories = useTreatmentSubCategoriesStore()
 subCategories.items = []
 
 const form = reactive({
-    treatments: {},
+    treatments_details: {},
     payment_method: 'cash',
-    discount_amount: null
+    visit_type: 'in-person',
 })
+
+
+const errors = ref({})
 
 const currentTab = ref(null)
 
 const selectTreatment = (id) => {
-    if (!form.treatments.hasOwnProperty(id))
-        form.treatments[id] = { tooths: [], services: {} }
+    Object.entries(form.treatments_details).forEach(([k, v]) => {
+        Object.entries(v.services).forEach(([k2, v2]) => v2 || delete v.services[k2])
+
+        if (v.tooths.length === 0 && Object.keys(v.services).length === 0) {
+            delete form.treatments_details[k]
+            delete errors.value[`treatments_details.${k}.tooths`]
+        }
+    })
+
+    if (!form.treatments_details.hasOwnProperty(id))
+        form.treatments_details[id] = { tooths: [], services: {} }
     currentTab.value = id
 }
 
@@ -225,10 +282,10 @@ const percents = reactive([10, 15, 20, 25])
 
 const total_amount = computed(() => {
     let amount = 0;
-    Object.entries(form.treatments).forEach(([key, { tooths, services }]) => {
+    Object.entries(form.treatments_details).forEach(([key, { tooths, services }]) => {
         if (tooths.length > 0) {
             const treatment = treatments.items.find(({ id }) => id == key)
-            amount += treatment.cost * tooths.length
+            amount += treatment?.cost * tooths.length
             Object.entries(services).forEach(([k, v]) => {
                 if (v) {
                     const subCategories = treatment.subCategories.find(({ id }) => id == k)
@@ -243,8 +300,6 @@ const total_amount = computed(() => {
 })
 
 const final_amount = computed(() => total_amount.value - (form.discount_amount || 0))
-
-const { t } = inject('service')
 
 const rows = computed(() => {
     const list = [
@@ -271,13 +326,17 @@ const rows = computed(() => {
 
 watch(currentTab, async (v) => {
     subCategories.treatment = v;
-    await subCategories.index()
     const treatment = treatments.items.find(({ id }) => id == v)
-    treatment.subCategories = subCategories.items
+    if (!treatment.hasOwnProperty('subCategories')) {
+        treatment.subCategories = []
+        await subCategories.index()
+        treatment.subCategories = subCategories.items
+    }
+
 })
 
-watch(() => form.treatments?.[currentTab.value]?.tooths.length, (v) => {
-    if (v < 1) form.treatments[currentTab.value].services = {}
+watch(() => form.treatments_details?.[currentTab.value]?.tooths.length, (v) => {
+    if (v < 1) form.treatments_details[currentTab.value].services = {}
 })
 
 watch(() => form.payment_method, (v) => {
@@ -286,9 +345,6 @@ watch(() => form.payment_method, (v) => {
         delete form.checks_count
         delete form.start_date
     } else form.start_date = new Date()
-
-    console.log(v);
-
 })
 
 
@@ -359,9 +415,74 @@ const showChecks = (months) => {
         checks.value.push(row)
     });
 
-    form.months = months
+    form.months_count = months
 }
 
+let timer;
+const searchPatient = (v) => {
+    clearTimeout(timer)
+    if (v != undefined) {
+        timer = setTimeout(async () => {
+            patients.filters = { query: v }
+            patients.index()
+        }, 300);
+    }
+
+    return patients.items
+}
+
+
+const loading = ref(false)
+
+const treatmentPlans = useTreatmentPlansStore()
+
+const handleSubmit = async () => {
+    loading.value = true
+
+    const { status, statusText, data } = await treatmentPlans.store(form)
+
+    loading.value = false
+
+    if (statusText === 'OK')
+        router.replace({ name: 'TreatmentPlans' })
+    else if (status === 422)
+        errors.value = data.errors
+    else
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+
+}
+
+const handleReset = () => {
+    currentTab.value = null
+    Object.keys(form).forEach(k => delete form[k])
+    Object.assign(form, { treatments_details: {}, payment_method: 'cash', })
+}
+
+watch(computed(() => Object.assign({}, form)), (value, old) => {
+    Object.keys(form).forEach((key) => {
+        if (value[key] != old[key]) delete errors.value[key]
+        if (key == 'treatments_details') {
+            Object.entries(value[key]).forEach(([k, v]) => {
+                if (v.tooths.length > 0)
+                    delete errors.value[`treatments_details.${k}.tooths`]
+            })
+        }
+    })
+
+    form.total_amount = total_amount.value
+}, { deep: true })
+
+onMounted(async () => {
+    if (disabled.value) {
+        const plan = store.items.find(item => item.id == id)
+        if (plan) Object.assign(form, plan)
+        else {
+            const { data } = await store.show(id)
+            Object.assign(form, data)
+            currentTab.value = treatments.items?.[0].id
+        }
+    }
+})
 
 </script>
 
