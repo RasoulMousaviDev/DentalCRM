@@ -63,7 +63,7 @@
     "lastname": "نام خانوادگی",
     "province": "استان",
     "city": "شهر",
-    "lead_source": "نحوه آشنایی",
+    "lead-source": "نحوه آشنایی",
     "createNewPatient": "ایجاد بیمار جدید",
     "editPatient": "ویرایش بیمار",
     "first-select-province": "ابتدا استان را انتخاب کنید",
@@ -232,5 +232,11 @@
     "invalid": "نامعتبر",
     "in-person": "حضوری",
     "online": "مجازی",
-    "visit-type": "نوع ویزیت"
+    "visit-type": "نوع ویزیت",
+    "from": "از",
+    "to": "تا",
+    "total": "کل",
+    "patient-status": "وضعیت بیمار",
+    "call-status": "وضعیت تماس",
+    "reception-report": "گزارش پذیرش"
 }

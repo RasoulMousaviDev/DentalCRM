@@ -1,15 +1,19 @@
 <template>
     <div class="max-w-full flex gap-8 relative">
         <div class="grow max-w-[calc(100%_-_24rem)] flex flex-col">
-            <Carousel :value="treatments.items" class="card !p-4" :num-visible="treatments.items.length"
-                :showIndicators="false" contentClass="!flex-row-reverse" pt:item="!p-2 !flex-none">
-                <template #item="{ data }">
-                    <Button :label="data.title" :severity="currentTab == data.id ? 'primary' : 'secondary'"
-                        :badge="form.treatments_details[`${data.id}`]?.tooths.length || null"
-                        @click="selectTreatment(data.id)" />
-                </template>
-            </Carousel>
-
+            <div class="card !p-4 flex gap-2 items-center">
+                <Button icon="pi pi-chevron-right" text rounded @click="() => treatRef.scrollTo(0, 0)" />
+                <div ref="treatRef" class="overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth">
+                    <ul class="flex gap-4 p-2">
+                        <li v-for="(item, i) in treatments.items" :key="i" class="shrink-0">
+                            <Button :label="item.title" :severity="currentTab == item.id ? 'primary' : 'secondary'"
+                                :badge="form.treatments_details[`${item.id}`]?.tooths.length || null"
+                                @click="selectTreatment(item.id)" />
+                        </li>
+                    </ul>
+                </div>
+                <Button icon="pi pi-chevron-left" text rounded @click="() => treatRef.scrollTo(-1000, 0)" />
+            </div>
             <div class="card flex flex-col justify-center items-center border border-transparent"
                 :class="{ '!border-red-500': errors[`treatments_details.${currentTab}.tooths`] }">
                 <template v-if="currentTab">
@@ -127,7 +131,8 @@
                             :optionLabel="({ firstname, lastname }) => [firstname, lastname].join(' ')"
                             overlayClass="[&_input:not(:placeholder-shown)]:ltr [&_input:not(:placeholder-shown)]:text-left"
                             class="has-[+small]:!border-red-500 *:has-[+small]:!text-red-500"
-                            @filter="searchPatient($event.value)" :disabled="disabled" />
+                            @filter="searchPatient($event.value)" :disabled="disabled">
+                        </Select>
                         <small v-if="errors.patient" v-text="errors.patient[0]" class="text-red-500" />
                     </div>
                     <div class="flex flex-col gap-2">
@@ -168,7 +173,7 @@
             <ul class="flex flex-col gap-4">
                 <li v-for="(option, service) in treatment.services" :key="service">
                     <div class="flex items-center justify-between">
-                        <span>{{ getOption(key, service, option, 'title') }}</span>
+                        <span>{{ getOption(key, service, option, ' title') }}</span>
                                                     <span>{{ [new Intl.NumberFormat().format(getOption(key, service,
                                                         option,
                                                         'cost') *
@@ -191,7 +196,7 @@
             {{ $t('payment-method') }}
         </span>
         <SelectButton v-model="form.payment_method" :options="['installments', 'cash']"
-            :optionLabel="(item) => $t(item)" class="ltr" :disabled="disabled"/>
+            :optionLabel="(item) => $t(item)" class="ltr" :disabled="disabled" />
     </div>
 
     <ul v-if="form.payment_method == 'installments' && form.months" class="flex flex-col gap-6">
@@ -233,7 +238,11 @@ import { usePatientsStore } from '@/stores/patients';
 import { computed, inject, onBeforeMount, onMounted, reactive, ref, watch } from 'vue';
 import { useTreatmentPlansStore } from '@/stores/treatment-plans';
 
+const treatRef = ref()
+
 const { router, route, t } = inject('service')
+
+const { patient } = route.query
 
 const { id } = route.params
 
@@ -242,7 +251,6 @@ const disabled = ref(!!id)
 const store = useTreatmentPlansStore()
 
 const patients = usePatientsStore()
-patients.index()
 
 const treatments = useTreatmentsStore()
 treatments.index()
@@ -472,6 +480,7 @@ watch(computed(() => Object.assign({}, form)), (value, old) => {
     form.total_amount = total_amount.value
 }, { deep: true })
 
+
 onMounted(async () => {
     if (disabled.value) {
         const plan = store.items.find(item => item.id == id)
@@ -481,7 +490,16 @@ onMounted(async () => {
             Object.assign(form, data)
             currentTab.value = treatments.items?.[0].id
         }
+    } else if (patient) {
+        const p = patients.items.find(item => item.id == patient)
+        if (!p) {
+            patients.filters.id = patient
+            await patients.index()
+            form.patient = +patient
+        }
     }
+
+
 })
 
 </script>

@@ -6,6 +6,7 @@ use App\Http\Controllers\CallController;
 use App\Http\Controllers\CallStatusController;
 use App\Http\Controllers\CampainController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\FollowupController;
 use App\Http\Controllers\LeadSourceController;
@@ -45,6 +46,10 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(PasswordController::class)->prefix('password')->group(function () {
         Route::post('reset', 'reset');
         Route::post('change', 'change');
+    });
+
+    Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
+        Route::get('charts', 'charts');
     });
 
     Route::controller(UserController::class)->prefix('users')->group(function () {
@@ -139,7 +144,6 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/{treatmentPlan}', 'show');
         Route::patch('/{treatmentPlan}', 'update');
         Route::delete('/{treatmentPlan}', 'destroy');
-
     });
 
 

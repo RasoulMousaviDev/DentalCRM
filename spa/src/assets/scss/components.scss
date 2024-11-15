@@ -63,3 +63,7 @@ button:has(.p-badge){
 .p-autocomplete-loader{
     @apply left-2 !right-auto;
 }
+
+.card{
+    @apply shadow-sm !mb-0;
+}

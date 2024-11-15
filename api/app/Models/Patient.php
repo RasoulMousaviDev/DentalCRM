@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use PhpParser\Node\Expr\FuncCall;
@@ -61,6 +62,11 @@ class Patient extends Model
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class, 'patient', 'id');
+    }
+
+    public function treatments(): BelongsToMany
+    {
+        return $this->belongsToMany(Treatment::class, 'patient_treatments');
     }
 
     public function treatmentPlans(): HasMany

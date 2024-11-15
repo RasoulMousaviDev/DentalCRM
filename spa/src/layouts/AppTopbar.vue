@@ -80,7 +80,7 @@ const optionSelect = ({ value: { id } }) => {
 </script>
 
 <template>
-    <div class="layout-topbar shadow">
+    <div class="layout-topbar shadow-sm">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" @click="onMenuToggle">
                 <i class="pi pi-bars"></i>

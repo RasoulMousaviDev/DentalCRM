@@ -12,6 +12,7 @@
     "@primevue/themes": "^4.0.4",
     "axios": "^1.7.4",
     "chart.js": "^4.4.6",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "laravel-echo": "^1.16.1",
     "pinia": "^2.1.7",
     "primeicons": "^7.0.0",

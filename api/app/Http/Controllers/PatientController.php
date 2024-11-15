@@ -24,6 +24,8 @@ class PatientController extends Controller
                 ->orWhereHas('mobiles', function (Builder $query) use ($value) {
                     $query->where('number', 'like', "%{$value}%");
                 });
+        })->when($request->input('id'), function ($query, $id) {
+            $query->where('id', $id);
         })->when($request->input('gender'), function ($query, $gender) {
             $query->where('gender', $gender);
         })->when($request->input('mobile'), function ($query, $mobile) {
@@ -73,12 +75,16 @@ class PatientController extends Controller
             'desc'
         ]);
 
-        $mobiles = $request->get('mobiles');
-
         $patient = Patient::create($form);
+
+        $mobiles = $request->get('mobiles');
 
         foreach ($mobiles as $mobile)
             $patient->mobiles()->create(['number' => $mobile]);
+
+        $treatments = $request->get('treatments');
+
+        $patient->treatments()->attach($treatments);
 
         $patient = $patient->latest()->first();
 
@@ -95,6 +101,12 @@ class PatientController extends Controller
 
         foreach ($mobiles as $mobile)
             $patient->mobiles()->create(['number' => $mobile]);
+
+        $patient->treatments()->detach();
+
+        $treatments = $request->get('treatments');
+
+        $patient->treatments()->attach($treatments);
 
         $patient->update($form);
 
