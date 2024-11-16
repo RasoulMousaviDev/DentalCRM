@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\JDate;
 use App\Events\UserCreated;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -52,6 +53,11 @@ class User extends Authenticatable implements JWTSubject
     public function OTPCode(): HasOne
     {
         return $this->hasOne(OTPCode::class);
+    }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 
     public function roles(): BelongsToMany

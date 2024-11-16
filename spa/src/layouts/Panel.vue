@@ -1,5 +1,5 @@
 <template>
-    <div class="layout-wrapper" :class="containerClass">
+    <div v-if="auth.user" class="layout-wrapper" :class="containerClass">
         <AppTopbar />
         <AppSidebar />
         <div class="layout-main-container">
@@ -16,6 +16,8 @@
 import AppTopbar from './AppTopbar.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppFooter from './AppFooter.vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRolesStore } from '@/stores/roles';
 import { useLayout } from '@/composables/layout';
 import { computed, ref, watch } from 'vue';
 
@@ -65,6 +67,12 @@ function isOutsideClicked(event) {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
+
+const auth = useAuthStore()
+auth.me()
+
+const role = useRolesStore()
+role.index()
 </script>
 
 <style lang="scss" scoped></style>

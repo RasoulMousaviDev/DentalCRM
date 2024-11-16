@@ -4,59 +4,56 @@ import IconSikai from '@/components/icon/Sakai.vue'
 import { useCookie } from '@/composables/cookie';
 import { useLayout } from '@/composables/layout';
 import { useAuthStore } from '@/stores/auth';
+import { useRolesStore } from '@/stores/roles';
 import { usePatientsStore } from '@/stores/patients';
 import AutoComplete from 'primevue/autocomplete';
-import { defineAsyncComponent, inject, ref, watch } from 'vue';
+import { defineAsyncComponent, inject, ref, watch, computed } from 'vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const { router, dialog, t, confirm } = inject('service')
 
 const ChangePasswordForm = defineAsyncComponent(() => import('@/components/ChangePasswordForm.vue'));
 const auth = useAuthStore()
+const roles = useRolesStore()
 const menu = ref();
 const items = ref([
     {
-        label: `(${auth.username})`,
-        items: [
-            {
-                label: t('change-password'),
-                icon: 'pi pi-key',
-                command: () => {
-                    dialog.open(ChangePasswordForm, {
-                        props: {
-                            header: t('change-password'), modal: true
-                        },
-                    })
-                }
-            },
-            {
-                label: t('logout'),
-                icon: 'pi pi-sign-out',
-                command: () => {
-                    confirm.require({
-                        message: t('logout-confirm-question'),
-                        header: t('danger-zone'),
-                        icon: 'pi pi-info-circle',
-                        rejectProps: {
-                            label: t('back'),
-                            severity: 'secondary',
-                            outlined: true
-                        },
-                        acceptProps: {
-                            label: t('i-go-out'),
-                            icon: 'pi pi-trash',
-                            severity: 'danger',
-                        },
-                        accept: async () => {
-                            const cookie = useCookie();
-                            cookie.set("token", '', new Date(1970, 0, 0, 0, 0));
+        label: t('change-password'),
+        icon: 'pi pi-key',
+        command: () => {
+            dialog.open(ChangePasswordForm, {
+                props: {
+                    header: t('change-password'), modal: true
+                },
+            })
+        }
+    },
+    {
+        label: t('logout'),
+        icon: 'pi pi-sign-out',
+        command: () => {
+            confirm.require({
+                message: t('logout-confirm-question'),
+                header: t('danger-zone'),
+                icon: 'pi pi-info-circle',
+                rejectProps: {
+                    label: t('back'),
+                    severity: 'secondary',
+                    outlined: true
+                },
+                acceptProps: {
+                    label: t('i-go-out'),
+                    icon: 'pi pi-trash',
+                    severity: 'danger',
+                },
+                accept: async () => {
+                    const cookie = useCookie();
+                    cookie.set("token", '', new Date(1970, 0, 0, 0, 0));
 
-                            router.replace({ name: 'Login' })
-                        }
-                    });
+                    router.replace({ name: 'Login' })
                 }
-            }
-        ]
+            });
+        }
     }
 ]);
 
@@ -77,6 +74,8 @@ const optionSelect = ({ value: { id } }) => {
     delete store.filters.query
     router.push({ name: 'PatientDetails', params: { id } })
 }
+
+const role = ref(auth.user.role.id)
 </script>
 
 <template>
@@ -122,13 +121,21 @@ const optionSelect = ({ value: { id } }) => {
                         <i class="pi pi-inbox"></i>
                         <span>Messages</span>
                     </button> -->
-                    <button type="button" class="layout-topbar-action" @click="toggle">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button>
+                    <Button icon="pi pi-user" text rounded @click="toggle" />
                 </div>
             </div>
-            <Menu ref="menu" :model="items" :popup="true" class="[&_span]:last:[&_li]:text-red-500" />
+            <Menu ref="menu" :model="items" :popup="true" class="[&_span]:last:[&_li]:text-red-500">
+                <template #start>
+                    <div class="">
+                        <div class="px-4 py-2 text-center">
+                            {{ auth.user.name }}
+                        </div>
+                        <SelectButton v-model="role" optionLabel="title" optionValue="id" class="ltr w-full *:flex-1 rounded-none"
+                            :options="roles.items.filter(({ id }) => auth.user.roles.includes(id)).reverse()" />
+                    </div>
+
+                </template>
+            </Menu>
         </div>
     </div>
 </template>

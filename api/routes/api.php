@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->group(function () {
     Route::controller(AuthController::class)->prefix('auth')->group(function () {
         Route::post('login', 'login')->withoutMiddleware('auth:api');
-        Route::post('me', 'me');
+        Route::get('me', 'me');
         Route::post('refresh', 'refresh');
         Route::post('logout', 'logout');
     });

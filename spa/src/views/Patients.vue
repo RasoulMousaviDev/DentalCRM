@@ -33,7 +33,7 @@
             <Column :field="({ gender }) => $t(gender)" :header="$t('gender')" />
             <Column field="province.title" :header="$t('province')" />
             <Column field="city.title" :header="$t('city')" />
-            <Column field="lead_source.title" :header="$t('lead_source')" />
+            <Column field="lead_source.title" :header="$t('lead-source')" />
             <Column field="status" :header="$t('status')">
                 <template #body="{ data: { status } }">
                     <Tag v-bind="status" />

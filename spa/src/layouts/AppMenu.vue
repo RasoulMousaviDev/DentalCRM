@@ -1,12 +1,18 @@
 <script setup>
 import AppMenuItem from './AppMenuItem.vue';
-import { ref, inject } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+
+import { ref, inject, computed } from 'vue';
+
+const auth = useAuthStore()
+
+const role = computed(() => auth.user.role)
 
 const { t } = inject('service')
 
 const model = ref([
     {
-        label: t('user-menu'),
+        label: computed(() => `${t('user-menu')} (${auth.user.role?.title})`),
         items: [
             { label: t('dashboard'), icon: 'pi pi-fw pi-home', to: '/' },
             { label: t('users'), icon: 'pi pi-fw pi-id-card', to: '/users' },

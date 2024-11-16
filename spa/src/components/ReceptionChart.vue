@@ -1,5 +1,5 @@
 <template>
-    <div class="card flex flex-col gap-8 justify-center w-max flex-1">
+    <div class="card flex flex-col gap-8 justify-center w-[74%]">
         <span class="text-xl font-medium">
             {{ $t('reception-report') }}
         </span>
@@ -56,8 +56,7 @@ const setChartOptions = () => {
                     family: 'vazir'
                 },
                 formatter: (value, context) => {
-                    const label = context.chart.data.labels[context.dataIndex];
-                    return `${label}: ${value}`;
+                    return `${value}`;
                 },
                 align: 'end',
                 textAlign: 'right',
@@ -74,8 +73,13 @@ const setChartOptions = () => {
                 }
             },
             y: {
+                position: 'right',
                 ticks: {
-                    display: false,
+                    color: textColor,
+                    font: {
+                        size: 14,
+                        family: 'vazir'
+                    },
                 },
                 grid: {
                     color: surfaceBorder,

@@ -65,7 +65,7 @@
         </div>
 
         <div class="flex flex-col gap-2">
-            <label class="has-[+*+small]:text-red-500"> {{ $t('lead_source') }}</label>
+            <label class="has-[+*+small]:text-red-500"> {{ $t('lead-source') }}</label>
             <Select v-model="form.lead_source" :options="leadSources.items" :loading="leadSources.fetching"
                 optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')"
                 class="has-[+small]:!border-red-500" />

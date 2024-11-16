@@ -12,7 +12,7 @@
             <li v-for="(key, i) in keys" :key="key"
                 class="flex items-center justify-between gap-2 px-4 py-3 last:justify-start"
                 :class="{ 'border-b': i < 10, 'col-span-2': i == 10, 'col-span-3': i == 11, 'border-l': ![4, 9, 11].includes(i) }">
-                <span class="opacity-70">{{ $t(key) }}:</span>
+                <span class="opacity-70">{{ $t(key.replace('_','-')) }}:</span>
                 <div v-if="key == 'mobiles'" class="flex gap-2">
                     <Chip v-for="mobile in data.mobiles" :label="mobile.number" />
                 </div>

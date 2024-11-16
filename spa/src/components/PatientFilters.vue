@@ -40,7 +40,7 @@
                 :placeholder="$t('choose')" show-clear />
         </div>
         <div class="flex flex-col gap-2">
-            <label> {{ $t('lead_source') }}</label>
+            <label> {{ $t('lead-source') }}</label>
             <Select v-model="filters.lead_source" :options="leadSources.items" :loading="leadSources.fetching"
                 optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" show-clear />
         </div>

@@ -15,21 +15,6 @@
                 {{ store.fetching ? $t('loading') : $t('not-found') }}
             </p>
         </template>
-        <template #expansion="{ data: { payment_type, id, status } }">
-            <Tabs :value="0" class="px-4 pt-1 pb-0 shadow-inner rounded bg-surface-50/70 relative">
-                <TabList v-if="payment_type == 'installments'" class="[&_div]:!bg-transparent z-10">
-                    <Tab v-for="(tab, i) in tabs" :key="i" :value="i" v-text="$t(tab)" />
-                </TabList>
-                <TabPanels class="!px-0 !py-2 !bg-transparent">
-                    <TabPanel v-for="(tab, i) in tabs" :key="i" :value="i">
-                        <TreatmentPlanDetails v-if="tab == 'details'" v-bind="{ id, status }"
-                            :class="{ '[&_.p-datatable-header]:-mt-[3.75rem] [&_.p-datatable-header]:pb-2 [&_.p-datatable-header>div>span]:invisible': payment_type == 'installments' }" />
-                        <TreatmentPlanInstallments v-else-if="tab == 'installments'" :id="id" class="-mt-2" />
-                    </TabPanel>
-                </TabPanels>
-            </Tabs>
-        </template>
-        <Column expander :header="$t('details')" class="w-4 [&_button]:has-[[aria-expanded='false']]:rotate-180" />
         <Column field="desc" :header="$t('desc')" body-class="truncate" />
         <!-- <Column field="tooths_count" :header="$t('tooths-count')" class="w-32" />
         <Column field="treatments_count" :header="$t('treatments-count')" class="w-32" /> -->
@@ -66,8 +51,6 @@
 <script setup>
 import { useTreatmentPlansStore } from '@/stores/treatment-plans';
 import { reactive, inject, ref, defineAsyncComponent, watch } from 'vue';
-import TreatmentPlanDetails from './TreatmentPlanDetails.vue';
-import TreatmentPlanInstallments from './TreatmentPlanInstallments.vue';
 
 const tabs = reactive(['details', 'installments'])
 

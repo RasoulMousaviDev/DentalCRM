@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('mobile')->unique();
             $table->string('email')->unique();
             $table->string('password');
+            $table->foreignId('role_id')->constrained('roles');
             $table->boolean('status');
             $table->timestamps();
         });

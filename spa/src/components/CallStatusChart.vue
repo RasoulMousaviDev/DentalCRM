@@ -1,5 +1,5 @@
 <template>
-    <div class="card flex flex-col gap-8 justify-center w-max flex-1">
+    <div class="card flex flex-col gap-8 justify-center w-max">
         <span class="text-xl font-medium">
             {{ $t('call-status') }}
         </span>
