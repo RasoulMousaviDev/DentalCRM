@@ -129,7 +129,7 @@ const optionSelect = ({ value: { id } }) => {
                         <div class="px-4 py-2 text-center">
                             {{ auth.user.name }}
                         </div>
-                        <SelectButton v-model="auth.role" optionLabel="title" optionValue="id" class="ltr w-full *:flex-1 rounded-none"
+                        <SelectButton v-if="auth.user.roles.length > 1" v-model="auth.role" optionLabel="title" optionValue="id" class="ltr w-full *:flex-1 rounded-none"
                             :options="roles.items.filter(({ id }) => auth.user.roles.includes(id)).reverse()" />
                     </div>
 
