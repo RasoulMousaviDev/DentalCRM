@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 export const useAuthStore = defineStore("auth", {
     state: () => ({
         user: {},
+        role: null
     }),
     actions: {
         async login(credentials) {
@@ -22,8 +23,10 @@ export const useAuthStore = defineStore("auth", {
         async me(){
             const { statusText , data} = await this.axios.get("/auth/me");
 
-            if (statusText == "OK") 
+            if (statusText == "OK") {
                 this.user = data;
+                this.role = data.role.id
+            }
         },
         refresh() {},
         logout() {},
