@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTreatmentSubCategoryRequest extends FormRequest
+class UpdateTreatmentServiceRequest extends FormRequest
 {
 
     /**
@@ -15,7 +15,7 @@ class UpdateTreatmentSubCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|unique:treatment_sub_categories,title,' . $this->subCategory->id,
+            'title' => 'required|string|unique:treatment_sub_categories,title,' . $this->service->id,
             'status' => 'required|boolean'
         ];
     }

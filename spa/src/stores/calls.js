@@ -4,6 +4,7 @@ import { useFollowupsStore } from "./followups";
 export const useCallsStore = defineStore("calls", {
     state: () => ({
         items: [],
+        statuses: [],
         fetching: true,
         pagiantor: { totalRecords: 0 },
         filters: {},

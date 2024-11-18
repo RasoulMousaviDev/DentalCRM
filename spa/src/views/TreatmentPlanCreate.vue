@@ -232,7 +232,7 @@
 
 <script setup>
 import SelectTooth from '@/components/SelectTooth.vue';
-import { useTreatmentSubCategoriesStore } from '@/stores/treatment-sub-categories';
+import { useTreatmentSubCategoriesStore } from '@/stores/treatment-services';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { usePatientsStore } from '@/stores/patients';
 import { computed, inject, onBeforeMount, onMounted, reactive, ref, watch } from 'vue';

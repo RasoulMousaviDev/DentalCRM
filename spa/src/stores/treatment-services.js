@@ -1,19 +1,18 @@
 import { defineStore } from "pinia";
 
-export const useTreatmentSubCategoryOptionsStore = defineStore(
-    "treatment-sub-category-options",
+export const useTreatmentServicesStore = defineStore(
+    "treatment-services",
     {
         state: () => ({
             items: [],
             fetching: true,
             treatment: null,
-            subCategory: null,
         }),
         actions: {
             async index() {
                 this.fetching = true;
                 const { statusText, data } = await this.axios.get(
-                    `/treatments/${this.treatment}/sub-categories/${this.subCategory}/options`
+                    `/treatments/${this.treatment}/services`
                 );
                 this.fetching = false;
 
@@ -21,7 +20,7 @@ export const useTreatmentSubCategoryOptionsStore = defineStore(
             },
             async store(form) {
                 const res = await this.axios.post(
-                    `/treatments/${this.treatment}/sub-categories/${this.subCategory}/options`,
+                    `/treatments/${this.treatment}/services`,
                     form
                 );
 
@@ -31,7 +30,7 @@ export const useTreatmentSubCategoryOptionsStore = defineStore(
             },
             async update(id, form) {
                 const res = await this.axios.patch(
-                    `/treatments/${this.treatment}/sub-categories/${this.subCategory}/options/${id}`,
+                    `/treatments/${this.treatment}/services/${id}`,
                     form
                 );
 
@@ -46,7 +45,7 @@ export const useTreatmentSubCategoryOptionsStore = defineStore(
             },
             async destroy(id) {
                 const res = await this.axios.delete(
-                    `/treatments/${this.treatment}/sub-categories/${this.subCategory}/options/${id}`
+                    `/treatments/${this.treatment}/services/${id}`
                 );
 
                 if (res.statusText === "OK") {

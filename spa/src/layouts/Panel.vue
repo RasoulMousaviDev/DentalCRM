@@ -23,6 +23,12 @@ import { computed, ref, watch } from 'vue';
 
 const { layoutConfig, layoutState, isSidebarActive, resetMenu } = useLayout();
 
+const auth = useAuthStore()
+auth.me()
+
+const role = useRolesStore()
+role.index()
+
 const outsideClickListener = ref(null);
 
 watch(isSidebarActive, (newVal) => {
@@ -67,12 +73,6 @@ function isOutsideClicked(event) {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
-
-const auth = useAuthStore()
-auth.me()
-
-const role = useRolesStore()
-role.index()
 </script>
 
 <style lang="scss" scoped></style>

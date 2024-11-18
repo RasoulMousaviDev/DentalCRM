@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTreatmentSubCategoryRequest extends FormRequest
+class StoreTreatmentServiceRequest extends FormRequest
 {
  
     /**
@@ -15,7 +15,7 @@ class StoreTreatmentSubCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|unique:treatment_sub_categories',
+            'title' => 'required|string|unique:treatment_services',
             'status' => 'required|boolean'
         ];
     }

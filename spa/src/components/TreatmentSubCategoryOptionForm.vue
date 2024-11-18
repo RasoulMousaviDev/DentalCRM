@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { useTreatmentSubCategoryOptionsStore } from '@/stores/treatment-sub-category-options';
+import { useTreatmentSubCategoryOptionsStore } from '@/stores/treatment-service-options';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
 const { toast } = inject('service')

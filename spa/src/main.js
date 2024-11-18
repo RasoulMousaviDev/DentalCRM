@@ -5,7 +5,8 @@ import App from "./App.vue";
 import router from "./router";
 
 import PrimeVue from "primevue/config";
-import Aura from "./assets/theme";
+// import Aura from "./assets/theme";
+import Aura from "@primevue/themes/aura";
 
 import Axios from "axios";
 
@@ -38,13 +39,14 @@ import TabPanels from "primevue/tabpanels";
 import TabPanel from "primevue/tabpanel";
 import Galleria from "primevue/galleria";
 import Menu from "primevue/menu";
-import InputNumber from 'primevue/inputnumber';
-import InputGroup from 'primevue/inputgroup';
-import InputGroupAddon from 'primevue/inputgroupaddon';
-import Paginator from 'primevue/paginator';
-import Listbox from 'primevue/listbox';
-import Chart from 'primevue/chart';
+import InputNumber from "primevue/inputnumber";
+import InputGroup from "primevue/inputgroup";
+import InputGroupAddon from "primevue/inputgroupaddon";
+import Paginator from "primevue/paginator";
+import Listbox from "primevue/listbox";
+import Chart from "primevue/chart";
 
+import KeyFilter from 'primevue/keyfilter';
 import StyleClass from "primevue/styleclass";
 import Ripple from "primevue/ripple";
 
@@ -55,6 +57,8 @@ import ToastService from "primevue/toastservice";
 import { createI18n } from "vue-i18n";
 import fa from "./locales/fa.json";
 import { useCookie } from "./composables/cookie";
+import TieredMenu from "primevue/tieredmenu";
+import FloatLabel from "primevue/floatlabel";
 
 const i18n = createI18n({ legacy: false, locale: "fa", messages: { fa } });
 const pinia = createPinia();
@@ -62,15 +66,19 @@ pinia.use(({ store }) => {
     store.axios = axios;
 });
 
-// const baseURL = "http://127.0.0.1:8000/api";
-const baseURL = "https://clinic-crm.chbk.app/api";
+const baseURL = "http://127.0.0.1:8000/api";
+// const baseURL = "https://clinic-crm.chbk.app/api";
 
 const axios = Axios.create({ baseURL });
 
 const app = createApp(App);
 
 app.use(PrimeVue, {
-    theme: { preset: Aura, options: { darkModeSelector: ".app-dark" } },
+    theme: {
+        preset: Aura,
+        options: { darkModeSelector: ".app-dark" },
+    },
+    inputVariant: "filled",
 });
 app.use(pinia);
 app.use(router);
@@ -114,7 +122,10 @@ app.component("InputGroupAddon", InputGroupAddon);
 app.component("Paginator", Paginator);
 app.component("Listbox", Listbox);
 app.component("Chart", Chart);
+app.component("TieredMenu", TieredMenu);
+app.component("FloatLabel", FloatLabel);
 
+app.directive('keyfilter', KeyFilter);
 app.directive("styleclass", StyleClass);
 app.directive("ripple", Ripple);
 

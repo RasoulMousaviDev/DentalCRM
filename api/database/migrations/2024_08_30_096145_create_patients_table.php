@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('telephone', 11);
             $table->enum('gender', ['male', 'female']);
             $table->text('desc')->nullable();
-            $table->foreignId('status')->constrained('patient_statuses');
+            $table->foreignId('status')->constrained('statuses');
             $table->foreignId('province')->constrained('provinces');
             $table->foreignId('city')->constrained('cities');
             $table->foreignId('lead_source')->constrained('lead_sources');

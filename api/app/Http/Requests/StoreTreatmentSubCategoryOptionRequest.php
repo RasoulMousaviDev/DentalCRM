@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTreatmentSubCategoryOptionRequest extends FormRequest
+class StoreTreatmentServiceOptionRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,7 @@ class StoreTreatmentSubCategoryOptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|unique:treatment_sub_category_options',
+            'title' => 'required|string|unique:treatment_service_options',
             'cost' => 'required|numeric|between:100000,100000000',
             'status' => 'required|boolean'
         ];

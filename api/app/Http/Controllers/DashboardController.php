@@ -6,7 +6,7 @@ use App\Http\Requests\DashboardChartsRequest;
 use App\Models\Appointment;
 use App\Models\Call;
 use App\Models\Deposit;
-use App\Models\Followup;
+use App\Models\FollowUp;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +25,7 @@ class DashboardController extends Controller
 
         $appointmentCount = Appointment::whereBetween('created_at', $period)->count();
 
-        $followupCount = Followup::whereBetween('created_at', $period)->count();
+        $followUpCount = FollowUp::whereBetween('created_at', $period)->count();
 
         $patientStatuses = Patient::without(['mobiles', 'city', 'province', 'leadSource', 'status'])
             ->select('status', DB::raw('COUNT(*) as count'))
@@ -76,7 +76,7 @@ class DashboardController extends Controller
             'appointmentCount',
             'patientStatuses',
             'patientGenders',
-            'followupCount',
+            'followUpCount',
             'patientCount',
             'callStatuses',
             'callCount',

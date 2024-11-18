@@ -10,6 +10,7 @@ class Province extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
 
     public function cities(): HasMany
     {

@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'Rasoul Mousavi',
             'mobile' => '09102836220',
             'email' => 'rasoulmousavidev@gmail.com',
-            'password' => Hash::make('123456789'),
+            'password' => '123456789',
             'role_id' => 1,
             'status' => true
         ]);

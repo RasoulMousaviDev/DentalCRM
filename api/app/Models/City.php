@@ -10,6 +10,8 @@ class City extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function province(): BelongsTo
     {
         return $this->belongsTo(Province::class);

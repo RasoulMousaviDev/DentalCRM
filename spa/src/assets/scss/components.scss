@@ -10,12 +10,16 @@
     @apply p-0 !important;
 }
 
+.p-datatable-header {
+    @apply p-0 pb-4 !important;
+}
+
 .p-datatable-footer {
     @apply border-0 pb-0 !important;
 }
 
 .p-paginator {
-    @apply ltr pb-0 translate-y-2 !important;
+    @apply pb-0 translate-y-2 !important;
     & > * {
         @apply max-sm:first:order-last max-sm:last:order-last;
     }
@@ -66,4 +70,8 @@ button:has(.p-badge){
 
 .card{
     @apply shadow-sm !mb-0;
+}
+
+.p-tieredmenu-item-link svg{
+    @apply ml-0 mr-auto rotate-180 #{!important};;
 }

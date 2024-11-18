@@ -1,27 +1,32 @@
 <template>
-    <form @submit.prevent="handleSubmit()" class="flex flex-col gap-4 w-full md:w-[30rem]">
-        <div class="flex flex-col gap-2">
-            <label class="has-[+*+small]:text-red-500">{{ $t('name') }}</label>
-            <InputText v-model="form.name" class="w-full has-[+small]:!border-red-500" />
+    <form @submit.prevent="handleSubmit()" class="flex flex-col gap-8 has-[small]:gap-3 w-full md:w-[30rem] pt-2">
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <InputText v-model="form.name" :invalid="errors.name" fluid />
+                <label>{{ $t('name') }}</label>
+            </FloatLabel>
             <small v-if="errors.name" v-text="errors.name[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-2">
-            <label class="has-[+*+small]:text-red-500">
-                {{ $t('mobile') }}
-            </label>
-            <InputText v-model="form.mobile" class="ltr w-full has-[+small]:!border-red-500" />
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <InputText v-model="form.mobile" :invalid="errors.mobile" class="ltr" fluid v-keyfilter.int />
+                <label>{{ $t('mobile') }}</label>
+            </FloatLabel>
             <small v-if="errors.mobile" v-text="errors.mobile[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-2">
-            <label class=" has-[+*+small]:text-red-500">{{ $t('email') }}</label>
-            <InputText v-model="form.email" class="ltr w-full has-[+small]:!border-red-500" />
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <InputText v-model="form.email" :invalid="errors.email" class="ltr" fluid />
+                <label>{{ $t('email') }}</label>
+            </FloatLabel>
             <small v-if="errors.email" v-text="errors.email[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-2">
-            <label class="has-[+*+small]:text-red-500"> {{ $t('roles') }}</label>
-            <MultiSelect v-model="form.roles" display="chip" :options="roles.items" :loading="roles.fetching"
-                optionLabel="title" optionValue="id" :showToggleAll="false" fluid
-                class="has-[+small]:!border-red-500" />
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <MultiSelect v-model="form.roles" display="chip" :options="roles.items" :loading="roles.fetching"
+                    optionLabel="title" optionValue="id" :showToggleAll="false" :invalid="errors.roles" fluid />
+                <label> {{ $t('roles') }}</label>
+            </FloatLabel>
             <small v-if="errors.roles" v-text="errors.roles[0]" class="text-red-500" />
         </div>
         <div class="flex justify-between items-center mt-2">
@@ -72,7 +77,7 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else
-        toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 
 }
 

@@ -7,55 +7,76 @@ import { useAuthStore } from '@/stores/auth';
 import { useRolesStore } from '@/stores/roles';
 import { usePatientsStore } from '@/stores/patients';
 import AutoComplete from 'primevue/autocomplete';
-import { defineAsyncComponent, inject, ref, watch, computed } from 'vue';
-
-const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
-const { router, dialog, t, confirm } = inject('service')
+import { defineAsyncComponent, inject, ref, watch, computed, onMounted } from 'vue';
 
 const ChangePasswordForm = defineAsyncComponent(() => import('@/components/ChangePasswordForm.vue'));
-const auth = useAuthStore()
-const roles = useRolesStore()
-const menu = ref();
-const items = ref([
-    {
-        label: t('change-password'),
-        icon: 'pi pi-key',
-        command: () => {
-            dialog.open(ChangePasswordForm, {
-                props: {
-                    header: t('change-password'), modal: true
-                },
-            })
-        }
-    },
-    {
-        label: t('logout'),
-        icon: 'pi pi-sign-out',
-        command: () => {
-            confirm.require({
-                message: t('logout-confirm-question'),
-                header: t('danger-zone'),
-                icon: 'pi pi-info-circle',
-                rejectProps: {
-                    label: t('back'),
-                    severity: 'secondary',
-                    outlined: true
-                },
-                acceptProps: {
-                    label: t('i-go-out'),
-                    icon: 'pi pi-trash',
-                    severity: 'danger',
-                },
-                accept: async () => {
-                    const cookie = useCookie();
-                    cookie.set("token", '', new Date(1970, 0, 0, 0, 0));
 
-                    router.replace({ name: 'Login' })
-                }
-            });
-        }
-    }
-]);
+const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+
+const { router, dialog, t, confirm } = inject('service')
+
+const auth = useAuthStore()
+
+const roles = useRolesStore()
+
+const menu = ref();
+
+const items = computed(() => {
+    const items = [];
+
+    if (auth.user.roles?.length > 1)
+        items.push({
+            label: t('change-role'),
+            icon: 'pi pi-user',
+            items: auth.user.roles.map((id) => {
+                const { title: label } = roles.items.find(role => role.id == id) || {}
+                const icon = '' + (id == auth.user.role.id ? 'pi pi-check' : 'w-4')
+                return { label, icon, command: () => auth.changeRole(id) }
+            })
+        });
+
+    items.push(
+        {
+            label: t('change-password'),
+            icon: 'pi pi-key',
+            command: () => {
+                dialog.open(ChangePasswordForm, {
+                    props: {
+                        header: t('change-password'), modal: true
+                    },
+                })
+            }
+        },
+        {
+            label: t('logout'),
+            icon: 'pi pi-sign-out',
+            command: () => {
+                confirm.require({
+                    message: t('logout-confirm-question'),
+                    header: t('danger-zone'),
+                    icon: 'pi pi-info-circle',
+                    rejectProps: {
+                        label: t('back'),
+                        severity: 'secondary',
+                        outlined: true
+                    },
+                    acceptProps: {
+                        label: t('i-go-out'),
+                        icon: 'pi pi-trash',
+                        severity: 'danger',
+                    },
+                    accept: async () => {
+                        const cookie = useCookie();
+                        cookie.set("token", '', new Date(1970, 0, 0, 0, 0));
+
+                        router.replace({ name: 'Login' })
+                    }
+                });
+            }
+        })
+
+    return items;
+});
 
 const toggle = (event) => {
     menu.value.toggle(event);
@@ -109,32 +130,14 @@ const optionSelect = ({ value: { id } }) => {
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
             </div>
-
-            <button class="layout-topbar-menu-button layout-topbar-action"
-                v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }">
-                <i class="pi pi-ellipsis-v"></i>
-            </button>
-            <div class="layout-topbar-menu hidden lg:block">
-                <div class="layout-topbar-menu-content">
-                    <!-- <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button> -->
-                    <Button icon="pi pi-user" text rounded @click="toggle" />
-                </div>
-            </div>
-            <Menu ref="menu" :model="items" :popup="true" class="[&_span]:last:[&_li]:text-red-500">
+            <Button icon="pi pi-user" text rounded @click="toggle" />
+            <TieredMenu ref="menu" :model="items" popup class="[&_span]:last:[&>*>li]:text-red-500">
                 <template #start>
-                    <div class="">
-                        <div class="px-4 py-2 text-center">
-                            {{ auth.user.name }}
-                        </div>
-                        <SelectButton v-if="auth.user.roles.length > 1" v-model="auth.role" optionLabel="title" optionValue="id" class="ltr w-full *:flex-1 rounded-none"
-                            :options="roles.items.filter(({ id }) => auth.user.roles.includes(id)).reverse()" />
+                    <div class="px-4 py-2">
+                        {{ auth.user.name }}
                     </div>
-
                 </template>
-            </Menu>
+            </TieredMenu>
         </div>
     </div>
 </template>

@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { usePatientStatuesStore } from '@/stores/patient-statuses';
+import { usePatientsStore } from '@/stores/patients';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ref, onMounted, inject, computed, reactive } from "vue";
 
@@ -16,13 +16,7 @@ const props = defineProps({ data: { type: Array, default: ({}) } })
 
 const { t } = inject('service')
 
-const store = usePatientStatuesStore()
-store.index().then(() => {
-    Object.entries(props.data).forEach(([id, count]) => {
-        const item = store.items.find(i => i.id == id)
-        item.count = count
-    })
-})
+const store = usePatientsStore()
 
 const chartOptions = ref(null);
 const backgroundColor = [
@@ -32,10 +26,10 @@ const backgroundColor = [
     "#1BD84F", "#D883A0", "#4F8BD8", "#1BD8FF", "#D8A11B"
 ]
 const chartData = computed(() => ({
-    labels: store.items.map(i => i.value),
+    labels: store.statuses.map(i => i.value),
     datasets: [
         {
-            data: store.items.map(i => i.count),
+            data: store.statuses.map(s => props.data[s.id]),
             backgroundColor,
         }
     ]
@@ -61,7 +55,7 @@ const setChartOptions = () => {
 
                 rtl: true
             },
-          
+
             datalabels: {
                 color: '#fff',
                 font: {

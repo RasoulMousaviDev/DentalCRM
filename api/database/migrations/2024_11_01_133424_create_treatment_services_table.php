@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('call_statuses', function (Blueprint $table) {
+        Schema::create('treatment_services', function (Blueprint $table) {
             $table->id();
-            $table->string('value');
-            $table->string('desc');
-            $table->enum('severity', ['primary', 'secondary', 'success', 'info', 'warn', 'danger', 'contrast']);
+            $table->foreignId('treatment_id')->constrained('treatments');
+            $table->string('title');
+            $table->boolean('status');
+            $table->timestamps();
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('call_statuses');
+        Schema::dropIfExists('treatment_services');
     }
 };

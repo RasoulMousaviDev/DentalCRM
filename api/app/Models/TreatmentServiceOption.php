@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class TreatmentSubCategoryOption extends Model
+class TreatmentServiceOption extends Model
 {
     use HasFactory;
 
@@ -20,8 +20,8 @@ class TreatmentSubCategoryOption extends Model
         'updated_at' => JDate::class,
     ];
 
-    public function subCategory(): BelongsTo
+    public function services(): BelongsTo
     {
-        return $this->belongsTo(TreatmentSubCategory::class);
+        return $this->belongsTo(TreatmentService::class);
     }
 }

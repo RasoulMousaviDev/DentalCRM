@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('treatment')->constrained('treatments');
             $table->timestamp('due_date');
             $table->string('desc');
-            $table->enum('status', ['pending', 'visited', 'missed','canceled'])->default('pending');
+            $table->foreignId('status')->constrained('statuses');
             $table->timestamps();
         });
     }

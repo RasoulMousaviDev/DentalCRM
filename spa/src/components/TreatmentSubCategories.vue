@@ -72,8 +72,8 @@
 
 <script setup>
 import { defineAsyncComponent, inject, ref, watch } from 'vue';
-import { useTreatmentSubCategoriesStore } from '@/stores/treatment-sub-categories';
-import { useTreatmentSubCategoryOptionsStore } from '@/stores/treatment-sub-category-options';
+import { useTreatmentSubCategoriesStore } from '@/stores/treatment-services';
+import { useTreatmentSubCategoryOptionsStore } from '@/stores/treatment-service-options';
 
 const { dialog, confirm, toast, t } = inject('service')
 

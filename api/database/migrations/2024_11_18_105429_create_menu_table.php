@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('calls', function (Blueprint $table) {
+        Schema::create('menu', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients');
-            $table->foreignId('status')->constrained('statuses');
-            $table->string('mobile', 11);
-            $table->string('desc');
-            $table->string('log');
-            $table->timestamps();
+            $table->string('name');
+            $table->string('title');
+            $table->string('route');
+            $table->string('icon');
+            $table->boolean('active')->default(true);
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('calls');
+        Schema::dropIfExists('menus');
     }
 };

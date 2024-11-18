@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('followups', function (Blueprint $table) {
+        Schema::create('treatment_service_options', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients');
-            $table->date('due_date');
-            $table->string('desc');
-            $table->enum('status', ['pending', 'done', 'missed']);
+            $table->foreignId('treatment_service_id')->constrained('treatment_services');
+            $table->string('title');
+            $table->integer('cost');
+            $table->boolean('status');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('followups');
+        Schema::dropIfExists('treatment_service_options');
     }
 };

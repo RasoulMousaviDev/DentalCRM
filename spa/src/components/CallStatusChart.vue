@@ -8,18 +8,14 @@
 </template>
 
 <script setup>
-import { useCallStatuesStore } from '@/stores/call-statuses';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { ref, onMounted, inject, computed, reactive } from "vue";
+import { useCallsStore } from '@/stores/calls';
+import { ref, onMounted, computed, reactive } from "vue";
+
 const props = defineProps({ data: { type: Array, default: ({}) } })
 
-const store = useCallStatuesStore()
-store.index().then(() => {
-    Object.entries(props.data).forEach(([id, count]) => {
-        const item = store.items.find(i => i.id == id)
-        item.count = count
-    })
-})
+const store = useCallsStore()
+
 const chartOptions = ref(null);
 const backgroundColor = [
     "#4F8BD8", "#1BD8FF", "#D8A11B", "#1BD84F", "#D883A0",
@@ -28,10 +24,10 @@ const backgroundColor = [
     "#1BD8C6", "#C6D81B", "#D87A1B", "#1BD88F", "#6A1BD8",
 ]
 const chartData = computed(() => ({
-    labels: store.items.map(i => i.value),
+    labels: store.statuses.map(i => i.value),
     datasets: [
         {
-            data: store.items.map(i => i.count),
+            data: store.statuses.map(s => props.data[s.id]),
             backgroundColor,
         }
     ]

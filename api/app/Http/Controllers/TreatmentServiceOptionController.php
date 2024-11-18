@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTreatmentSubCategoryOptionRequest;
-use App\Http\Requests\UpdateTreatmentSubCategoryOptionRequest;
-use App\Models\TreatmentSubCategory;
-use App\Models\TreatmentSubCategoryOption;
+use App\Http\Requests\StoreTreatmentServiceOptionRequest;
+use App\Http\Requests\UpdateTreatmentServiceOptionRequest;
+use App\Models\TreatmentService;
+use App\Models\TreatmentServiceOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class TreatmentSubCategoryOptionController extends Controller
+class TreatmentServiceOptionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(TreatmentSubCategory $subCategory)
+    public function index(TreatmentService $service)
     {
-        $items = $subCategory->options()->get();
+        $items = $service->options()->get();
 
         return response()->json(['items' => $items]);
     }
@@ -24,13 +24,13 @@ class TreatmentSubCategoryOptionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTreatmentSubCategoryOptionRequest $request, TreatmentSubCategory $subCategory)
+    public function store(StoreTreatmentServiceOptionRequest $request, TreatmentService $service)
     {
         $form = $request->only(['title', 'cost', 'status']);
 
-        $subCategory->options()->create($form)->save();
+        $service->options()->create($form)->save();
 
-        $option =  $subCategory->options()->latest()->first();
+        $option =  $service->options()->latest()->first();
 
         return response()->json($option);
     }
@@ -39,7 +39,7 @@ class TreatmentSubCategoryOptionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTreatmentSubCategoryOptionRequest $request, TreatmentSubCategoryOption $option)
+    public function update(UpdateTreatmentServiceOptionRequest $request, TreatmentServiceOption $option)
     {
         $form = $request->only($option->fillable);
 
@@ -53,7 +53,7 @@ class TreatmentSubCategoryOptionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TreatmentSubCategoryOption $option)
+    public function destroy(TreatmentServiceOption $option)
     {
         $option->delete();
 

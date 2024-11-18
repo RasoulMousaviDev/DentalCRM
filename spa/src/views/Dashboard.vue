@@ -19,8 +19,8 @@
             </div>
         </div>
         <ul class="w-full flex gap-8">
-            <li v-for="(card, i) in cards" :key="i" class="flex-1">
-                <div class="card mb-0 flex flex-col gap-4">
+            <li v-for="(card, i) in cards" :key="i" class="flex-1 grow">
+                <div class="card mb-0 flex flex-col gap-4 h-full">
                     <div class="flex justify-between">
                         <div class="flex flex-col gap-4">
                             <span class="text-lg text-muted-color font-medium">
@@ -102,74 +102,9 @@ const cards = reactive([
         title: 'follow-ups',
         class: 'text-orange-500 bg-orange-200 dark:bg-orange-400/10',
         icon: 'pi-pen-to-square',
-        count: computed(() => store.charts.followupCount)
+        count: computed(() => store.charts.followUpCount)
     },
 ])
-
-// const chartData = ref();
-// const chartOptions = ref();
-
-// const setChartData = () => {
-//     const documentStyle = getComputedStybg-blue-100 dark:bg-blue-400/10le(document.documentElement);
-
-//     return {
-//         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-//         datasets: [
-//             {
-//                 label: 'My First dataset',
-//                 backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-//                 borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-//                 data: [65, 59, 80, 81, 56, 55, 40]
-//             }
-//         ]
-//     };
-// };
-// const setChartOptions = () => {
-//     const documentStyle = getComputedStyle(document.documentElement);
-//     const textColor = documentStyle.getPropertyValue('--p-text-color');
-//     const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-//     const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
-
-//     return {
-//         indexAxis: 'y',
-//         maintainAspectRatio: false,
-//         plugins: {
-//             // legend: {
-//             //     labels: {
-//             //         color: textColor
-//             //     }
-//             // }
-//         },
-//         // scales: {
-//         //     x: {
-//         //         // ticks: {
-//         //         //     color: textColorSecondary,
-//         //         //     font: {
-//         //         //         weight: 500
-//         //         //     }
-//         //         // },
-//         //         // grid: {
-//         //         //     display: false,
-//         //         //     drawBorder: false
-//         //         // }
-//         //     },
-//         //     y: {
-//         //         // ticks: {
-//         //         //     color: textColorSecondary
-//         //         // },
-//         //         // grid: {
-//         //         //     color: surfaceBorder,
-//         //         //     drawBorder: false
-//         //         // }
-//         //     }
-//         // }
-//     };
-// }
-
-// onMounted(() => {
-//     chartData.value = setChartData();
-//     chartOptions.value = setChartOptions();
-// });
 </script>
 
 

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -17,10 +19,8 @@ class UserController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $columns = ['name', 'mobile', 'email'];
-
-        $users = User::when($request->input('query'), function ($query, $value) use ($columns) {
-            $query->whereAny($columns, 'like', "%{$value}%");
+        $users = User::when($request->input('id'), function ($query, $id) {
+            $query->where('id', $id);
         })->when($request->input('roles'), function ($query, $roles) {
             $query->whereHas('roles', function (Builder $query) use ($roles) {
                 $query->whereIn('id', $roles);
@@ -30,9 +30,18 @@ class UserController extends Controller
             $query->where('status', $status);
         });
 
+        $columns = ['name', 'mobile', 'email'];
+
         foreach ($columns as $column)
             $users->when($request->input($column), function ($query, $value) use ($column) {
                 $query->where($column, 'like', "%{$value}%");
+            });
+
+        $dates = ['created_at', 'updated_at'];
+
+        foreach ($dates as $date)
+            $users->when($request->input($date), function ($query, $value) use ($date) {
+                $query->whereBetween($date, $value);
             });
 
         $users = $users->with('roles:id,title')->latest()->paginate($rows);
@@ -51,6 +60,8 @@ class UserController extends Controller
         $form['password'] = $this->generatePassword(8);
 
         $roles = $request->get('roles');
+
+        $form['role_id'] = $roles[0];
 
         $user = User::create($form);
 
@@ -74,9 +85,13 @@ class UserController extends Controller
 
         $user->roles()->attach($roles);
 
+        in_array($user->role_id, $roles) || $form['role_id'] = $roles[0];
+
         $user->update($form);
 
         $user->refresh();
+
+        $user->load('roles:id,title');
 
         return response()->json($user);
     }
@@ -86,11 +101,17 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->roles()->detach();
+        $access = Auth::user()->hasRole('super-admin') && $user->id != auth()->id();
 
-        $user->delete();
+        if ($access) {
+            $user->roles()->detach();
 
-        return response()->json(['message' => __('messages.deleted-successfully')]);
+            $user->delete();
+
+            return response()->json(['message' => __('messages.deleted-successfully')]);
+        }
+
+        return response()->json(['message' => __('messages.have-not-access')], 403);
     }
 
     private function generatePassword($length = 8)

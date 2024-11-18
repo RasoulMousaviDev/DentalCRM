@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTreatmentSubCategoryOptionRequest extends FormRequest
+class UpdateTreatmentServiceOptionRequest extends FormRequest
 {
    
     /**
@@ -15,7 +15,7 @@ class UpdateTreatmentSubCategoryOptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|unique:treatment_sub_category_options,title,' . $this->option->id,
+            'title' => 'required|string|unique:treatment_service_options,title,' . $this->option->id,
             'cost' => 'required|numeric|between:100000,100000000',
             'status' => 'required|boolean'
         ];

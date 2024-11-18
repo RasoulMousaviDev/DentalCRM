@@ -10,15 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
-    public $fillable = ['name', 'mobile', 'email', 'status','password'];
-    
-    protected $hidden = [ 'password'];
+    public $fillable = ['name', 'mobile', 'email', 'role_id', 'status', 'password'];
+
+    protected $hidden = ['role_id', 'password'];
 
     protected $casts = [
         'status' => 'boolean',
@@ -68,5 +69,14 @@ class User extends Authenticatable implements JWTSubject
     public function campains(): HasMany
     {
         return $this->hasMany(Campain::class);
+    }
+
+    public function hasRole($name)
+    {
+        $id = Auth::user()->id;
+
+        $role = Role::firstWhere('name', $name);
+
+        return User::find($id)->roles()->where('id', $role->id)->exists();
     }
 }

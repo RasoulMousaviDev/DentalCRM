@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class TreatmentSubCategory extends Model
+class TreatmentService extends Model
 {
     use HasFactory;
 
@@ -27,6 +27,6 @@ class TreatmentSubCategory extends Model
 
     public function options(): HasMany
     {
-        return $this->hasMany(TreatmentSubCategoryOption::class);
+        return $this->hasMany(TreatmentServiceOption::class);
     }
 }

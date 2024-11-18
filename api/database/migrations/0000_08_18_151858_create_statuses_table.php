@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('treatment_sub_categories', function (Blueprint $table) {
+        Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('treatment_id')->constrained('treatments');
-            $table->string('title');
-            $table->boolean('status');
-            $table->timestamps();
+            $table->string('value');
+            $table->enum('severity', ['secondary', 'success', 'info', 'warn', 'danger', 'help']);
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('treatment_sub_categories');
+        Schema::dropIfExists('statuses');
     }
 };

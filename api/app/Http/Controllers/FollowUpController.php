@@ -7,7 +7,7 @@ use App\Models\Followup;
 use Illuminate\Database\Eloquent\Builder;
 use Morilog\Jalali\Jalalian;
 
-class FollowupController extends Controller
+class FollowUpController extends Controller
 {
     /**
      * Display a listing of the resource.

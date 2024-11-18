@@ -1,17 +1,16 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem">
+        <DataTable :value="store.items">
             <template #header>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold ml-auto">
-                        {{ $t('users') }}
-                    </span>
-                    <IconField>
-                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
-                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
-                    </IconField>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
-                    <Button icon="pi pi-plus" :label="$t('new-user')" severity="success" @click="create()" />
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold">{{ $t('users') }}</span>
+                        <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
+                        <hr class="grow !ml-2"></hr>
+                        <Button icon="pi pi-plus" :label="$t('new-user')" severity="success"
+                            @click="create()" />
+                    </div>
+                    <UserFilters />
                 </div>
             </template>
             <template #empty>
@@ -33,10 +32,9 @@
                     <Tag v-else severity="danger" :value="$t('deactive')" />
                 </template>
             </Column>
-            <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
-            <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
-
-            <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20">
+            <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" />
+            <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" />
+            <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-28">
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
                         <Button icon="pi pi-pencil" rounded text severity="secondary" @click="edit(data)" />
@@ -50,14 +48,12 @@
 </template>
 
 <script setup>
+import UserFilters from '@/components/UserFilters.vue';
+import UserForm from '@/components/UserForm.vue';
 import { useUsersStore } from '@/stores/users';
 import { defineAsyncComponent, inject, ref, watch } from 'vue';
 
-const { dialog, confirm, popover, toast, t } = inject('service')
-
-popover.value.component = defineAsyncComponent(() => import('@/components/UserFilters.vue'));
-
-const UserForm = defineAsyncComponent(() => import('@/components/UserForm.vue'));
+const { dialog, confirm, toast, t } = inject('service')
 
 const store = useUsersStore()
 

@@ -10,6 +10,7 @@
 <script setup>
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ref, onMounted, inject, computed, reactive } from "vue";
+
 const props = defineProps({ data: { type: Array, default: ({}) } })
 
 const { t } = inject('service')

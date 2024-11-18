@@ -9,14 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@primevue/themes": "^4.0.4",
+    "@primevue/themes": "^4.2.2",
     "axios": "^1.7.4",
     "chart.js": "^4.4.6",
     "chartjs-plugin-datalabels": "^2.2.0",
     "laravel-echo": "^1.16.1",
     "pinia": "^2.1.7",
     "primeicons": "^7.0.0",
-    "primevue": "^4.0.4",
+    "primevue": "^4.2.2",
     "pusher-js": "^8.4.0-rc2",
     "tailwindcss-primeui": "^0.3.4",
     "vue": "^3.4.29",

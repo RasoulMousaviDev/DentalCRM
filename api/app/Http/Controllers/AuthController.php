@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangeRoleRequest;
 use App\Http\Requests\LoginRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\RateLimiter;
@@ -36,12 +37,21 @@ class AuthController extends Controller
         $user = [
             'name' => $user->name,
             'role' => $user->role,
-            'roles' => $user->roles->pluck('id')
+            'roles' => $user->roles->pluck('id'),
+            'menu' => $user->role->menu,
         ];
 
         return response()->json($user);
     }
 
+    public function changeRole(ChangeRoleRequest $request)
+    {
+        $role = $request->only('role');
+
+        auth()->user->update(compact('role'));
+
+        return response()->json(['ok' => true]);
+    }
 
     public function refresh()
     {

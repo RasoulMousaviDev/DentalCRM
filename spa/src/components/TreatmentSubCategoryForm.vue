@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { useTreatmentSubCategoriesStore } from '@/stores/treatment-sub-categories';
+import { useTreatmentSubCategoriesStore } from '@/stores/treatment-services';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
 const { toast, confirm, t } = inject('service')
