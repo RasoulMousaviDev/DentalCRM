@@ -1,59 +1,87 @@
 <template>
-    <form @submit.prevent="handleSubmit()" class="grid grid-cols-2 gap-4 w-full md:w-[30rem]">
-        <div class="flex flex-col gap-2">
-            <label class="has-[+*+small]:text-red-500"> {{ $t('call_status') }}</label>
-            <Select v-model="form.status" :options="callStatuses.items" :loading="callStatuses.fetching"
-                optionValue="id" fluid  :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
-                <template #value="{ value }">
-                    <Tag v-if="value" class="text-xs" v-bind="callStatuses.items.find(({ id }) => value == id)" />
-                </template>
-                <template #option="{ option }">
-                    <Tag v-bind="option" class="text-xs" />
-                </template>
-            </Select>
-            <small v-if="errors.status" v-text="errors.status[0]" class="text-red-500" />
+    <form @submit.prevent="handleSubmit()"
+        class="grid grid-cols-2 gap-x-4 gap-y-8 [&_small]:-mb-6 w-full md:w-[40rem] pt-2">
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <Select v-model="patient" :options="patients.items" option-value="id" :loading="patients.fetching"
+                    resetFilterOnHide autoFilterFocus filter
+                    :filterFields="[({ mobiles }) => mobiles.map(m => m.number).join(' ')]"
+                    :optionLabel="({ firstname, lastname }) => [firstname, lastname].join(' ')" fluid
+                    :invalid="errors['patient.id']"
+                    panel-class="[&_.p-iconfield]:ltr [&_input:not(.p-filled)]:!text-right"
+                    :filter-placeholder="$t('search-patient')" @filter="patients.search($event.value)">
+                </Select>
+                <label> {{ $t('patient') }}</label>
+            </FloatLabel>
+            <small v-if="errors['patient.id']" v-text="errors['patient.id'][0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-2 grow">
-            <label class="has-[+*+small]:text-red-500">{{ $t('mobile') }}</label>
-            <Select v-model="form.mobile" :options="patient.mobiles" optionLabel="number" optionValue="number" fluid
-                 class="ltr has-[+small]:!border-red-500" panel-class="ltr" />
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <Select v-model="form.mobile" :options="patients.item?.mobiles" optionLabel="number"
+                    optionValue="number" fluid :loading="patients.fetching" :invalid="errors.mobile" panel-class="ltr"
+                    class="text-left *:!pl-0" />
+                <label>{{ $t('mobile') }}</label>
+            </FloatLabel>
             <small v-if="errors.mobile" v-text="errors.mobile[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-2 col-span-2">
-            <label class="has-[+*+small]:text-red-500"> {{ $t('desc') }}</label>
-            <Textarea v-model="form.desc" fluid rows="5" cols="30" class="has-[+small]:!border-red-500" />
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <Select v-model="form.patient.status" :options="patients.statuses" optionValue="id" fluid
+                    :invalid="errors['patient.status']">
+                    <template #value="{ value }">
+                        <Tag v-if="value" class="text-xs" v-bind="patients.statuses.find(({ id }) => value == id)" />
+                    </template>
+                    <template #option="{ option }">
+                        <Tag v-bind="option" class="text-xs" />
+                    </template>
+                </Select>
+                <label> {{ $t('patient-status') }}</label>
+            </FloatLabel>
+            <small v-if="errors['patient.status']" v-text="errors['patient.status'][0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <Select v-model="form.status" :options="store.statuses" optionValue="id" fluid :invalid="errors.status">
+                    <template #value="{ value }">
+                        <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
+                    </template>
+                    <template #option="{ option }">
+                        <Tag v-bind="option" class="text-xs" />
+                    </template>
+                </Select>
+                <label> {{ $t('call_status') }}</label>
+            </FloatLabel>
+            <small v-if="errors.status" v-text="errors.status[0]" class="text-red-500" />
+        </div>
+
+        <div class="flex flex-col gap-1 col-span-2">
+            <FloatLabel variant="on">
+                <Textarea v-model="form.desc" fluid rows="5" cols="30" :invalid="errors.desc" />
+                <label> {{ $t('desc') }}</label>
+            </FloatLabel>
             <small v-if="errors.desc" v-text="errors.desc[0]" class="text-red-500" />
         </div>
-        <hr class="col-span-2">
-        <div class="flex flex-col gap-2" :class="{ 'col-span-2': !followup }">
-            <label class="has-[+*+small]:text-red-500"> {{ $t('patient_status') }}</label>
-            <Select v-model="form.patient_status" :options="patientStatuses.items" :loading="patientStatuses.fetching"
-                optionValue="id" fluid  :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
-                <template #value="{ value }">
-                    <Tag v-if="value" class="text-xs" v-bind="patientStatuses.items.find(({ id }) => value == id)" />
-                </template>
-                <template #option="{ option }">
-                    <Tag v-bind="option" class="text-xs" />
-                </template>
-            </Select>
-            <small v-if="errors.patient_status" v-text="errors.patient_status[0]" class="text-red-500" />
-        </div>
-        <template v-if="form.followup">
-            <div class="flex flex-col gap-2">
-                <label class="has-[+*+small]:text-red-500">{{ $t('followup-date') }}</label>
-                <DatePicker v-model="form.followup.due_date" class="w-full [&>input]:has-[+small]:!border-red-500"
-                    :placeholder="$t('choose')" :inputClass="{ 'ltr': form.due_date }"
-                    panelClass="ltr -translate-x-10" dateFormat="yy/mm/dd" showTime hourFormat="24" />
-                <small v-if="errors['followup.due_date']" v-text="errors['followup.due_date'][0]"
+
+        <template v-if="form.follow_up">
+            <div class="flex flex-col gap-1">
+                <FloatLabel variant="on">
+                    <DatePicker v-model="form.follow_up.due_date" :invalid="errors['follow_up.due_date']" class="ltr"
+                        fluid dateFormat="yy/mm/dd" show-time :min-date="new Date()"/>
+                    <label>{{ $t('follow-up-date') }}</label>
+                </FloatLabel>
+                <small v-if="errors['follow_up.due_date']" v-text="errors['follow_up.due_date'][0]"
                     class="text-red-500" />
             </div>
-            <div class="flex flex-col gap-2 col-span-2">
-                <label class="has-[+*+small]:text-red-500"> {{ $t('followup-desc') }}</label>
-                <Textarea v-model="form.followup.desc" fluid rows="5" cols="30" class="has-[+small]:!border-red-500" />
-                <small v-if="errors['followup.desc']" v-text="errors['followup.desc'][0]" class="text-red-500" />
+            <div class="flex flex-col gap-1 col-span-2">
+                <FloatLabel variant="on">
+                    <Textarea v-model="form.follow_up.desc" fluid rows="5" cols="30"
+                        :invalid="errors['follow_up.due_date']" />
+                    <label> {{ $t('follow-up-desc') }}</label>
+                </FloatLabel>
+                <small v-if="errors['follow_up.desc']" v-text="errors['follow_up.desc'][0]" class="text-red-500" />
             </div>
         </template>
-        <div class="flex justify-between col-span-2 gap-2 mt-8">
+        <div class="flex justify-between col-span-2 gap-2 mt-4">
             <Button :label="$t('back')" severity="secondary" @click="dialogRef.close()" />
             <Button icon="pi pi-save" :label="$t('save')" type="submit" severity="success" :loading="loading" />
         </div>
@@ -63,7 +91,7 @@
 <script setup>
 import { useCallsStore } from '@/stores/calls';
 import { usePatientsStore } from '@/stores/patients';
-import { computed, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { inject, reactive, ref } from 'vue';
 
 const { route } = inject('service')
@@ -72,15 +100,17 @@ const { id } = route.params
 
 const dialogRef = inject('dialogRef')
 
-const form = reactive({ })
+const form = reactive({ patient: {} })
 const errors = ref({})
 const loading = ref(false)
 
 const store = useCallsStore()
 
-const patientStore = usePatientsStore()
-const patient = reactive(patientStore.items.find((item) => item.id == id))
-const followup = computed(() => [1].includes(form.patient_status))
+const patients = usePatientsStore()
+if (patients.statuses.length === 0)
+    patients.index()
+// const patient = reactive(patients.items.find((item) => item.id == id))
+// const followup = computed(() => [1].includes(form.patient_status))
 
 const handleSubmit = async () => {
     loading.value = true
@@ -94,29 +124,61 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else
-        toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 
 }
 
-watch(followup, (v) => {
-    if (v) form.followup = {}
-    else delete form.followup
+const patient = ref()
+
+watch(patient, async (v) => {
+    if (v) {
+        await patients.show(v)
+
+        const item = patients.item
+
+        if (item) {
+            form.patient.id = item.id
+            form.patient.status = item.status.id
+
+            if (item.mobiles.length === 1)
+                form.mobile = item.mobiles[0].number
+            else {
+                const mobile = item.mobiles.find(m => m.number.includes(patients.filters.query))
+
+                if (mobile) form.mobile = mobile.number
+            }
+            delete errors.value[`patient.id`]
+            delete errors.value[`patient.status`]
+
+        } else patient.value = undefined
+    }
+})
+
+watch(() => form.patient.status, (v) => {
+    if (v == 9) delete form.follow_up
+    else form.follow_up = {}
 })
 
 watch(computed(() => Object.assign({}, form)), (value, old) => {
+    console.log(value, old);
+
     Object.keys(form).forEach((key) => {
+        if (key == 'follow_up') {
+            ['due_date', 'desc'].forEach(k => {
+                if (value.follow_up[k] != old.follow_up?.[k]) delete errors.value[`follow_up.${k}`]
+            })
+        }
         if (value[key] != old[key]) delete errors.value[key]
     })
+}, { deep: true })
+
+onMounted(() => {
+    if (id)
+        patient.value = +id
+    else if (store.filters.patient)
+        patient.value = +store.filters.patient
+
 })
-
-form.patient = id
-form.patient_status = patient.status.id
-
-if (dialogRef.value.data)
-    form.followup_id = dialogRef.value.data
-
-if (patient.mobiles.length === 1)
-    form.mobile = patient.mobiles[0].number
 </script>
 
 <style lang="scss" scoped></style>

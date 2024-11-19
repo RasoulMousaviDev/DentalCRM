@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,10 +40,17 @@ class UserController extends Controller
 
         $dates = ['created_at', 'updated_at'];
 
-        foreach ($dates as $date)
+        foreach ($dates as $date) {
+            $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+                ->setTimezone('Asia/Tehran')
+                ->{$i ? 'endOfDay' : 'startOfDay'}()
+                ->format('Y-m-d H:i:s'));
+
             $users->when($request->input($date), function ($query, $value) use ($date) {
                 $query->whereBetween($date, $value);
             });
+        }
+
 
         $users = $users->with('roles:id,title')->latest()->paginate($rows);
 

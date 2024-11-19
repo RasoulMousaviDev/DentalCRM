@@ -17,7 +17,7 @@
             <label>{{ $t('mobile') }} </label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <Select v-model="filters.status" :options="store.statuses" optionValue="id" fluid>
+            <Select v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear>
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
                 </template>
@@ -29,7 +29,7 @@
         </FloatLabel>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" fluid class="ltr"
-                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+                showButtonBar dateFormat="yy/mm/dd" />
             <label> {{ $t('created_at') }}</label>
         </FloatLabel>
         <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" class="w-32"

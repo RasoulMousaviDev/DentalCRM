@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -55,7 +56,27 @@ class PatientController extends Controller
                 $query->where($column, 'like', "%{$value}%");
             });
 
-        $patients = $patients->latest()->paginate($rows);
+        $dates = ['created_at', 'updated_at'];
+
+        foreach ($dates as $date) {
+            $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+                ->setTimezone('Asia/Tehran')
+                ->{$i ? 'endOfDay' : 'startOfDay'}()
+                ->format('Y-m-d H:i:s'));
+
+            $patients->when($request->input($date), function ($query, $value) use ($date) {
+                $query->whereBetween($date, $value);
+            });
+        }
+
+        $patients = $patients->with([
+            'mobiles',
+            'city:id,title',
+            'province:id,title',
+            'leadSource:id,title',
+            'treatments:id,title',
+            'status'
+        ])->latest()->paginate($rows);
 
         $response = $this->paginate($patients);
 

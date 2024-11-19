@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IndexCallRequest;
 use App\Http\Requests\StoreCallRequest;
 use App\Models\Call;
-use App\Models\Followup;
+use App\Models\FollowUp;
 use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,16 +27,12 @@ class CallController extends Controller
 
         $calls = Call::latest()->with('status:id,value,severity');
 
-        if ($patient)
-            $calls->where('patient_id', $patient);
-        else
-            $calls->with(['patient' => fn($q) => $q->without([
-                'mobiles',
-                'city',
-                'province',
-                'leadSource',
-                'status'
-            ])->select('id', 'firstname', 'lastname')]);
+        // if ($patient)
+        //     $calls->where('patient_id', $patient);
+        // else
+
+        $calls->with('patient:id,firstname,lastname');
+
         $calls = $calls->when($request->input('query'), function ($query, $value) {
             $query->whereHas('patient', function (Builder $query) use ($value) {
                 $query->whereAny(['firstname', 'lastname'], 'like', "%{$value}%");
@@ -52,8 +48,12 @@ class CallController extends Controller
         })->when($request->input('mobile'), function ($query, $mobile) {
             $query->where('mobile', 'like', "%{$mobile}%");
         })->when($request->input('created_at'), function ($query, $created_at) {
-            $created_at = Jalalian::fromFormat('Y/m/d', $created_at)->toCarbon()->format('Y-m-d');
-            $query->whereDate('created_at', $created_at);
+            $date = collect($created_at)->map(fn($d, $i) => Carbon::parse($d)
+                ->setTimezone('Asia/Tehran')
+                ->{$i ? 'endOfDay' : 'startOfDay'}()
+                ->format('Y-m-d H:i:s'));
+            Log::alert($date);
+            $query->whereBetween('created_at', $date);
         })->when($request->input('status'), function ($query, $status) {
             $query->whereHas('status', function (Builder $query) use ($status) {
                 $query->where('id', $status);
@@ -63,44 +63,54 @@ class CallController extends Controller
 
         $calls = $calls->paginate($rows);
 
-        return response()->json($this->paginate($calls));
+        $response = $this->paginate($calls);
+
+        $response['statuses'] = Call::model()->statuses;
+
+        return response()->json($response);
     }
 
 
     public function store(StoreCallRequest $request)
     {
+        $request = collect($request->all())->dot();
+
         $form = $request->only(['status', 'mobile',  'desc']);
 
-        $patient = Patient::find($request->get('patient'));
+        $patient = Patient::find($request->get('patient.id'));
 
-        $status = $request->get('patient_status');
+        $status = $request->get('patient.status');
 
         if ($status == $patient->status)
             $form['log'] = __('messages.call-stored');
         else {
             $patient->update(compact('status'));
+
             $form['log'] = __('messages.patient-status-changed', [
                 'from' => $patient->status->title,
-                'to' => Patient::find($status)->title
+                'to' => $patient->refresh() && $patient->status->title
             ]);
         }
 
-        $patient->calls()->create($form)->save();
+        $patient->calls()->create($form->toArray())->save();
 
-        if ($request->has('followup_id'))
-            Followup::find($request->get('followup_id'))->update(['status' => 'done']);
+        if ($request->has('follow_up.id'))
+            FollowUp::find($request->get('follow_up.id'))->update(['status' => 'done']);
 
-
-        $call = $patient->calls()->with('status:id,value,severity')->latest()->first();
+        $call = $patient->calls()
+            ->with('status:id,value,severity')
+            ->with('patient:id,firstname,lastname')
+            ->latest()->first();
 
         $response = compact('call');
 
-        if ($request->has('followup')) {
-            $form = $request->get('followup');
-            $patient->followups()->create($form);
-            $response['followup'] = $patient->followups()->latest()->first();
-        }
+        $request = $request->undot();
 
+        if ($request->has('follow_up')) {
+            $form = $request->undot()->get('follow_up');
+            $patient->followUps()->create($form);
+            $response['follow_up'] = $patient->followUps()->latest()->first();
+        }
 
         return response()->json($response);
     }

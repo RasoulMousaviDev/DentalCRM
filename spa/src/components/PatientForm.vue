@@ -57,8 +57,8 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <DatePicker v-model="form.birthday" :invalid="errors.birthday" class="ltr" fluid dateFormat="yy/mm/dd"
-                    hideOnDateTimeSelect />
+                <DatePicker v-model="form.birthday" :invalid="errors.birthday" class="ltr" fluid
+                    dateFormat="yy/mm/dd" />
                 <label>{{ $t('birthday') }}</label>
             </FloatLabel>
             <small v-if="errors.birthday" v-text="errors.birthday[0]" class="text-red-500" />

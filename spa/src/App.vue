@@ -18,7 +18,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useDialog } from 'primevue/usedialog'
 import { useToast } from 'primevue/usetoast'
-import { provide, reactive, ref } from 'vue'
+import { onMounted, provide, reactive, ref, watch } from 'vue'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -32,7 +32,9 @@ const service = { toast, dialog, confirm, popover, router, route, t }
 
 provide('service', service)
 
-// watch(route, () => dialog?.close());
+onMounted(() => watch(route, () => document.dispatchEvent(new KeyboardEvent("keydown", {
+    'key': 'Escape'
+}))))
 </script>
 
 <style lang="scss">

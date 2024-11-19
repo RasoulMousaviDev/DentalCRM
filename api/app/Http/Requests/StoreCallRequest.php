@@ -14,14 +14,14 @@ class StoreCallRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|exists:call_statuses,id',
+            'status' => 'required|exists:statuses,id',
             'mobile' => 'required|numeric|digits:11|starts_with:09|exists:patient_mobiles,number',
             'desc' => 'required|string',
-            'patient' => 'required|exists:patients,id',
-            'patient_status' => 'required|exists:patient_statuses,id',
-            'followup.due_date' => 'required_if:patient_status,1|date',
-            'followup.desc' => 'required_if:patient_status,1|string',
-            "followup_id" => "nullable|exists:followups,id"
+            'patient.id' => 'required|exists:patients,id',
+            'patient.status' => 'required|exists:statuses,id',
+            'follow_up.due_date' => 'required_unless:patient.status,9,null|date',
+            'follow_up.desc' => 'required_unless:patient.status,9,null|string',
+            "follow_up.id" => "nullable|exists:follow_ups,id"
         ];
     }
 }
