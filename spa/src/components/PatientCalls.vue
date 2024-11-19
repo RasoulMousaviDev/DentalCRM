@@ -36,7 +36,7 @@
 import { useCallsStore } from '@/stores/calls';
 import { defineAsyncComponent, inject } from 'vue';
 
-const PatientCallForm = defineAsyncComponent(() => import('@/components/PatientCallForm.vue'));
+const PatientCallForm = defineAsyncComponent(() => import('@/components/CallForm.vue'));
 
 const { dialog, route, t } = inject('service')
 

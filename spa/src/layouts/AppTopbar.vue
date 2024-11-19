@@ -31,7 +31,10 @@ const items = computed(() => {
             items: auth.user.roles.map((id) => {
                 const { title: label } = roles.items.find(role => role.id == id) || {}
                 const icon = '' + (id == auth.user.role.id ? 'pi pi-check' : 'w-4')
-                return { label, icon, command: () => auth.changeRole(id) }
+                return { label, icon, command: async () => {
+                    await auth.changeRole(id) ;
+                    router.replace('/')
+                }}
             })
         });
 

@@ -2,11 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Treatment;
-use App\Models\TreatmentSubCategory;
-use App\Models\TreatmentSubCategoryOption;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreTreatmentPlanRequest extends FormRequest
 {

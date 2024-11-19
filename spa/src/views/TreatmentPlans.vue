@@ -37,7 +37,7 @@
                 <template #editor="{ data, field }">
                     <Select v-model="data[field]" option-value="value" focusOnHover
                         :options="Object.entries(severities).map(([value, severity]) => ({ value, severity }))" fluid
-                        checkmark :placeholder="$t('choose')" class="has-[+small]:!border-red-500 -my-2">
+                         :placeholder="$t('choose')" class="has-[+small]:!border-red-500 -my-2">
                         <template #value="{ value }">
                             <Tag :value="$t(value)" :severity="severities[value]" />
                         </template>

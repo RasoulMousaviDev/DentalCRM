@@ -17,7 +17,7 @@ class UpdatePatientRequest extends FormRequest
         return [
             'firstname' => 'required|string',
             'lastname' => 'required|string',
-            'birthday' => 'required|date_format:Y/m/d',
+            'birthday' => 'required|date',
             'gender' => 'required|in:male,female',
             'mobiles' => 'required|array|min:1',
             'mobiles.*' => 'required|numeric|digits:11|starts_with:09|unique:patient_mobiles,number,' . $this->patient->id . ',patient_id',
@@ -25,7 +25,7 @@ class UpdatePatientRequest extends FormRequest
             'province' => 'required|exists:provinces,id',
             'city' => 'required|exists:cities,id',
             'lead_source' => 'required|exists:lead_sources,id',
-            'status' => 'required|exists:patient_statuses,id',
+            'status' => 'required|exists:statuses,id',
             'desc' => 'nullable|string'
         ];
     }

@@ -1,122 +1,111 @@
 <template>
-    <form @submit.prevent="handleSubmit()" @keypress.enter.prevent=""
-        class="grid grid-cols-2 gap-4 w-full md:w-[30rem]">
-        <div class="flex flex-col gap-2">
-            <label>{{ $t('firstname') }}</label>
+    <form @submit.prevent="handleSubmit()"
+        class="grid grid-cols-[repeat(7,_minmax(0,_1fr))] w-full gap-4 [&>span]:flex-1 [&>span]:shrink-0">
+        <FloatLabel variant="on">
             <InputText v-model="filters.firstname" fluid />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label>{{ $t('lastname') }}</label>
+            <label>{{ $t('firstname') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
             <InputText v-model="filters.lastname" fluid />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label>{{ $t('birthday') }}</label>
-            <DatePicker v-model="date" class="w-full" :placeholder="$t('choose')"
-                :inputClass="{ 'ltr': filters.birthday }" panelClass="ltr" dateFormat="yy/mm/dd"
-                showButtonBar @clearClick="date = null" />
-        </div>
-        <div class="flex flex-col gap-2 grow">
-            <label>{{ $t('gender') }}</label>
-            <Select v-model="filters.gender" :options="genders" :optionLabel="(opt) => $t(opt)" fluid checkmark
-                :placeholder="$t('choose')" show-clear />
-        </div>
-        <div class="flex flex-col gap-2">
+            <label>{{ $t('lastname') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <InputText v-model="filters.mobile" fluid class="ltr" v-keyfilter.int />
             <label>{{ $t('mobile') }} </label>
-            <InputText v-model="filters.mobile" type="phone" class="ltr w-full" />
-        </div>
-        <div class="flex flex-col gap-2">
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <InputText v-model="filters.telephone" fluid class="ltr" v-keyfilter.int />
             <label> {{ $t('telephone') }}</label>
-            <InputText v-model="filters.telephone" type="phone" class="ltr w-full" />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label> {{ $t('province') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <DatePicker v-model="filters.birthday" selectionMode="range" :manualInput="false" :max-date="new Date()"
+                fluid class="ltr" dateFormat="yy/mm/dd" showButtonBar />
+            <label>{{ $t('birthday') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.gender" :options="genders.items" :optionLabel="(opt) => $t(opt)" fluid
+                show-clear />
+            <label>{{ $t('gender') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.treatment" :options="treatments.items" :loading="treatments.fetching"
+                optionLabel="title" optionValue="id" fluid show-clear />
+            <label> {{ $t('treatment') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
             <Select v-model="filters.province" :options="provinces.items" :loading="provinces.fetching"
-                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" show-clear />
-        </div>
-        <div class="flex flex-col gap-2">
+                optionLabel="title" optionValue="id" fluid show-clear />
+            <label> {{ $t('province') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.city" :options="filters.province ? cities.items : []" :loading="cities.fetching"
+                :emptyMessage="$t('first-select-province')" optionLabel="title" optionValue="id" fluid show-clear />
             <label> {{ $t('city') }}</label>
-            <Select v-model="filters.city" :options="cities.items" :loading="cities.fetching"
-                :emptyMessage="$t('first-select-province')" optionLabel="title" optionValue="id" fluid checkmark
-                :placeholder="$t('choose')" show-clear />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label> {{ $t('lead-source') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
             <Select v-model="filters.lead_source" :options="leadSources.items" :loading="leadSources.fetching"
-                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" show-clear />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label> {{ $t('status') }}</label>
-            <Select v-model="filters.status" :options="statuses.items" :loading="statuses.fetching" optionValue="id"
-                fluid checkmark :placeholder="$t('choose')" show-clear>
+                optionLabel="title" optionValue="id" fluid show-clear />
+            <label> {{ $t('lead-source') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear>
                 <template #value="{ value }">
-                    <Tag v-if="value" class="text-xs" v-bind="statuses.items.find(({ id }) => value == id)" />
+                    <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
                 </template>
                 <template #option="{ option }">
                     <Tag v-bind="option" class="text-xs" />
                 </template>
             </Select>
+            <label> {{ $t('status') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" class="ltr w-full"
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+            <label> {{ $t('created_at') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <DatePicker v-model="filters.updated_at" selectionMode="range" :manualInput="false" class="ltr w-full"
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+            <label> {{ $t('updated_at') }}</label>
+        </FloatLabel>
+        <div class="flex gap-4">
+            <FloatLabel variant="on" class="grow">
+                <InputText v-model="filters.id" fluid class="ltr" v-keyfilter.int />
+                <label>{{ $t('id') }}</label>
+            </FloatLabel>
+            <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" class="w-28 shrink-0"
+                :loading="store.fetching" />
         </div>
-        <div class="flex justify-between col-span-2 gap-2 mt-8">
-            <Button :label="$t('back')" severity="secondary" class="ml-auto" @click="popover.hide()" />
-            <Button v-if="Object.keys(filters).length > 0" icon="pi pi-filter-slash" :label="$t('clear')"
-                severity="warn" outlined @click="clearFilters()" />
-            <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" />
-        </div>
+
     </form>
 </template>
 
 <script setup>
 import { useCitiesStore } from '@/stores/cities';
+import { useGendersStore } from '@/stores/genders';
 import { useLeadSourcesStore } from '@/stores/lead-sources';
-import { usePatientStatuesStore } from '@/stores/patient-statuses';
 import { usePatientsStore } from '@/stores/patients';
 import { useProvincesStore } from '@/stores/provinces';
-import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
-
-const { popover } = inject('service')
+import { useTreatmentsStore } from '@/stores/treatments';
+import { onBeforeUnmount, onMounted, reactive, watch } from 'vue';
 
 const filters = reactive({})
 
-const date = computed({
-    get: () => {
-        if (filters.birthday) {
-            const d = filters.birthday.split('/');
-            return new Date(d[0], d[1] - 1, d[2]);
-        }
-        return null
-    },
-    set: (v) => {
-        if (v) filters.birthday = [
-            v.getFullYear(),
-            ('0' + (v.getMonth() + 1)).slice(-2),
-            ('0' + v.getDate()).slice(-2)
-        ].join('/')
-        else delete filters.birthday
-    }
-})
-
+const store = usePatientsStore()
 const provinces = useProvincesStore()
-const statuses = usePatientStatuesStore()
 const leadSources = useLeadSourcesStore()
+const cities = useCitiesStore()
+const genders = useGendersStore()
+const treatments = useTreatmentsStore()
 
-statuses.index()
+treatments.index()
 provinces.index()
 leadSources.index()
 
-const genders = reactive(['male', 'female'])
-
-const patients = usePatientsStore()
-
 const handleSubmit = async () => {
     popover.value.hide()
-    patients.filters = filters
-    patients.index()
-}
-
-const clearFilters = () => {
-    popover.value.hide()
-    patients.filters = {}
-    patients.index()
+    store.filters = filters
+    store.index()
 }
 
 watch(filters, () => {
@@ -125,14 +114,11 @@ watch(filters, () => {
     })
 }, { deep: true })
 
-const cities = useCitiesStore()
-watch(() => filters.province, (v) => { cities.index(v) })
+watch(() => filters.province, (v) => cities.index(v))
 
-onMounted(() => {
-    Object.assign(filters, patients.filters)
-    delete filters.query
-})
+onMounted(() => Object.assign(filters, store.filters))
 
+onBeforeUnmount(() => store.filters = {})
 </script>
 
 <style lang="scss" scoped></style>

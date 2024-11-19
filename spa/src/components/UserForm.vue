@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit()" class="flex flex-col gap-8 has-[small]:gap-3 w-full md:w-[30rem] pt-2">
+    <form @submit.prevent="handleSubmit()" class="flex flex-col gap-8 [&_small]:-mb-6 w-full md:w-[30rem] pt-2">
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <InputText v-model="form.name" :invalid="errors.name" fluid />

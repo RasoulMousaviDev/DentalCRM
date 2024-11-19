@@ -71,12 +71,17 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Campain::class);
     }
 
-    public function hasRole($name)
+    public function hasRole($role)
     {
-        $id = Auth::user()->id;
+        $user = User::find(Auth::user()->id);
 
-        $role = Role::firstWhere('name', $name);
+        if (is_numeric($role)) 
+            return $user->roles()->where('id', $role)->exists();
+    
+        if (is_string($role)) 
+            return $user->roles()->where('name', $role)->exists();
+        
 
-        return User::find($id)->roles()->where('id', $role->id)->exists();
+        return false;
     }
 }

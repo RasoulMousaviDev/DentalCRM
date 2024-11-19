@@ -43,7 +43,7 @@
 import { useFollowupsStore } from '@/stores/followups';
 import { defineAsyncComponent, inject, reactive } from 'vue';
 
-const PatientCallForm = defineAsyncComponent(() => import('@/components/PatientCallForm.vue'));
+const PatientCallForm = defineAsyncComponent(() => import('@/components/CallForm.vue'));
 
 const severities = reactive({ pending: "warn", done: "success", missed: "danger" })
 

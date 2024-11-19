@@ -57,7 +57,11 @@ class PatientController extends Controller
 
         $patients = $patients->latest()->paginate($rows);
 
-        return response()->json($this->paginate($patients));
+        $response = $this->paginate($patients);
+
+        $response['statuses'] = Patient::model()->statuses;
+
+        return response()->json($response);
     }
 
     public function store(StorePatientRequest $request)
@@ -88,6 +92,11 @@ class PatientController extends Controller
 
         $patient = $patient->latest()->first();
 
+        return response()->json($patient);
+    }
+
+    public function show(Patient $patient)
+    {
         return response()->json($patient);
     }
 
@@ -122,6 +131,8 @@ class PatientController extends Controller
     public function destroy(Patient $patient)
     {
         $patient->mobiles()->delete();
+
+        $patient->treatments()->detach();
 
         $patient->delete();
 

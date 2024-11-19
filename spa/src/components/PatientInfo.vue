@@ -11,10 +11,13 @@
         <ul v-if="data" class="grid grid-cols-5 border-t translate-y-4">
             <li v-for="(key, i) in keys" :key="key"
                 class="flex items-center justify-between gap-2 px-4 py-3 last:justify-start"
-                :class="{ 'border-b': i < 10, 'col-span-2': i == 10, 'col-span-3': i == 11, 'border-l': ![4, 9, 11].includes(i) }">
-                <span class="opacity-70">{{ $t(key.replace('_','-')) }}:</span>
+                :class="{ 'border-b': i < 13, 'col-span-2': i == 10 || i == 11, 'col-span-full': i == 14, 'border-l': ![4, 9, 12].includes(i) }">
+                <span class="opacity-70">{{ $t(key.replace('_', '-')) }}:</span>
                 <div v-if="key == 'mobiles'" class="flex gap-2">
                     <Chip v-for="mobile in data.mobiles" :label="mobile.number" />
+                </div>
+                <div v-else-if="key == 'treatments'" class="flex gap-2 ml-auto">
+                    {{ data.treatments.map(({ title }) => title).join(' | ') }}
                 </div>
                 <Tag v-else-if="key == 'status'" v-bind="data.status" />
                 <span v-else class="font-medium" :class="{ 'ltr': (i + 1) % 5 === 0 }">
@@ -39,7 +42,7 @@ const store = usePatientsStore()
 
 const keys = reactive([
     'firstname', 'lastname', 'birthday', 'gender', 'created_at', 'province', 'city',
-    'telephone', 'lead_source', 'status', 'mobiles', 'desc'
+    'telephone', 'lead_source', 'updated_at', 'mobiles', 'treatments', 'status', 'desc'
 ])
 
 const PatientForm = defineAsyncComponent(() => import('@/components/PatientForm.vue'));

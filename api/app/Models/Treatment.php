@@ -21,9 +21,9 @@ class Treatment extends Model
     ];
 
 
-    public function subCategories(): HasMany
+    public function services(): HasMany
     {
-        return $this->hasMany(TreatmentSubCategory::class);
+        return $this->hasMany(TreatmentService::class);
     }
 
     public function patients(): BelongsToMany

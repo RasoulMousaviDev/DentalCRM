@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ModelStatusSeeder::class,
             ProvinceSeeder::class,
             UserSeeder::class,
+            LeadSourceSeeder::class
         ]);
     }
 }

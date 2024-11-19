@@ -4,13 +4,13 @@
             <div class="flex flex-col gap-2 flex-1">
                 <label class="has-[+*+small]:text-red-500"> {{ $t('model-name') }}</label>
                 <Select v-model="form.model_name" :options="['patient', 'call']" :optionLabel="(item) => $t(item)" fluid
-                    checkmark :placeholder="$t('choose')" class="has-[+small]:!border-red-500" />
+                     :placeholder="$t('choose')" class="has-[+small]:!border-red-500" />
                 <small v-if="errors.model_name" v-text="errors.model_name[0]" class="text-red-500" />
             </div>
             <div class="flex flex-col gap-2 flex-1">
                 <label class="has-[+*+small]:text-red-500"> {{ $t('model-status') }}</label>
                 <Select v-model="form.model_id" :options="modelStatus.items" :loading="modelStatus.fetching"
-                    :emptyMessage="$t('first-select-model-name')" optionValue="id" fluid checkmark
+                    :emptyMessage="$t('first-select-model-name')" optionValue="id" fluid 
                     :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
                     <template #value="{ value }">
                         <Tag v-if="value" class="text-xs" v-bind="modelStatus.items.find(({ id }) => value == id)" />

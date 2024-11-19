@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const usePatientsStore = defineStore("patients", {
     state: () => ({
         items: [],
+        item: null,
         statuses: [],
         fetching: false,
         pagiantor: { totalRecords: 0 },
@@ -21,6 +22,7 @@ export const usePatientsStore = defineStore("patients", {
 
             if (statusText === "OK") {
                 this.items = data.items;
+                this.statuses = data.statuses;
                 this.pagiantor = data.pagiantor;
             }
         },
@@ -30,6 +32,22 @@ export const usePatientsStore = defineStore("patients", {
             if (res.statusText === "OK") this.items.unshift(res.data);
 
             return res;
+        },
+        async show(id) {
+            const patient = this.items.find((item) => item.id == id);
+
+            if (patient) this.item = patient;
+            else {
+                this.fetching = true;
+
+                const res = await this.axios.get(`/patients/${id}`);
+
+                this.fetching = false;
+
+                if (res.statusText === "OK") this.item = res.data;
+
+                return res;
+            }
         },
         async update(id, form) {
             const res = await this.axios.patch(`/patients/${id}`, form);

@@ -2,15 +2,15 @@
     <div class="card">
         <DataTable :value="store.items" tableStyle="min-width: 50rem" striped-rows>
             <template #header>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold ml-auto">
-                        {{ $t('calls') }}
-                    </span>
-                    <IconField>
-                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
-                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
-                    </IconField>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold">{{ $t('calls') }}</span>
+                        <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
+                        <hr class="grow !ml-2">
+                        </hr>
+                        <Button icon="pi pi-plus" :label="$t('new-call')" severity="success" class="w-32" @click="create()" />
+                    </div>
+                    <CallFilters />
                 </div>
             </template>
             <template #empty>
@@ -42,15 +42,23 @@
 </template>
 
 <script setup>
+import CallFilters from '@/components/CallFilters.vue';
+import CallForm from '@/components/CallForm.vue';
 import { useCallsStore } from '@/stores/calls';
-import { defineAsyncComponent, inject, watch } from 'vue';
+import { inject, watch } from 'vue';
 
-const { popover } = inject('service')
-
-popover.value.component = defineAsyncComponent(() => import('@/components/CallFilters.vue'));
+const { dialog, t } = inject('service')
 
 const store = useCallsStore()
-store.index({})
+store.index()
+
+const create = async () => {
+    dialog.open(CallForm, {
+        props: {
+            header: t('createNewCall'), modal: true
+        },
+    })
+}
 
 let timer;
 watch(() => store.filters.query, (v) => {

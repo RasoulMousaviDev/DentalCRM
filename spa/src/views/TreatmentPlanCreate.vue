@@ -30,17 +30,17 @@
             </div>
 
             <template v-if="form.treatments_details[`${currentTab}`]?.tooths.length > 0">
-                <div v-if="getTreatment(currentTab, 'subCategories')?.length > 0" class="card">
+                <div v-if="getTreatment(currentTab, 'services')?.length > 0" class="card">
                     <p class="text-lg font-bold flex gap-4">
                         <span>{{ $t('required-services') }} </span>
                         <hr class="grow">
                     </p>
                     <ul class="flex flex-wrap gap-6">
-                        <li v-for="(subCategory, i) in getTreatment(currentTab, 'subCategories')" :key="i">
+                        <li v-for="(service, i) in getTreatment(currentTab, 'services')" :key="i">
                             <div class="flex flex-col gap-2 flex-1 max-w-80 min-w-72">
-                                <label>{{ $t(subCategory.title) }}</label>
-                                <Select v-model="form.treatments_details[currentTab].services[`${subCategory.id}`]"
-                                    :options="subCategory.options" optionLabel="title" optionValue="id" fluid checkmark
+                                <label>{{ $t(service.title) }}</label>
+                                <Select v-model="form.treatments_details[currentTab].services[`${service.id}`]"
+                                    :options="service.options" optionLabel="title" optionValue="id" fluid 
                                     :placeholder="$t('choose')" show-clear :disabled="disabled">
                                     <template #option="{ option: { title, cost } }">
                                         <div class="w-full flex items-center justify-between text-sm">
@@ -232,7 +232,7 @@
 
 <script setup>
 import SelectTooth from '@/components/SelectTooth.vue';
-import { useTreatmentSubCategoriesStore } from '@/stores/treatment-services';
+import { useTreatmentServicesStore } from '@/stores/treatment-services';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { usePatientsStore } from '@/stores/patients';
 import { computed, inject, onBeforeMount, onMounted, reactive, ref, watch } from 'vue';
@@ -255,8 +255,8 @@ const patients = usePatientsStore()
 const treatments = useTreatmentsStore()
 treatments.index()
 
-const subCategories = useTreatmentSubCategoriesStore()
-subCategories.items = []
+const services = useTreatmentServicesStore()
+services.items = []
 
 const form = reactive({
     treatments_details: {},
@@ -296,8 +296,8 @@ const total_amount = computed(() => {
             amount += treatment?.cost * tooths.length
             Object.entries(services).forEach(([k, v]) => {
                 if (v) {
-                    const subCategories = treatment.subCategories.find(({ id }) => id == k)
-                    const option = subCategories.options.find(({ id }) => id == v)
+                    const services = treatment.services.find(({ id }) => id == k)
+                    const option = services.options.find(({ id }) => id == v)
                     amount += option.cost * tooths.length
                 }
             })
@@ -333,12 +333,12 @@ const rows = computed(() => {
 
 
 watch(currentTab, async (v) => {
-    subCategories.treatment = v;
+    services.treatment = v;
     const treatment = treatments.items.find(({ id }) => id == v)
-    if (!treatment.hasOwnProperty('subCategories')) {
-        treatment.subCategories = []
-        await subCategories.index()
-        treatment.subCategories = subCategories.items
+    if (!treatment.hasOwnProperty('services')) {
+        treatment.services = []
+        await services.index()
+        treatment.services = services.items
     }
 
 })
@@ -363,9 +363,9 @@ const getTreatment = (t, k = null) => {
 }
 
 const getOption = (t, s, o, k) => {
-    const subCategories = getTreatment(t, 'subCategories')
-    const subCategory = subCategories.find(({ id }) => id == +s)
-    const option = subCategory.options.find(({ id }) => id == +o)
+    const services = getTreatment(t, 'services')
+    const service = services.find(({ id }) => id == +s)
+    const option = service.options.find(({ id }) => id == +o)
 
     return k ? option[k] : option
 

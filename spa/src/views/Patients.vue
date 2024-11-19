@@ -1,18 +1,17 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" class="[&_td]:cursor-pointer" tableStyle="min-width: 50rem" removable-sort
-            row-hover @row-click="showPatientDetails">
+        <DataTable :value="store.items" class="[&_td]:cursor-pointer truncate" tableStyle="min-width: 50rem"
+            removable-sort row-hover @row-click="showPatient">
             <template #header>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold ml-auto">
-                        {{ $t('patients') }}
-                    </span>
-                    <IconField>
-                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
-                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
-                    </IconField>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
-                    <Button icon="pi pi-plus" :label="$t('new-patient')" severity="success" @click="create()" />
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold">{{ $t('patients') }}</span>
+                        <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
+                        <hr class="grow !ml-2">
+                        </hr>
+                        <Button icon="pi pi-plus" :label="$t('new-patient')" severity="success" @click="create()" />
+                    </div>
+                    <PatientFilters />
                 </div>
             </template>
             <template #empty>
@@ -31,10 +30,12 @@
             <Column field="telephone" :header="$t('telephone')" body-class="ltr !text-left" />
             <Column field="birthday" :header="$t('birthday')" body-class="ltr !text-left" />
             <Column :field="({ gender }) => $t(gender)" :header="$t('gender')" />
-            <Column field="province.title" :header="$t('province')" />
-            <Column field="city.title" :header="$t('city')" />
+            <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
+                :header="$t('treatments')" />
+            <Column :field="({ province, city }) => [province, city].map(({ title }) => title).join(' / ')"
+                :header="$t('province-city')" />
             <Column field="lead_source.title" :header="$t('lead-source')" />
-            <Column field="status" :header="$t('status')">
+            <Column field="status" :header="$t('status')" class="whitespace-nowrap">
                 <template #body="{ data: { status } }">
                     <Tag v-bind="status" />
                 </template>
@@ -56,19 +57,17 @@
 </template>
 
 <script setup>
+import PatientFilters from '@/components/PatientFilters.vue';
+import PatientForm from '@/components/PatientForm.vue';
 import { usePatientsStore } from '@/stores/patients';
-import { defineAsyncComponent, inject, watch } from 'vue';
+import { inject, watch } from 'vue';
 
-const { dialog, confirm, popover, toast, router, t } = inject('service')
-
-popover.value.component = defineAsyncComponent(() => import('@/components/PatientFilters.vue'));
+const { dialog, confirm, toast, router, t } = inject('service')
 
 const store = usePatientsStore()
 
 if (store.items.length === 0)
     store.index()
-
-const PatientForm = defineAsyncComponent(() => import('@/components/PatientForm.vue'));
 
 const create = async () => {
     dialog.open(PatientForm, {
@@ -85,6 +84,7 @@ const edit = async (data) => {
     patient.city = patient.city.id
     patient.status = patient.status.id
     patient.lead_source = patient.lead_source.id
+    patient.treatments = patient.treatments.map(({ id }) => id)
 
     dialog.open(PatientForm, {
         props: { header: t('editPatient'), modal: true },
@@ -122,7 +122,7 @@ const destroy = (patient) => {
     });
 }
 
-const showPatientDetails = ({ data: { id } }) => router.push({ name: 'PatientDetails', params: { id } })
+const showPatient = ({ data: { id } }) => router.push({ name: 'Patient', params: { id } })
 
 let timer;
 watch(() => store.filters.query, (v) => {

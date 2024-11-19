@@ -22,6 +22,7 @@ export const useCallsStore = defineStore("calls", {
 
             if (statusText === "OK") {
                 this.items = data.items;
+                this.statuses = data.statuses;
                 this.pagiantor = data.pagiantor;
             }
         },

@@ -30,5 +30,13 @@ export const useAuthStore = defineStore("auth", {
         },
         refresh() {},
         logout() {},
+        async changeRole(id){
+            const { statusText , data} = await this.axios.post("/auth/change-role", { id });
+
+            if (statusText == "OK") {
+                this.user = data;
+                this.role = id
+            }
+        },
     },
 });

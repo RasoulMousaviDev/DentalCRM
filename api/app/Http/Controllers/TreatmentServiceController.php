@@ -6,8 +6,6 @@ use App\Http\Requests\StoreTreatmentServiceRequest;
 use App\Http\Requests\UpdateTreatmentServiceRequest;
 use App\Models\Treatment;
 use App\Models\TreatmentService;
-use Illuminate\Http\Request;
-use Mockery\Matcher\Any;
 
 class TreatmentServiceController extends Controller
 {
@@ -16,7 +14,7 @@ class TreatmentServiceController extends Controller
      */
     public function index(Treatment $treatment)
     {
-        $items = $treatment->subCategories()->with('options')->get();
+        $items = $treatment->services()->with('options')->get();
 
         return response()->json(['items' => $items]);
     }
@@ -28,9 +26,9 @@ class TreatmentServiceController extends Controller
     {
         $form = $request->only(['title', 'status']);
 
-        $treatment->subCategories()->create($form)->save();
+        $treatment->services()->create($form)->save();
 
-        $service =  $treatment->subCategories()->latest()->first();
+        $service =  $treatment->services()->latest()->first();
 
         return response()->json($service);
     }

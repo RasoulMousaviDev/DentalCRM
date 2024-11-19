@@ -17,11 +17,11 @@
         <div class="flex flex-col gap-2 grow">
             <label>{{ $t('treatment') }}</label>
             <Select v-model="filters.treatment" :options="treatments.items" :loading="treatments.fetching"
-                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')" show-clear />
+                optionLabel="title" optionValue="id" fluid  :placeholder="$t('choose')" show-clear />
         </div>
         <div class="flex flex-col gap-2">
             <label> {{ $t('status') }}</label>
-            <Select v-model="filters.status" :options="statuses" optionValue="value" fluid checkmark
+            <Select v-model="filters.status" :options="statuses" optionValue="value" fluid 
                 :placeholder="$t('choose')" show-clear>
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="getTag(value)" />

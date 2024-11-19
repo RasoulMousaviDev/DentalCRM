@@ -35,7 +35,7 @@
                 <template #body="{ data }">
                     <div class="flex justify-end">
                         <Button icon="pi pi-sitemap !text-xl" rounded text severity="secondary"
-                            @click="subCategories(data)" />
+                            @click="showServicess(data)" />
                         <Button icon="pi pi-pencil" rounded text severity="secondary" @click="edit(data)" />
                         <Button icon="pi pi-trash" rounded text severity="danger" :loading="data.loading"
                             @click="destroy(data)" />
@@ -47,8 +47,10 @@
 </template>
 
 <script setup>
+import TreatmentForm from '@/components/TreatmentForm.vue';
+import TreatmentServices from '@/components/TreatmentServices.vue';
 import { useTreatmentsStore } from '@/stores/treatments';
-import { defineAsyncComponent, inject } from 'vue';
+import { inject } from 'vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
@@ -56,10 +58,6 @@ const store = useTreatmentsStore()
 
 if (store.items.length === 0)
     store.index()
-
-const TreatmentForm = defineAsyncComponent(() => import('@/components/TreatmentForm.vue'));
-
-const TreatmentSubCategories = defineAsyncComponent(() => import('@/components/TreatmentSubCategories.vue'));
 
 const create = async () => {
     dialog.open(TreatmentForm, {
@@ -109,8 +107,8 @@ const destroy = (template) => {
     });
 }
 
-const subCategories = (treatment) => {
-    dialog.open(TreatmentSubCategories, {
+const showServicess = (treatment) => {
+    dialog.open(TreatmentServices, {
         props: { header: t('sub-categires-of', treatment), modal: true },
         data: { treatment }
     })

@@ -20,7 +20,7 @@ class TreatmentController extends Controller
 
     public function store(StoreTreatmentRequest $request)
     {
-        $form = $request->only(['title', 'cost', 'status']);
+        $form = $request->only(['title', 'cost', 'order', 'status']);
 
         Treatment::create($form)->save();
 
@@ -42,7 +42,7 @@ class TreatmentController extends Controller
 
     public function update(UpdateTreatmentRequest $request, Treatment $treatment)
     {
-        $form = $request->only('status');
+        $form = $request->only($treatment->fillable);
 
         $treatment->update($form);
 
@@ -54,6 +54,11 @@ class TreatmentController extends Controller
     public function destroy(Treatment $treatment)
     {
         try {
+            foreach ($treatment->services as $service)
+                $service->options()->delete();
+
+            $treatment->services()->delete();
+            
             $treatment->delete();
 
             return response()->json(['message' => __('message.deleted-successfully')]);

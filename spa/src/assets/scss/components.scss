@@ -75,3 +75,11 @@ button:has(.p-badge){
 .p-tieredmenu-item-link svg{
     @apply ml-0 mr-auto rotate-180 #{!important};;
 }
+
+.p-datepicker-decade{
+    @apply ltr;
+}
+
+.p-datepicker-year-view{
+    @apply ltr;
+}

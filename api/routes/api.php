@@ -59,6 +59,7 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(PatientController::class)->prefix('patients')->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
+        Route::get('/{patient}', 'show');
         Route::patch('/{patient}', 'update');
         Route::delete('/{patient}', 'destroy');
     });
@@ -147,7 +148,7 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('/{treatment}', 'update');
         Route::delete('/{treatment}', 'destroy');
 
-        Route::controller(TreatmentServiceController::class)->prefix('{treatment}/sub-categories')->group(function () {
+        Route::controller(TreatmentServiceController::class)->prefix('{treatment}/services')->group(function () {
             Route::get('', 'index');
             Route::post('', 'store');
 

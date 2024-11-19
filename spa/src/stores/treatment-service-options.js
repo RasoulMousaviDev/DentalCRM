@@ -13,7 +13,7 @@ export const useTreatmentServiceOptionsStore = defineStore(
             async index() {
                 this.fetching = true;
                 const { statusText, data } = await this.axios.get(
-                    `/treatments/${this.treatment}/sub-categories/${this.service}/options`
+                    `/treatments/${this.treatment}/services/${this.service}/options`
                 );
                 this.fetching = false;
 
@@ -21,7 +21,7 @@ export const useTreatmentServiceOptionsStore = defineStore(
             },
             async store(form) {
                 const res = await this.axios.post(
-                    `/treatments/${this.treatment}/sub-categories/${this.service}/options`,
+                    `/treatments/${this.treatment}/services/${this.service}/options`,
                     form
                 );
 
@@ -31,7 +31,7 @@ export const useTreatmentServiceOptionsStore = defineStore(
             },
             async update(id, form) {
                 const res = await this.axios.patch(
-                    `/treatments/${this.treatment}/sub-categories/${this.service}/options/${id}`,
+                    `/treatments/${this.treatment}/services/${this.service}/options/${id}`,
                     form
                 );
 
@@ -46,7 +46,7 @@ export const useTreatmentServiceOptionsStore = defineStore(
             },
             async destroy(id) {
                 const res = await this.axios.delete(
-                    `/treatments/${this.treatment}/sub-categories/${this.service}/options/${id}`
+                    `/treatments/${this.treatment}/services/${this.service}/options/${id}`
                 );
 
                 if (res.statusText === "OK") {

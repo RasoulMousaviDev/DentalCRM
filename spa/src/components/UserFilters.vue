@@ -1,19 +1,19 @@
 <template>
-    <form @submit.prevent="handleSubmit()" @keypress.enter.prevent="" class="flex w-full gap-4 [&>span]:flex-1">
+    <form @submit.prevent="handleSubmit()" class="flex w-full gap-4 [&>span]:flex-1">
         <FloatLabel variant="on" class="max-w-20">
-            <InputText v-model="filters.id" class="ltr w-full" v-keyfilter.int />
+            <InputText v-model="filters.id" fluid class="ltr" v-keyfilter.int />
             <label>{{ $t('id') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <InputText v-model="filters.name" class="w-full" />
+            <InputText v-model="filters.name"  />
             <label>{{ $t('name') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <InputText v-model="filters.mobile" class="ltr w-full" v-keyfilter.int />
+            <InputText v-model="filters.mobile" fluid class="ltr" v-keyfilter.int />
             <label>{{ $t('mobile') }} </label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <InputText v-model="filters.email" class="ltr w-full" />
+            <InputText v-model="filters.email" fluid class="ltr" />
             <label>{{ $t('email') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
@@ -23,16 +23,16 @@
         </FloatLabel>
         <FloatLabel variant="on">
             <Select v-model="filters.status" :options="statuses" option-label="label" option-value="value" fluid
-                show-clear checkmark />
+                show-clear  />
             <label> {{ $t('status') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" class="rtl w-full"
+            <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" fluid class="ltr"
                 showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
             <label> {{ $t('created_at') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <DatePicker v-model="filters.updated_at" selectionMode="range" :manualInput="false" class="rtl w-full"
+            <DatePicker v-model="filters.updated_at" selectionMode="range" :manualInput="false" fluid class="ltr"
                 showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
             <label> {{ $t('updated_at') }}</label>
         </FloatLabel>
@@ -70,10 +70,7 @@ watch(filters, () => {
     })
 }, { deep: true })
 
-onMounted(() => {
-    Object.assign(filters, store.filters)
-    delete filters.query
-})
+onMounted(() => Object.assign(filters, store.filters))
 
 onBeforeUnmount(() => store.filters = {})
 </script>

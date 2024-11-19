@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\JDate;
+use App\Models\Model as ModelsModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\FuncCall;
 
 class Patient extends Model
@@ -41,7 +43,8 @@ class Patient extends Model
         'city:id,title',
         'province:id,title',
         'leadSource:id,title',
-        'status:id,value,severity'
+        'treatments:id,title',
+        'status'
     ];
 
     public function mobiles(): HasMany
@@ -54,7 +57,7 @@ class Patient extends Model
         return $this->hasMany(Call::class);
     }
 
-    public function followups(): HasMany
+    public function followUps(): HasMany
     {
         return $this->hasMany(Followup::class);
     }
@@ -94,8 +97,21 @@ class Patient extends Model
         return $this->belongsTo(LeadSource::class, 'lead_source');
     }
 
-    public function status(): BelongsTo
+    public function status()
     {
-        return $this->belongsTo(PatientStatus::class, 'status');
+        return $this->belongsTo(Status::class, 'status');
+    }
+
+    public static function model()
+    {
+        return ModelsModel::firstWhere('name', Patient::class);
+    }
+
+    public function birthday(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value,
+            set: fn($value) => date('Y/m/d', strtotime($value))
+        );
     }
 }

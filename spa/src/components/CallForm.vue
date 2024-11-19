@@ -3,7 +3,7 @@
         <div class="flex flex-col gap-2">
             <label class="has-[+*+small]:text-red-500"> {{ $t('call_status') }}</label>
             <Select v-model="form.status" :options="callStatuses.items" :loading="callStatuses.fetching"
-                optionValue="id" fluid checkmark :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
+                optionValue="id" fluid  :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="callStatuses.items.find(({ id }) => value == id)" />
                 </template>
@@ -16,7 +16,7 @@
         <div class="flex flex-col gap-2 grow">
             <label class="has-[+*+small]:text-red-500">{{ $t('mobile') }}</label>
             <Select v-model="form.mobile" :options="patient.mobiles" optionLabel="number" optionValue="number" fluid
-                checkmark class="ltr has-[+small]:!border-red-500" panel-class="ltr" />
+                 class="ltr has-[+small]:!border-red-500" panel-class="ltr" />
             <small v-if="errors.mobile" v-text="errors.mobile[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2 col-span-2">
@@ -28,7 +28,7 @@
         <div class="flex flex-col gap-2" :class="{ 'col-span-2': !followup }">
             <label class="has-[+*+small]:text-red-500"> {{ $t('patient_status') }}</label>
             <Select v-model="form.patient_status" :options="patientStatuses.items" :loading="patientStatuses.fetching"
-                optionValue="id" fluid checkmark :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
+                optionValue="id" fluid  :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="patientStatuses.items.find(({ id }) => value == id)" />
                 </template>
@@ -61,9 +61,7 @@
 </template>
 
 <script setup>
-import { useCallStatuesStore } from '@/stores/call-statuses';
 import { useCallsStore } from '@/stores/calls';
-import { usePatientStatuesStore } from '@/stores/patient-statuses';
 import { usePatientsStore } from '@/stores/patients';
 import { computed, watch } from 'vue';
 import { inject, reactive, ref } from 'vue';
@@ -78,13 +76,7 @@ const form = reactive({ })
 const errors = ref({})
 const loading = ref(false)
 
-const calls = useCallsStore()
-
-const callStatuses = useCallStatuesStore()
-callStatuses.index()
-
-const patientStatuses = usePatientStatuesStore()
-patientStatuses.index()
+const store = useCallsStore()
 
 const patientStore = usePatientsStore()
 const patient = reactive(patientStore.items.find((item) => item.id == id))
@@ -93,7 +85,7 @@ const followup = computed(() => [1].includes(form.patient_status))
 const handleSubmit = async () => {
     loading.value = true
 
-    const { status, statusText, data } = await calls.store(form)
+    const { status, statusText, data } = await store.store(form)
 
     loading.value = false
 

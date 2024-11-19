@@ -46,11 +46,17 @@ class AuthController extends Controller
 
     public function changeRole(ChangeRoleRequest $request)
     {
-        $role = $request->only('role');
+        $role_id = $request->only('id');
+        
+        $user = auth()->user;
 
-        auth()->user->update(compact('role'));
+        if ($user->hasRole($role_id)) {
+            $user->update(compact('role_id'));
 
-        return response()->json(['ok' => true]);
+            return $this->me();
+        }
+
+        return response()->json(['message' => __('messages.have-not-access')], 403);
     }
 
     public function refresh()

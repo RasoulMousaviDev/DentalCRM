@@ -1,8 +1,8 @@
 <template>
     <div class="flex">
         <div class="min-w-96 flex flex-col gap-4">
-            <Listbox v-model="selectedSubCategory" :options="subCategories.items" class="w-full md:w-96"
-                scrollHeight="70vh" pt:option="justify-between border-[auto]" pt:list="!divide-y" checkmark>
+            <Listbox v-model="selectedService" :options="services.items" class="w-full md:w-96" scrollHeight="70vh"
+                pt:option="justify-between border-[auto]" pt:list="!divide-y" >
                 <template #option="{ option }">
                     <span class="ml-auto">{{ option.title }}</span>
                     <Tag v-if="option.status" severity="success" :value="$t('active')" />
@@ -10,28 +10,28 @@
                 </template>
                 <template #empty>
                     <p class="text-center text-gray-500">
-                        {{ subCategories.fetching ? $t('loading') : $t('sub-category-empty') }}
+                        {{ services.fetching ? $t('loading') : $t('service-empty') }}
                     </p>
                 </template>
             </Listbox>
             <div class="flex gap-4">
                 <Button :label="$t('back')" severity="secondary" class="shrink-0" @click="dialogRef.close()" />
-                <Button :label="$t('new-sub-category')" icon="pi pi-plus" severity="success" class="w-full"
-                    @click="createSubCategory()" />
+                <Button :label="$t('new-service')" icon="pi pi-plus" severity="success" class="w-full"
+                    @click="createdService()" />
             </div>
 
         </div>
         <div class="flex max-w-0 transition-[max-width] duration-300 overflow-hidden"
-            :class="{ '!max-w-[100vw] mr-6': selectedSubCategory }">
+            :class="{ '!max-w-[100vw] mr-6': selectedService }">
             <Transition name="fade" mode="out-in">
-                <DataTable v-if="selectedSubCategory" :key="selectedSubCategory.id" :value="options.items"
-                    class="shrink-0" @rowReorder="reorder">
+                <DataTable v-if="selectedService" :key="selectedService.id" :value="options.items" class="shrink-0"
+                    @rowReorder="reorder">
                     <template #header>
                         <div class="flex gap-1 items-center">
                             <span class="text-2xl font-bold">
-                                {{ selectedSubCategory.title }}
+                                {{ selectedService.title }}
                             </span>
-                            <Button icon="pi pi-pencil" rounded text severity="secondary" @click="editSubCategory()" />
+                            <Button icon="pi pi-pencil" rounded text severity="secondary" @click="editService()" />
                             <Button icon="pi pi-plus" :label="$t('new-option')" severity="success" class="mr-auto"
                                 @click="create()" />
                         </div>
@@ -71,9 +71,11 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, inject, ref, watch } from 'vue';
-import { useTreatmentSubCategoriesStore } from '@/stores/treatment-services';
-import { useTreatmentSubCategoryOptionsStore } from '@/stores/treatment-service-options';
+import { inject, ref, watch } from 'vue';
+import { useTreatmentServicesStore } from '@/stores/treatment-services';
+import { useTreatmentServiceOptionsStore } from '@/stores/treatment-service-options';
+import TreatmentServiceForm from '@/components/TreatmentServiceForm.vue';
+import TreatmentServiceOptionForm from '@/components/TreatmentServiceOptionForm.vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
@@ -81,44 +83,41 @@ const dialogRef = inject('dialogRef')
 
 const { treatment } = dialogRef.value.data || {}
 
-const subCategories = useTreatmentSubCategoriesStore()
+const services = useTreatmentServicesStore()
 
-const options = useTreatmentSubCategoryOptionsStore()
+const options = useTreatmentServiceOptionsStore()
 
-subCategories.treatment = treatment.id
+services.treatment = treatment.id
 
-subCategories.index()
+services.index()
 
 options.treatment = treatment.id
 
-const TreatmentSubCategoryForm = defineAsyncComponent(() => import('@/components/TreatmentSubCategoryForm.vue'));
+const selectedService = ref();
 
-const TreatmentSubCategoryOptionForm = defineAsyncComponent(() => import('@/components/TreatmentSubCategoryOptionForm.vue'));
-
-const selectedSubCategory = ref();
-
-const createSubCategory = async () => {
-    dialog.open(TreatmentSubCategoryForm, {
+const createdService = async () => {
+    dialog.open(TreatmentServiceForm, {
         props: {
-            header: t('createNewSubCategory'), modal: true
+            header: t('createNewService'), modal: true
         },
     })
 }
 
-const editSubCategory = async () => {
-    const subCategory = Object.assign({}, selectedSubCategory.value)
+const editService = async () => {
+    const service = Object.assign({}, selectedService.value)
 
-    dialog.open(TreatmentSubCategoryForm, {
-        props: { header: t('editSubCategory'), modal: true },
-        data: { subCategory },
+    dialog.open(TreatmentServiceForm, {
+        props: { header: t('editService'), modal: true },
+        data: { service },
         onClose: (opt) => {
-            if (opt.data) selectedSubCategory.value = null
+            if (opt.data) selectedService.value = null
+            else selectedService.value = services.items.find(({ id }) => service.id == id)
         }
     })
 }
 
 const create = async () => {
-    dialog.open(TreatmentSubCategoryOptionForm, {
+    dialog.open(TreatmentServiceOptionForm, {
         props: {
             header: t('createNewOption'), modal: true
         },
@@ -128,7 +127,7 @@ const create = async () => {
 const edit = async (data) => {
     const option = Object.assign({}, data)
 
-    dialog.open(TreatmentSubCategoryOptionForm, {
+    dialog.open(TreatmentServiceOptionForm, {
         props: { header: t('editOption'), modal: true },
         data: { option }
     })
@@ -165,9 +164,9 @@ const destroy = (option) => {
     });
 }
 
-watch(selectedSubCategory, (v) => {
+watch(selectedService, (v) => {
     if (v) {
-        options.subCategory = v.id
+        options.service = v.id
         options.index()
     }
 })

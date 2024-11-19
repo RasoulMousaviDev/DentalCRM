@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col">
-        <PatientInfo :data="patient" />
+        <PatientInfo :data="store.item" />
         <Tabs :value="0" class="card">
             <TabList>
                 <Tab v-for="(tab, i) in tabs" :key="i" :value="i">
@@ -28,18 +28,15 @@ import PatientFollowups from '@/components/PatientFollowups.vue';
 import PatientInfo from '@/components/PatientInfo.vue';
 import PatientTreatmentPlans from '@/components/PatientTreatmentPlans.vue';
 import { usePatientsStore } from '@/stores/patients';
-import { computed, inject, reactive, ref } from 'vue';
+import { inject, reactive, ref } from 'vue';
 
-const {route, router, t } = inject('service')
+const {route } = inject('service')
 
 const { id } = route.params
 
 const store = usePatientsStore()
 
-const patient = computed(() => store.items.find((item) => item.id == id))
-
-if (!patient.value)
-    router.replace({ name: 'Patients' });
+store.show(id)
 
 const tabs = reactive(['calls', 'follow-ups', 'appointments', 'treatment-plans', 'documents'])
 </script>

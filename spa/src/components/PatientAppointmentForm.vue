@@ -3,7 +3,7 @@
         <div class="flex flex-col gap-2 grow">
             <label class="has-[+*+small]:text-red-500">{{ $t('treatment') }}</label>
             <Select v-model="form.treatment" :options="treatments.items" :loading="treatments.fetching"
-                optionLabel="title" optionValue="id" fluid checkmark :placeholder="$t('choose')"
+                optionLabel="title" optionValue="id" fluid  :placeholder="$t('choose')"
                 class="has-[+small]:!border-red-500" />
             <small v-if="errors.treatment" v-text="errors.treatment[0]" class="text-red-500" />
         </div>

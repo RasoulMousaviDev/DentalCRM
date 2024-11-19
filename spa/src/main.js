@@ -78,7 +78,7 @@ app.use(PrimeVue, {
         preset: Aura,
         options: { darkModeSelector: ".app-dark" },
     },
-    inputVariant: "filled",
+    // inputVariant: "filled",
 });
 app.use(pinia);
 app.use(router);

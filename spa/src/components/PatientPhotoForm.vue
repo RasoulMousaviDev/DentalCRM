@@ -20,16 +20,19 @@
             </label>
         </div>
 
-        <div class="flex flex-col gap-4">
-            <div class="flex flex-col gap-2">
-                <label class=" has-[+*+small]:text-red-500">{{ $t('title') }}</label>
-                <InputText v-model="form.title" class="w-full has-[+small]:!border-red-500" />
+        <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-1">
+                <FloatLabel variant="on">
+                    <InputText v-model="form.title" fluid :invalid="errors.title" />
+                    <label>{{ $t('title') }}</label>
+                </FloatLabel>
                 <small v-if="errors.title" v-text="errors.title[0]" class="text-red-500" />
             </div>
-
-            <div class="flex flex-col gap-2 col-span-2">
-                <label class="has-[+*+small]:text-red-500"> {{ $t('desc') }}</label>
-                <Textarea v-model="form.desc" fluid rows="5" cols="30" />
+            <div class="flex flex-col gap-1">
+                <FloatLabel variant="on">
+                    <Textarea v-model="form.desc" fluid rows="5" cols="30" />
+                    <label> {{ $t('desc') }}</label>
+                </FloatLabel>
             </div>
             <Button icon="pi pi-save" :label="$t('save')" type="submit" severity="success" :loading="loading" />
         </div>
@@ -59,7 +62,7 @@ const handleSubmit = async () => {
     loading.value = true
 
     let result;
-    if (form.value.image)
+    if (form.value.id)
         result = await photos.update(form.value.id, form.value)
     else
         result = await photos.store(form.value)
@@ -73,7 +76,7 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else
-        toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 }
 
 

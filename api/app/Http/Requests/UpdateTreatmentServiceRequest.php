@@ -15,7 +15,7 @@ class UpdateTreatmentServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|unique:treatment_sub_categories,title,' . $this->service->id,
+            'title' => 'required|string|unique:treatment_services,title,' . $this->service->id,
             'status' => 'required|boolean'
         ];
     }

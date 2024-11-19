@@ -37,7 +37,7 @@ export const usePhotosStore = defineStore("photos", {
             const res = await this.axios.post("/photos", formData);
 
             if (res.statusText === "OK") {
-                res.data.image = URL.createObjectURL(form.photo);
+                res.data.image = URL.createObjectURL(form.image);
                 this.items.unshift(res.data);
             }
 
