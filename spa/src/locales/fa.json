@@ -241,7 +241,11 @@
     "patient-status": "وضعیت بیمار",
     "call-status": "وضعیت تماس",
     "reception-report": "گزارش پذیرش",
-    "change-role" : "تغییر نقش",
+    "change-role": "تغییر نقش",
     "province-city": "استان / شهر",
-    "patient-id": "شناسه بیمار"
+    "patient-id": "شناسه بیمار",
+    "online-visited": "ویزیت مجازی شد",
+    "options": "گزینه ها",
+    "was-visit": "ویزیت شد",
+    "set-deposit": "ثبت بیعانه"
 }

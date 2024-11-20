@@ -4,17 +4,19 @@ namespace App\Models;
 
 use App\Casts\JDate;
 use Carbon\Carbon;
+use App\Models\Model as ModelsModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Appointment extends Model
 {
     use HasFactory;
 
-    public $fillable = ['treatment', 'due_date',  'desc', 'status'];
+    public $fillable = ['due_date', 'desc', 'status'];
 
     protected $casts = [
         'due_date' => JDate::class,
@@ -27,9 +29,9 @@ class Appointment extends Model
         return $this->belongsTo(Patient::class, 'patient');
     }
 
-    public function treatment(): BelongsTo
+    public function treatments(): BelongsToMany
     {
-        return $this->belongsTo(Treatment::class, 'treatment');
+        return $this->belongsToMany(Treatment::class, 'appointment_treatments');
     }
 
     public function deposits(): HasMany
@@ -40,8 +42,18 @@ class Appointment extends Model
     protected function dueDate(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => Carbon::parse($value)->format('Y-m-d H:i:s'),
+            set: fn($value) => Carbon::parse($value)->setTimezone('Asia/Tehran')->format('Y-m-d H:i:s'),
             get: fn($value) => Carbon::parse($value)->toIso8601String()
         );
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class, 'status');
+    }
+
+    public static function model()
+    {
+        return ModelsModel::firstWhere('name', Appointment::class);
     }
 }

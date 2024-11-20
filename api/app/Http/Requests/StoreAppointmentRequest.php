@@ -16,7 +16,8 @@ class StoreAppointmentRequest extends FormRequest
     {
         return [
             'patient' => 'required|exists:patients,id',
-            'treatment' =>'required|exists:treatments,id',
+            'treatments' => 'required|array',
+            'treatments.*' => 'required|exists:treatments,id',
             'due_date' => 'required|date',
             'desc' => 'nullable|string'
         ];

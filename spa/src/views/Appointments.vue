@@ -2,15 +2,16 @@
     <div class="card">
         <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
             <template #header>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold ml-auto">
-                        {{ $t('appointments') }}
-                    </span>
-                    <IconField>
-                        <InputText v-model="store.filters.query" :placeholder="$t('search')" />
-                        <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
-                    </IconField>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold">{{ $t('appointments') }}</span>
+                        <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
+                        <hr class="grow !ml-2">
+                        </hr>
+                        <Button icon="pi pi-plus" :label="$t('new-appointment')" severity="success" class="w-32"
+                            @click="create()" />
+                    </div>
+                    <AppointmentFilters />
                 </div>
             </template>
             <template #empty>
@@ -28,21 +29,27 @@
             </Column>
             <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
                 :header="$t('patient-name')" />
-            <Column :field="({ treatment: { title } }) => title" :header="$t('treatment')" class="w-44" />
-            <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
             <Column field="desc" :header="$t('desc')" />
-            <Column field="status" :header="$t('status')" class="w-44">
+            <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
+                :header="$t('treatments')" />
+            <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
+            <Column field="status" :header="$t('status')">
                 <template #body="{ data: { status } }">
-                    <Tag :value="$t(status)" :severity="severities[status]" />
+                    <Tag v-bind="status" />
                 </template>
             </Column>
-            <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20">
+            <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44" body-class="!pl-0">
                 <template #body="{ data }">
-                    <div class="flex gap-2 pr-2">
-                        <Button v-if="data.status == 'visited'" size="large" icon="pi pi-credit-card" rounded
-                            severity="secondary" :loading="data.loading" @click="deposit(data)" />
-                        <Button v-else icon="pi pi-check" size="small" rounded severity="success"
-                            :loading="data.loading" @click="visit(data)" />
+                    <div class="flex gap-2 justify-end">
+                        <SplitButton v-if="data.status.id == 13" :label="$t('was-visit')" size="small"
+                            class="w-32 first:*:grow" :model="getMenu(data)" :loading="data.loading"
+                            @click="visit(data)" />
+                        <Button v-else-if="[4, 5].includes(data.status.id)" :label="$t('set-deposit')" ize="small"
+                            icon="pi pi-credit-card" severity="secondary" class="w-32" :loading="data.loading"
+                            @click="deposit(data)" />
+                        <Button v-else-if="data.status.id == 6" :label="$t('refund')" ize="small" outlined
+                            icon="pi pi-credit-card" severity="danger" class="w-32" :loading="data.loading"
+                            @click="refund(data)" />
                     </div>
                 </template>
             </Column>
@@ -51,23 +58,28 @@
 </template>
 
 <script setup>
+import AppointmentFilters from '@/components/AppointmentFilters.vue';
+import AppointmentForm from '@/components/AppointmentForm.vue';
+import DepositForm from '@/components/DepositForm.vue';
 import { useAppointmentsStore } from '@/stores/appointments';
-import { defineAsyncComponent, inject, reactive, watch } from 'vue';
+import { inject, ref } from 'vue';
 
-const DepositForm = defineAsyncComponent(() => import('@/components/DepositForm.vue'));
-
-const severities = reactive({ pending: "warn", visited: "success", missed: "danger", canceled: 'info' })
-
-const { dialog, confirm, toast, popover, t } = inject('service')
-
-popover.value.component = defineAsyncComponent(() => import('@/components/AppointmentFilters.vue'));
+const { dialog, confirm, toast, t } = inject('service')
 
 const store = useAppointmentsStore()
 
 if (store.items.length === 0)
     store.index()
 
-const visit = (appointment) => {
+const create = async () => {
+    dialog.open(AppointmentForm, {
+        props: {
+            header: t('createNewAppointment'), modal: true
+        },
+    })
+}
+
+const visit = (appointment, status = 4) => {
     confirm.require({
         message: t('visit-confirm-question'),
         header: t('danger-zone'),
@@ -85,7 +97,7 @@ const visit = (appointment) => {
         accept: async () => {
             appointment.loading = true
 
-            const { statusText, data } = await store.update(appointment.id, { status: 'visited' });
+            const { statusText, data } = await store.update(appointment.id, { status });
 
             appointment.loading = false
 
@@ -98,6 +110,51 @@ const visit = (appointment) => {
     });
 }
 
+const cancel = (appointment) => {
+    confirm.require({
+        message: t('cancel-appointment-confirm-question'),
+        header: t('danger-zone'),
+        icon: 'pi pi-info-circle',
+        rejectProps: {
+            label: t('cancel'),
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: t('be-canceled'),
+            icon: 'pi pi-trash',
+            severity: 'danger',
+        },
+        accept: async () => {
+            appointment.loading = true
+
+            const { statusText, data } = await store.update(appointment.id, { status: 17 });
+
+            appointment.loading = false
+
+            if (statusText == 'OK') {
+                Object.assign(appointment, data)
+            }
+            else {
+                toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+            }
+        }
+    });
+}
+
+const getMenu = (appointment) => ([
+    {
+        label: t('online-visited'),
+        icon: 'pi pi-check',
+        command: () => visit(appointment, 5)
+    },
+    {
+        label: t('appointment-cancel'),
+        icon: 'pi pi-times',
+        command: () => cancel(appointment)
+    },
+]);
+
 const deposit = (appointment) => {
     dialog.open(DepositForm, {
         props: {
@@ -107,17 +164,38 @@ const deposit = (appointment) => {
     })
 }
 
-let timer;
-watch(() => store.filters.query, (v) => {
-    if (v != undefined) {
-        clearTimeout(timer)
-        timer = setTimeout(() => {
-            if (v) store.filters = { query: v }
-            else delete store.filters.query
-            store.index()
-        }, 300);
-    }
-})
+
+const refund = (appointment) => {
+    confirm.require({
+        message: t('refund-confirm-question'),
+        header: t('danger-zone'),
+        icon: 'pi pi-info-circle',
+        rejectProps: {
+            label: t('cancel'),
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: t('was-refunded'),
+            severity: 'danger',
+        },
+        accept: async () => {
+            appointment.loading = true
+
+            const { statusText, data } = await store.update(appointment.id, { status: 15 });
+
+            appointment.loading = false
+
+            if (statusText == 'OK')
+                toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+            else {
+                toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+            }
+        }
+    });
+}
+
+
 </script>
 
 <style lang="scss"></style>

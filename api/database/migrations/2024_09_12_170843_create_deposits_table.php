@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->timestamp('payment_date');
             $table->timestamp('refund_date')->nullable();
-            $table->foreignId('status')->constrained('statuses');
+            $table->foreignId('status')->default(14)->constrained('statuses');
             $table->timestamps();
         });
     }

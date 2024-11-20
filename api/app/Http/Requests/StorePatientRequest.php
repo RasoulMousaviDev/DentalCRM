@@ -25,7 +25,9 @@ class StorePatientRequest extends FormRequest
             'city' => 'required|exists:cities,id',
             'lead_source' => 'required|exists:lead_sources,id',
             'status' => 'required|exists:statuses,id',
-            'desc' => 'nullable|string'
+            'desc' => 'nullable|string',
+            'treatments' => 'nullable|array',
+            'treatments.*' => 'required|exists:treatments,id'
         ];
     }
 

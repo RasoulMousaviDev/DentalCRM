@@ -54,7 +54,7 @@ const { id } = route.params
 const store = useAppointmentsStore()
 store.index({ patient: id })
 
-const PatientAppointmentForm = defineAsyncComponent(() => import('@/components/PatientAppointmentForm.vue'));
+const PatientAppointmentForm = defineAsyncComponent(() => import('@/components/AppointmentForm.vue'));
 
 const create = async () => {
     dialog.open(PatientAppointmentForm, {

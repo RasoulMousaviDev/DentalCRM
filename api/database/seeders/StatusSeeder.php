@@ -27,7 +27,6 @@ class StatusSeeder extends Seeder
             ['value' => 'ناموفق', 'severity' => 'danger'],
             ['value' => 'شماره اشتباه است', 'severity' => 'help'],
             ['value' => 'در انتظار', 'severity' => 'warn'],
-            ['value' => 'عودت داده شده', 'severity' => 'danger'],
             ['value' => 'پرداخت شده', 'severity' => 'success'],
             ['value' => 'عودت داده شده', 'severity' => 'danger'],
             ['value' => 'از دست رفته', 'severity' => 'danger'],

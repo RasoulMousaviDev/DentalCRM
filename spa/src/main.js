@@ -59,6 +59,7 @@ import fa from "./locales/fa.json";
 import { useCookie } from "./composables/cookie";
 import TieredMenu from "primevue/tieredmenu";
 import FloatLabel from "primevue/floatlabel";
+import { SplitButton } from "primevue";
 
 const i18n = createI18n({ legacy: false, locale: "fa", messages: { fa } });
 const pinia = createPinia();
@@ -124,6 +125,7 @@ app.component("Listbox", Listbox);
 app.component("Chart", Chart);
 app.component("TieredMenu", TieredMenu);
 app.component("FloatLabel", FloatLabel);
+app.component("SplitButton", SplitButton);
 
 app.directive('keyfilter', KeyFilter);
 app.directive("styleclass", StyleClass);

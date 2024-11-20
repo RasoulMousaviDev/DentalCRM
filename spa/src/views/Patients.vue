@@ -31,7 +31,7 @@
             <Column field="birthday" :header="$t('birthday')" body-class="ltr !text-left" />
             <Column :field="({ gender }) => $t(gender)" :header="$t('gender')" />
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
-                :header="$t('treatments')" />
+                :header="$t('treatments')" class="max-w-52 truncate" />
             <Column :field="({ province, city }) => [province, city].map(({ title }) => title).join(' / ')"
                 :header="$t('province-city')" />
             <Column field="lead_source.title" :header="$t('lead-source')" />

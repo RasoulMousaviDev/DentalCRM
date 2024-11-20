@@ -16,7 +16,7 @@ class UpdateAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|in:visited,missed,canceled'
+            'status' => 'required|exists:statuses,id'
         ];
     }
 }

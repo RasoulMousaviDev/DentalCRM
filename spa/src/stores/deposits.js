@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useAppointmentsStore } from "./appointments";
 
 export const useDepositsStore = defineStore("deposits", {
     state: () => ({
@@ -26,7 +27,13 @@ export const useDepositsStore = defineStore("deposits", {
         async store(form) {
             const res = await this.axios.post("/deposits", form);
 
-            if (res.statusText === "OK") this.items.unshift(res.data);
+            if (res.statusText === "OK") {
+                this.items.unshift(res.data);
+
+                const appointments = useAppointmentsStore()
+                const appointment = appointments.items.find(i => i.id == form.appointment)
+                Object.assign(appointment, res.data.appointment)
+            }
 
             return res;
         },

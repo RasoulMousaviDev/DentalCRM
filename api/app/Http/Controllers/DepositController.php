@@ -18,15 +18,7 @@ class DepositController extends Controller
         $rows = $request->input('rows', 10);
 
         $deposits = Deposit::with([
-            'appointment' => fn($q) => $q->with([
-                'patient' => fn($q) => $q->without([
-                    'mobiles',
-                    'city',
-                    'province',
-                    'leadSource',
-                    'status'
-                ])->select('id', 'firstname', 'lastname')
-            ])->select('id', 'patient')
+            'appointment' => fn($q) => $q->with('patient:id,firstname,lastname')->select('id', 'patient')
         ]);
 
         $deposits = $deposits->when($request->input('query'), function ($query, $value) {
@@ -58,23 +50,24 @@ class DepositController extends Controller
 
     public function store(StoreDepositRequest $request)
     {
+        $status = 6;
+
         $form = $request->only(['amount', 'payment_date']);
 
         $appointment = Appointment::find($request->get('appointment'));
 
+        $appointment->update(compact('status'));
+
+        $appointment->patient()->update(compact('status'));
+
         $appointment->deposits()->create($form)->save();
 
-        $appointment = $appointment->deposits()->with([
-            'appointment' => fn($q) => $q->with([
-                'patient' => fn($q) => $q->without([
-                    'mobiles',
-                    'city',
-                    'province',
-                    'leadSource',
-                    'status'
-                ])->select('id', 'firstname', 'lastname')
-            ])->select('id', 'patient')
-        ])->latest()->first();
+        $appointment = $appointment->deposits()
+            ->with('appointment')
+            ->with('appointment.patient:id,firstname,lastname')
+            ->with('appointment.treatments:id,title')
+            ->with('appointment.status:id,value,severity')
+            ->latest()->first();
 
         return response()->json($appointment);
     }
@@ -83,9 +76,12 @@ class DepositController extends Controller
     {
         $form = $request->only(['status']);
 
-        $form['refund_date'] = Carbon::now()->toIso8601String();
+        if ($form['status'] == 14)
+            $form['refund_date'] = Carbon::now()->toIso8601String();
 
         $deposit->update($form);
+
+        $deposit->appointment()->update(compact('status'));
 
         return response()->json(['message' => __('messages.diposit-refunded')]);
     }

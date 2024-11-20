@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { useFollowupsStore } from '@/stores/follow-ups';
+import { useFollowUpsStore } from '@/stores/follow-ups';
 import { defineAsyncComponent, inject, reactive } from 'vue';
 
 const PatientCallForm = defineAsyncComponent(() => import('@/components/CallForm.vue'));
@@ -51,7 +51,7 @@ const { dialog, route, t } = inject('service')
 
 const { id } = route.params
 
-const store = useFollowupsStore()
+const store = useFollowUpsStore()
 store.index({ patient: id })
 
 const done = async (id) => {

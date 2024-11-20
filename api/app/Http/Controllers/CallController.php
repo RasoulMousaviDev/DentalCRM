@@ -23,7 +23,8 @@ class CallController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $calls = Call::latest()->with('status:id,value,severity')->with('patient:id,firstname,lastname');
+        $calls = Call::latest()->with('status:id,value,severity')
+        ->with('patient:id,firstname,lastname');
 
         $calls = $calls->when($request->input('patient'), function ($query, $patient) {
             $query->where('patient_id', $patient);
@@ -84,7 +85,7 @@ class CallController extends Controller
         $patient->calls()->create($form->toArray())->save();
 
         if ($request->has('follow_up_id'))
-            FollowUp::find($request->get('follow_up_id'))->update(['status' => 19]);
+            FollowUp::find($request->get('follow_up_id'))->update(['status' => 18]);
 
         $call = $patient->calls()
             ->with('status:id,value,severity')

@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient')->constrained('patients');
-            $table->foreignId('treatment')->constrained('treatments');
             $table->timestamp('due_date');
-            $table->string('desc');
-            $table->foreignId('status')->constrained('statuses');
+            $table->string('desc')->nullable();
+            $table->foreignId('status')->default(13)->constrained('statuses');
             $table->timestamps();
         });
     }
