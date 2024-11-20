@@ -65,16 +65,16 @@ const expandedRows = ref([])
 const store = useTreatmentPlansStore()
 store.index({ patient: id })
 
-const TreatmentPlanForm = defineAsyncComponent(() => import('@/components/TreatmentPlanForm.vue'));
+// const TreatmentPlanForm = defineAsyncComponent(() => import('@/components/TreatmentPlanForm.vue'));
 
-const create = async () => {
-    expandedRows.value = []
-    dialog.open(TreatmentPlanForm, {
-        props: {
-            header: t('createNewTreatmentPlan'), modal: true
-        },
-    })
-}
+// const create = async () => {
+//     expandedRows.value = []
+//     dialog.open(TreatmentPlanForm, {
+//         props: {
+//             header: t('createNewTreatmentPlan'), modal: true
+//         },
+//     })
+// }
 
 const destroy = (plan) => {
     confirm.require({
