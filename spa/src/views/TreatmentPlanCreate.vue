@@ -315,7 +315,7 @@ const rows = computed(() => {
             title: `${t('advance-payment')} (${t('percent')})`
         },
         { title: `${t('advance-payment')} (${t('toman')})` },
-        { title: t('installment-every-month') },:loading="patients.fetching"
+        { title: t('installment-every-month') },
         { title: t('final-amount') }
     ]
 
