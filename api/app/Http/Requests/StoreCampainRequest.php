@@ -17,8 +17,8 @@ class StoreCampainRequest extends FormRequest
         return [
             'title' => 'required|string',
             'desc' => 'required|string',
-            'start_date' => 'required|date_format:Y/m/d',
-            'end_date' => 'required|date_format:Y/m/d',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
             'budget' => 'nullable|integer'
         ];
     }

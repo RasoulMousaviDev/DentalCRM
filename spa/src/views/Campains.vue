@@ -6,10 +6,13 @@
                     <span class="text-2xl font-bold ml-auto">
                         {{ $t('campains') }}
                     </span>
+                    <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
                     <IconField>
                         <InputText v-model="store.filters.query" :placeholder="$t('search')" />
                         <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
                     </IconField>
+                    <hr class="grow !ml-2">
+                    </hr>
                     <Button icon="pi pi-plus" :label="$t('new-campain')" severity="success" @click="create()" />
                     <Button icon="pi pi-file-import" :label="$t('data-entry')" severity="info" @click="dataEntry()" />
                 </div>
@@ -51,8 +54,10 @@
 </template>
 
 <script setup>
+import CampainForm from '@/components/CampainForm.vue';
+import DataEntryForm from '@/components/DataEntryForm.vue';
 import { useCampainsStore } from '@/stores/campains';
-import { defineAsyncComponent, inject, watch } from 'vue';
+import { inject, onMounted, watch } from 'vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
@@ -60,10 +65,6 @@ const store = useCampainsStore()
 
 if (store.items.length === 0)
     store.index()
-
-const CampainForm = defineAsyncComponent(() => import('@/components/CampainForm.vue'));
-
-const DataEntryForm = defineAsyncComponent(() => import('@/components/DataEntryForm.vue'));
 
 const create = async () => {
     dialog.open(CampainForm, {
@@ -132,6 +133,7 @@ watch(() => store.filters.query, (v) => {
         }, 300);
     }
 })
+
 </script>
 
 <style lang="scss"></style>

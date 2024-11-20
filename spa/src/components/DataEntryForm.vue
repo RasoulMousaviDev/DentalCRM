@@ -3,15 +3,19 @@
         <div class="flex justify-between items-center">
             <label class="has-[+*+small]:text-red-500"> {{ $t('excel-file') }}</label>
             <input ref="file" type="file" hidden @input="chooseFile" @change="chooseFile">
-            <Button v-if="form.file" icon="pi pi-times" :label="form.file.name.slice(-24)" outlined severity="info"  @click="() => file.click()"/>
-            <Button v-else icon="pi pi-file-excel" :label="$t('choose-file')" severity="info" @click="() => file.click()" />
+            <Button v-if="form.file" icon="pi pi-times" :label="form.file.name.slice(-24)" outlined severity="info"
+                @click="() => file.click()" />
+            <Button v-else icon="pi pi-file-excel" :label="$t('choose-file')" severity="info"
+                @click="() => file.click()" />
             <small v-if="errors.file" v-text="errors.file[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-2">
-            <label class="has-[+*+small]:text-red-500"> {{ $t('consultants') }}</label>
-            <MultiSelect v-model="form.roles" display="chip" :options="users.items" :loading="users.fetching"
-                optionLabel="name" optionValue="id" fluid filter class="has-[+small]:!border-red-500 overflow-x-auto"
-                panelClass="[&>*>.p-checkbox]:!mr-0 [&>*>.p-checkbox]:ml-2" />
+            <FloatLabel variant="on">
+                <MultiSelect v-model="form.roles" display="chip" :options="users.items" :loading="users.fetching"
+                    optionLabel="name" optionValue="id" fluid filter class="overflow-x-auto"
+                    panelClass="[&>*>.p-checkbox]:!mr-0 [&>*>.p-checkbox]:ml-2" @filter="users.search" />
+                <label> {{ $t('consultants') }}</label>
+            </FloatLabel>
             <small v-if="errors.roles" v-text="errors.roles[0]" class="text-red-500" />
         </div>
         <div class="flex justify-between gap-2 mt-8">
@@ -23,8 +27,7 @@
 
 <script setup>
 import { useUsersStore } from '@/stores/users';
-import { usePatientsStore } from '@/stores/patients';
-import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
+import { computed, inject, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 
 const { toast, } = inject('service')
 
@@ -38,9 +41,8 @@ const errors = ref({})
 const loading = ref(false)
 
 const users = useUsersStore()
+users.filters = { role: 'consultant' }
 users.index()
-
-const patients = usePatientsStore()
 
 const handleSubmit = async () => {
     loading.value = true
@@ -78,6 +80,8 @@ onMounted(() => {
     if (user)
         Object.keys(form).forEach((key) => form[key] = user[key])
 })
+
+onBeforeUnmount(() => users.filters = {})
 </script>
 
 <style lang="scss" scoped></style>

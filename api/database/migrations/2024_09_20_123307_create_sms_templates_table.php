@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('sms_templates', function (Blueprint $table) {
             $table->id();
-            $table->string('template');
-            $table->enum('model_name', ['patient', 'call']);
-            $table->integer('model_id');
-            $table->boolean('status');
+            $table->text('template');
+            $table->enum('model', ['patient', 'call']);
+            $table->foreignId('status')->constrained('statuses');
+            $table->boolean('active');
             $table->timestamps();
         });
     }

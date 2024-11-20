@@ -22,6 +22,11 @@ class UserController extends Controller
 
         $users = User::when($request->input('id'), function ($query, $id) {
             $query->where('id', $id);
+        })->when($request->input('role'), function ($query, $role) {
+            $ids = Role::where('name','like', "%{$role}%")->pluck('id');
+            $query->whereHas('roles', function (Builder $query) use ($ids) {
+                $query->whereIn('id', $ids);
+            });
         })->when($request->input('roles'), function ($query, $roles) {
             $query->whereHas('roles', function (Builder $query) use ($roles) {
                 $query->whereIn('id', $roles);
@@ -37,6 +42,10 @@ class UserController extends Controller
             $users->when($request->input($column), function ($query, $value) use ($column) {
                 $query->where($column, 'like', "%{$value}%");
             });
+
+        $users->when($request->input('query'), function ($query, $value) use ($columns) {
+            $query->whereAny($columns, 'like', "%{$value}%");
+        });
 
         $dates = ['created_at', 'updated_at'];
 

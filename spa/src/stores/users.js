@@ -12,7 +12,7 @@ export const useUsersStore = defineStore("users", {
             this.items = [];
             this.fetching = true;
             const { page = 1, rows = 10 } = this.pagiantor;
-            
+
             const { statusText, data } = await this.axios.get("/users", {
                 params: { page, rows, ...this.filters },
             });
@@ -49,6 +49,13 @@ export const useUsersStore = defineStore("users", {
             }
 
             return res;
+        },
+        async search(query) {
+            this.filters = { query, role: "consultant" };
+
+            await this.index();
+
+            return this.items;
         },
         paginate({ rows, page }) {
             this.pagiantor.rows = rows;

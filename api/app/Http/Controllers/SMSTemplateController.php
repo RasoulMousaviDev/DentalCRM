@@ -4,19 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSMSTemplateRequest;
 use App\Http\Requests\UpdateSMSTemplateRequest;
+use App\Models\Call;
+use App\Models\Patient;
 use App\Models\SMSTemplate;
 use Illuminate\Http\Request;
 
 class SMSTemplateController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $templates = SMSTemplate::latest()->paginate(10);
 
-        return response()->json($this->paginate($templates));
+        $response = $this->paginate($templates);
+
+        $response['statuses'] = [
+            'patient' => Patient::model()->statuses,
+            'call' => Call::model()->statuses,
+        ];
+
+        return response()->json($response);
     }
 
     /**
@@ -24,10 +33,10 @@ class SMSTemplateController extends Controller
      */
     public function store(StoreSMSTemplateRequest $request)
     {
-        $form = $request->only(['template', 'model_name', 'model_id', 'status']);
+        $form = $request->only(['template', 'model','status', 'active']);
 
         SMSTemplate::create($form)->save();
-        
+
         $smsTemplate = SMSTemplate::latest()->first();
 
         return response()->json($smsTemplate);

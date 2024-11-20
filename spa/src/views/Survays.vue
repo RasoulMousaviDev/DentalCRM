@@ -4,13 +4,13 @@
             removable-sort>
             <template #header>
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold ml-auto">
-                        {{ $t('survays') }}
-                    </span>
+                    <span class="text-2xl font-bold">{{ $t('survays') }}</span>
+                    <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
                     <IconField>
                         <InputText v-model="store.filters.query" :placeholder="$t('search')" />
                         <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
                     </IconField>
+                    <hr class="grow !ml-2"></hr>
                     <Button icon="pi pi-plus" :label="$t('new-survay')" severity="success" @click="create()" />
                 </div>
             </template>
@@ -55,9 +55,10 @@
 </template>
 
 <script setup>
+import SurvayForm from '@/components/SurvayForm.vue';
 import SurvayQuestions from '@/components/SurvayQuestions.vue';
 import { useSurvaysStore } from '@/stores/survays';
-import { defineAsyncComponent, inject, ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
@@ -67,8 +68,6 @@ const store = useSurvaysStore()
 
 if (store.items.length === 0)
     store.index()
-
-const SurvayForm = defineAsyncComponent(() => import('@/components/SurvayForm.vue'));
 
 const create = async () => {
     dialog.open(SurvayForm, {

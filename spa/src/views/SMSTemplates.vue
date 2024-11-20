@@ -3,9 +3,9 @@
         <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
             <template #header>
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold ml-auto">
-                        {{ $t('sms-templates') }}
-                    </span>
+                    <span class="text-2xl font-bold">{{ $t('sms-templates') }}</span>
+                    <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
+                    <hr class="grow !ml-2"></hr>
                     <Button icon="pi pi-plus" :label="$t('new-template')" severity="success" @click="create()" />
                 </div>
             </template>
@@ -14,16 +14,24 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
+            <template #footer>
+                <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
+            </template>
             <Column :header="$t('row')" class="w-20">
                 <template #body="{ index }">
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column :field="(item) => getModel(item)" :header="$t('model')" class="w-44" />
-            <Column field="template" :header="$t('template')" />
-            <Column field="status" :header="$t('status')" class="w-24">
+            <Column :field="({ model }) => $t(model)" :header="$t('model')" class="w-44" />
+            <Column field="status" :header="$t('model')" class="w-44">
                 <template #body="{ data: { status } }">
-                    <Tag v-if="status" severity="success" :value="$t('active')" />
+                    <Tag v-bind="status" />
+                </template>
+            </Column>
+            <Column field="template" :header="$t('template')" />
+            <Column field="active" :header="$t('active')" class="w-24">
+                <template #body="{ data: { active } }">
+                    <Tag v-if="active" severity="success" :value="$t('active')" />
                     <Tag v-else severity="danger" :value="$t('deactive')" />
                 </template>
             </Column>
@@ -43,10 +51,11 @@
 </template>
 
 <script setup>
+import SMSTemplateForm from '@/components/SMSTemplateForm.vue';
 import { useCallsStore } from '@/stores/calls';
 import { usePatientsStore } from '@/stores/patients';
 import { useSMSTemplatesStore } from '@/stores/sms-templates';
-import { defineAsyncComponent, inject } from 'vue';
+import { inject } from 'vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
@@ -54,8 +63,6 @@ const store = useSMSTemplatesStore()
 
 if (store.items.length === 0)
     store.index()
-
-const SMSTemplateForm = defineAsyncComponent(() => import('@/components/SMSTemplateForm.vue'));
 
 const create = async () => {
     dialog.open(SMSTemplateForm, {
@@ -67,6 +74,7 @@ const create = async () => {
 
 const edit = async (data) => {
     const template = Object.assign({}, data)
+    template.status = template.status.id
 
     dialog.open(SMSTemplateForm, {
         props: { header: t('editSMSTemplate'), modal: true },

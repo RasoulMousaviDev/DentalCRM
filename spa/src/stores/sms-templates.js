@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useSMSTemplatesStore = defineStore("sms-templates", {
     state: () => ({
         items: [],
+        statuses: {},
         pagiantor: {},
         fetching: true,
     }),
@@ -17,6 +18,7 @@ export const useSMSTemplatesStore = defineStore("sms-templates", {
 
             if (statusText === "OK") {
                 this.items = data.items;
+                this.statuses = data.statuses;
                 this.pagiantor = data.pagiantor;
             }
         },

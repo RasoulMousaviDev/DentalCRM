@@ -1,37 +1,41 @@
 <template>
-    <form @submit.prevent="handleSubmit()" class="flex flex-col gap-4 w-full md:w-[30rem]">
-        <div class="flex gap-4">
-            <div class="flex flex-col gap-2 flex-1">
-                <label class="has-[+*+small]:text-red-500"> {{ $t('model-name') }}</label>
-                <Select v-model="form.model_name" :options="['patient', 'call']" :optionLabel="(item) => $t(item)" fluid
-                     :placeholder="$t('choose')" class="has-[+small]:!border-red-500" />
-                <small v-if="errors.model_name" v-text="errors.model_name[0]" class="text-red-500" />
-            </div>
-            <div class="flex flex-col gap-2 flex-1">
-                <label class="has-[+*+small]:text-red-500"> {{ $t('model-status') }}</label>
-                <Select v-model="form.model_id" :options="modelStatus.items" :loading="modelStatus.fetching"
-                    :emptyMessage="$t('first-select-model-name')" optionValue="id" fluid 
-                    :placeholder="$t('choose')" class="has-[+small]:!border-red-500">
+    <form @submit.prevent="handleSubmit()"
+        class="grid grid-cols-2 gap-x-4 gap-y-8 [&_small]:-mb-6 w-full md:w-[30rem] pt-2">
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <Select v-model="form.model" :options="['patient', 'call']" :optionLabel="(item) => $t(item)"
+                    :invalid="errors.model" fluid />
+                <label> {{ $t('model-name') }}</label>
+            </FloatLabel>
+            <small v-if="errors.model" v-text="errors.model[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <Select v-model="form.status" :options="statuses" :emptyMessage="$t('first-select-model-name')"
+                    optionValue="id" fluid :invalid="errors.status" class="has-[+small]:!border-red-500">
                     <template #value="{ value }">
-                        <Tag v-if="value" class="text-xs" v-bind="modelStatus.items.find(({ id }) => value == id)" />
+                        <Tag class="text-xs" v-bind="statuses?.find(({ id }) => value == id)" />
                     </template>
                     <template #option="{ option }">
                         <Tag v-bind="option" class="text-xs" />
                     </template>
                 </Select>
-                <small v-if="errors.model_id" v-text="errors.model_id[0]" class="text-red-500" />
-            </div>
+                <label> {{ $t('model-status') }}</label>
+            </FloatLabel>
+            <small v-if="errors.status" v-text="errors.status[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-2 col-span-2">
-            <label class="has-[+*+small]:text-red-500"> {{ $t('template') }}</label>
-            <Textarea v-model="form.template" fluid rows="5" cols="30" class="has-[+small]:!border-red-500" />
+        <div class="flex flex-col gap-1 col-span-2">
+            <FloatLabel variant="on">
+                <Textarea v-model="form.template" fluid rows="5" cols="30" :invalid="errors.template" />
+                <label> {{ $t('template') }}</label>
+            </FloatLabel>
             <small v-if="errors.template" v-text="errors.template[0]" class="text-red-500" />
         </div>
-        <div class="flex justify-between items-center mt-2">
+        <div class="flex justify-between items-center col-span-2 -mt-2 pr-2">
             <label> {{ $t('status') }}</label>
-            <ToggleButton v-model="form.status" class="w-20" :onLabel="$t('active')" :offLabel="$t('deactive')" />
+            <ToggleButton v-model="form.active" class="w-20" :onLabel="$t('active')" :offLabel="$t('deactive')" />
         </div>
-        <div class="flex justify-between gap-2 mt-8">
+        <div class="flex justify-between gap-2 col-span-2 mt-4">
             <Button :label="$t('back')" severity="secondary" @click="dialogRef.close()" />
             <Button icon="pi pi-save" :label="$t('save')" type="submit" severity="success" :loading="loading" />
         </div>
@@ -39,32 +43,21 @@
 </template>
 
 <script setup>
-import { useCallsStore } from '@/stores/calls';
-import { usePatientsStore } from '@/stores/patients';
 import { useSMSTemplatesStore } from '@/stores/sms-templates';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
-const { toast, t } = inject('service')
+const { toast } = inject('service')
 
 const dialogRef = inject('dialogRef')
 const { template } = dialogRef.value.data || {}
 
-const form = reactive({ model_name: '', model_id: '', template: '', status: true })
+const form = reactive({ model: null, status: null, template: null, active: true })
 const errors = ref({})
 const loading = ref(false)
 
-const patients = usePatientsStore()
-const calls = useCallsStore()
-
-const modelStatus = computed(() => {
-    if (form.model_name == 'patient')
-        return patients.statuses;
-    else if (form.model_name == 'call')
-        return calls.statuses
-    else return { items: [] }
-})
-
 const smsTempaltes = useSMSTemplatesStore()
+
+const statuses = computed(() => smsTempaltes.statuses[form.model] || [])
 
 const handleSubmit = async () => {
     loading.value = true
@@ -84,7 +77,7 @@ const handleSubmit = async () => {
     else if (status === 422)
         errors.value = data.errors
     else
-        toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 
 }
 

@@ -4,13 +4,13 @@
             class="[&_table_tr]:!bg-transparent [&_.p-datatable-header]:!bg-transparent [&_.p-datatable-footer]:!bg-transparent" tableStyle="min-width: 50rem">
             <template #header>
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold ml-auto">
-                        {{ $t('questions') }}
-                    </span>
+                    <span class="text-2xl font-bold">{{ $t('questions') }}                    </span>
+                    <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
                     <IconField>
                         <InputText v-model="store.filters.query" :placeholder="$t('search')" class="!bg-transparent" />
                         <InputIcon :class="`pi pi-${store.fetching ? 'spin pi-spinner' : 'search'}`" />
                     </IconField>
+                    <hr class="grow !ml-2"></hr>
                     <Button icon="pi pi-plus" :label="$t('new-question')" outlined severity="success"
                         @click="create()" />
                 </div>
