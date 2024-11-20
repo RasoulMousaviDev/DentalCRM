@@ -19,8 +19,8 @@
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column :field="(item) => getModel(item)" :header="$t('model')"  class="w-44" />
-            <Column field="template" :header="$t('template')"/>
+            <Column :field="(item) => getModel(item)" :header="$t('model')" class="w-44" />
+            <Column field="template" :header="$t('template')" />
             <Column field="status" :header="$t('status')" class="w-24">
                 <template #body="{ data: { status } }">
                     <Tag v-if="status" severity="success" :value="$t('active')" />
@@ -43,8 +43,8 @@
 </template>
 
 <script setup>
-import { useCallStatuesStore } from '@/stores/call-statuses';
-import { usePatientStatuesStore } from '@/stores/patient-statuses';
+import { useCallsStore } from '@/stores/calls';
+import { usePatientsStore } from '@/stores/patients';
 import { useSMSTemplatesStore } from '@/stores/sms-templates';
 import { defineAsyncComponent, inject } from 'vue';
 
@@ -97,24 +97,20 @@ const destroy = (template) => {
             template.loading = false
 
             if (statusText == 'OK')
-                toast.add({  severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
+                toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
             else
-                toast.add({  severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+                toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
 
         }
     });
 }
 
-const patientStatus = usePatientStatuesStore()
-if (patientStatus.items.length < 1)
-    patientStatus.index()
+const patients = usePatientsStore()
 
-const callStatus = useCallStatuesStore()
-if (callStatus.items.length < 1)
-    callStatus.index()
+const calls = useCallsStore()
 
 const getModel = ({ model_name, model_id }) => {
-    const model = { patient: patientStatus, call: callStatus }
+    const model = { patient: patients.statuses, call: calls.statuses }
 
     const status = model[model_name].items.find((item) => item.id == model_id);
 

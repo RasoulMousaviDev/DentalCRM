@@ -39,8 +39,8 @@
 </template>
 
 <script setup>
-import { useCallStatuesStore } from '@/stores/call-statuses';
-import { usePatientStatuesStore } from '@/stores/patient-statuses';
+import { useCallsStore } from '@/stores/calls';
+import { usePatientsStore } from '@/stores/patients';
 import { useSMSTemplatesStore } from '@/stores/sms-templates';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
@@ -53,14 +53,14 @@ const form = reactive({ model_name: '', model_id: '', template: '', status: true
 const errors = ref({})
 const loading = ref(false)
 
-const patientStatus = usePatientStatuesStore()
-const callStatus = useCallStatuesStore()
+const patients = usePatientsStore()
+const calls = useCallsStore()
 
 const modelStatus = computed(() => {
     if (form.model_name == 'patient')
-        return patientStatus;
+        return patients.statuses;
     else if (form.model_name == 'call')
-        return callStatus
+        return calls.statuses
     else return { items: [] }
 })
 
