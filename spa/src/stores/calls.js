@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useFollowupsStore } from "./followups";
+import { useFollowUpsStore } from "./follow-ups";
 
 export const useCallsStore = defineStore("calls", {
     state: () => ({
@@ -32,14 +32,14 @@ export const useCallsStore = defineStore("calls", {
             if (res.statusText === "OK") {
                 this.items.unshift(res.data.call);
 
-                if (res.data.followup) {
-                    const followups = useFollowupsStore();
-                    followups.items.unshift(res.data.followup);
+                if (res.data.follow_up) {
+                    const followUps = useFollowUpsStore();
+                    followUps.items.unshift(res.data.followup);
                 }
 
                 if (form.followup_id) {
-                    const followups = useFollowupsStore();
-                    const item = followups.items.find(
+                    const followUps = useFollowUpsStore();
+                    const item = followUps.items.find(
                         (item) => item.id == form.followup_id
                     );
                     item.status = "done";

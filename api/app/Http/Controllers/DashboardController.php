@@ -27,8 +27,7 @@ class DashboardController extends Controller
 
         $followUpCount = FollowUp::whereBetween('created_at', $period)->count();
 
-        $patientStatuses = Patient::without(['mobiles', 'city', 'province', 'leadSource', 'status'])
-            ->select('status', DB::raw('COUNT(*) as count'))
+        $patientStatuses = Patient::select('status', DB::raw('COUNT(*) as count'))
             ->whereBetween('created_at',  $period)
             ->groupBy('status')
             ->pluck('count', 'status');
@@ -69,6 +68,11 @@ class DashboardController extends Controller
 
         $receptionReport = $appointmentsStatusCount->merge($depositsStatusCount);
 
+        $statuses = [
+            'patient' => Patient::model()->statuses,
+            'call' => Call::model()->statuses,
+        ];
+
         return response()->json(compact(
             'patientLeadSources',
             'patientTreatments',
@@ -80,6 +84,7 @@ class DashboardController extends Controller
             'patientCount',
             'callStatuses',
             'callCount',
+            'statuses'
         ));
     }
 }

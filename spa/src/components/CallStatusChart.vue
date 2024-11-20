@@ -18,16 +18,13 @@ const store = useCallsStore()
 
 const chartOptions = ref(null);
 const backgroundColor = [
-    "#4F8BD8", "#1BD8FF", "#D8A11B", "#1BD84F", "#D883A0",
-    "#D81B8D", "#1BB8D8", "#D84F1B", "#8B1BD8", "#D81B33",
-    "#D84F1B", "#1BD84F", "#1B4FD8", "#D81B6A", "#6A1BD8",
-    "#1BD8C6", "#C6D81B", "#D87A1B", "#1BD88F", "#6A1BD8",
+    "#1BD84F", "#D81B33", "#CCCCCC",
 ]
 const chartData = computed(() => ({
     labels: store.statuses.map(i => i.value),
     datasets: [
         {
-            data: store.statuses.map(s => props.data[s.id]),
+            data: store.statuses.map(s => props.data[s.id] || 0),
             backgroundColor,
         }
     ]

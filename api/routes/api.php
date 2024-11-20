@@ -7,7 +7,7 @@ use App\Http\Controllers\CampainController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepositController;
-use App\Http\Controllers\FollowupController;
+use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\OTPCodeController;
 use App\Http\Controllers\PasswordController;
@@ -73,7 +73,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('', 'store');
     });
 
-    Route::get('followups', [FollowupController::class, 'index']);
+    Route::get('follow-ups', [FollowUpController::class, 'index']);
 
     Route::controller(TreatmentController::class)->prefix('treatments')->group(function () {
         Route::get('', 'index');

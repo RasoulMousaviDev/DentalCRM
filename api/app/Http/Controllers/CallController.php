@@ -19,24 +19,14 @@ class CallController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(IndexCallRequest $request)
+    public function index(Request $request)
     {
         $rows = $request->input('rows', 10);
 
-        $patient = $request->get('patient');
+        $calls = Call::latest()->with('status:id,value,severity')->with('patient:id,firstname,lastname');
 
-        $calls = Call::latest()->with('status:id,value,severity');
-
-        // if ($patient)
-        //     $calls->where('patient_id', $patient);
-        // else
-
-        $calls->with('patient:id,firstname,lastname');
-
-        $calls = $calls->when($request->input('query'), function ($query, $value) {
-            $query->whereHas('patient', function (Builder $query) use ($value) {
-                $query->whereAny(['firstname', 'lastname'], 'like', "%{$value}%");
-            })->orWhereAny(['mobile', 'desc'], 'like', "%{$value}%");
+        $calls = $calls->when($request->input('patient'), function ($query, $patient) {
+            $query->where('patient_id', $patient);
         })->when($request->input('firstname'), function ($query, $firstname) {
             $query->whereHas('patient', function (Builder $query) use ($firstname) {
                 $query->where('firstname', 'like', "%{$firstname}%");
@@ -52,7 +42,6 @@ class CallController extends Controller
                 ->setTimezone('Asia/Tehran')
                 ->{$i ? 'endOfDay' : 'startOfDay'}()
                 ->format('Y-m-d H:i:s'));
-            Log::alert($date);
             $query->whereBetween('created_at', $date);
         })->when($request->input('status'), function ($query, $status) {
             $query->whereHas('status', function (Builder $query) use ($status) {
@@ -84,18 +73,18 @@ class CallController extends Controller
         if ($status == $patient->status)
             $form['log'] = __('messages.call-stored');
         else {
+            $patient->status = $patient->status()->get();
+            $from = $patient->status->value;
             $patient->update(compact('status'));
-
-            $form['log'] = __('messages.patient-status-changed', [
-                'from' => $patient->status->title,
-                'to' => $patient->refresh() && $patient->status->title
-            ]);
+            $patient->refresh();
+            $to = $patient->status->value;
+            $form['log'] = __('messages.patient-status-changed', compact('from', 'to'));
         }
 
         $patient->calls()->create($form->toArray())->save();
 
-        if ($request->has('follow_up.id'))
-            FollowUp::find($request->get('follow_up.id'))->update(['status' => 'done']);
+        if ($request->has('follow_up_id'))
+            FollowUp::find($request->get('follow_up_id'))->update(['status' => 19]);
 
         $call = $patient->calls()
             ->with('status:id,value,severity')

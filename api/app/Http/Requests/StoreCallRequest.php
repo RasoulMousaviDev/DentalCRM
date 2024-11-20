@@ -21,7 +21,7 @@ class StoreCallRequest extends FormRequest
             'patient.status' => 'required|exists:statuses,id',
             'follow_up.due_date' => 'required_unless:patient.status,9,null|date',
             'follow_up.desc' => 'required_unless:patient.status,9,null|string',
-            "follow_up.id" => "nullable|exists:follow_ups,id"
+            "follow_up_id" => "nullable|exists:follow_ups,id"
         ];
     }
 }

@@ -88,7 +88,7 @@ const router = createRouter({
                 {
                     name: "Followups",
                     path: "/follow-ups",
-                    component: () => import("@/views/Followups.vue"),
+                    component: () => import("@/views/FollowUps.vue"),
                 },
                 {
                     name: "Calls",

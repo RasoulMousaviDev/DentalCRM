@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { useFollowupsStore } from '@/stores/followups';
+import { useFollowupsStore } from '@/stores/follow-ups';
 import { defineAsyncComponent, inject, reactive } from 'vue';
 
 const PatientCallForm = defineAsyncComponent(() => import('@/components/CallForm.vue'));

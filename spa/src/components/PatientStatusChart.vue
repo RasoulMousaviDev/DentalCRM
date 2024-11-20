@@ -29,7 +29,7 @@ const chartData = computed(() => ({
     labels: store.statuses.map(i => i.value),
     datasets: [
         {
-            data: store.statuses.map(s => props.data[s.id]),
+            data: store.statuses.map(s => props.data[s.id] || 0),
             backgroundColor,
         }
     ]
@@ -42,7 +42,7 @@ const setChartOptions = () => {
     return {
         plugins: {
             legend: {
-                position: 'bottom',
+                position: 'right',
                 labels: {
                     cutout: '60%',
                     color: textColor,
@@ -98,7 +98,7 @@ const plugins = reactive([
             const centerX = width / 2;
             const centerY = height / 2;
 
-            ctx.fillText(t('total'), centerX, centerY - 30);
+            ctx.fillText(t('total'), centerX - 60, centerY - 15);
 
             const count = Object.values(props.data).reduce((a, b) => a + b, 0)
 
@@ -107,7 +107,7 @@ const plugins = reactive([
             ctx2.font = '20px vazir';
             ctx2.textAlign = 'center';
             ctx2.textBaseline = 'middle';
-            ctx2.fillText(count, centerX, centerY + 10);
+            ctx2.fillText(count, centerX - 60, centerY + 15);
 
 
             ctx.restore();

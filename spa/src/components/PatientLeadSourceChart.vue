@@ -45,7 +45,7 @@ const setChartOptions = () => {
     return {
         plugins: {
             legend: {
-                position: 'bottom',
+                position: 'right',
                 labels: {
                     cutout: '60%',
                     color: textColor,

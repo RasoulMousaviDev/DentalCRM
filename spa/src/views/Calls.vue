@@ -59,18 +59,6 @@ const create = async () => {
         },
     })
 }
-
-let timer;
-watch(() => store.filters.query, (v) => {
-    if (v != undefined) {
-        clearTimeout(timer)
-        timer = setTimeout(() => {
-            if (v) store.filters = { query: v }
-            else delete store.filters.query
-            store.index()
-        }, 300);
-    }
-})
 </script>
 
 <style lang="scss" scoped></style>

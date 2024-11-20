@@ -66,6 +66,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
+    public function patients(): HasMany
+    {
+        return $this->hasMany(Patient::class);
+    }
+
     public function campains(): HasMany
     {
         return $this->hasMany(Campain::class);
@@ -75,12 +80,12 @@ class User extends Authenticatable implements JWTSubject
     {
         $user = User::find(Auth::user()->id);
 
-        if (is_numeric($role)) 
+        if (is_numeric($role))
             return $user->roles()->where('id', $role)->exists();
-    
-        if (is_string($role)) 
+
+        if (is_string($role))
             return $user->roles()->where('name', $role)->exists();
-        
+
 
         return false;
     }

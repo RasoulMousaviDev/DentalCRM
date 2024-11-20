@@ -41,12 +41,12 @@ class UserController extends Controller
         $dates = ['created_at', 'updated_at'];
 
         foreach ($dates as $date) {
-            $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
-                ->setTimezone('Asia/Tehran')
-                ->{$i ? 'endOfDay' : 'startOfDay'}()
-                ->format('Y-m-d H:i:s'));
-
             $users->when($request->input($date), function ($query, $value) use ($date) {
+                $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+                    ->setTimezone('Asia/Tehran')
+                    ->{$i ? 'endOfDay' : 'startOfDay'}()
+                    ->format('Y-m-d H:i:s'));
+
                 $query->whereBetween($date, $value);
             });
         }

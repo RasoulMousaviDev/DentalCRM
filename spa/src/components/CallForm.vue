@@ -7,7 +7,7 @@
                     resetFilterOnHide autoFilterFocus filter
                     :filterFields="[({ mobiles }) => mobiles.map(m => m.number).join(' ')]"
                     :optionLabel="({ firstname, lastname }) => [firstname, lastname].join(' ')" fluid
-                    :invalid="errors['patient.id']"
+                    :invalid="errors['patient.id']" :disabled="disabled"
                     panel-class="[&_.p-iconfield]:ltr [&_input:not(.p-filled)]:!text-right"
                     :filter-placeholder="$t('search-patient')" @filter="patients.search($event.value)">
                 </Select>
@@ -66,7 +66,7 @@
             <div class="flex flex-col gap-1">
                 <FloatLabel variant="on">
                     <DatePicker v-model="form.follow_up.due_date" :invalid="errors['follow_up.due_date']" class="ltr"
-                        fluid dateFormat="yy/mm/dd" show-time :min-date="new Date()"/>
+                        fluid dateFormat="yy/mm/dd" show-time :min-date="new Date()" />
                     <label>{{ $t('follow-up-date') }}</label>
                 </FloatLabel>
                 <small v-if="errors['follow_up.due_date']" v-text="errors['follow_up.due_date'][0]"
@@ -90,27 +90,32 @@
 
 <script setup>
 import { useCallsStore } from '@/stores/calls';
+import { useFollowUpsStore } from '@/stores/follow-ups';
 import { usePatientsStore } from '@/stores/patients';
 import { computed, onMounted, watch } from 'vue';
 import { inject, reactive, ref } from 'vue';
 
-const { route } = inject('service')
+const { route, toast } = inject('service')
 
 const { id } = route.params
 
 const dialogRef = inject('dialogRef')
+const { data: followUpId } = dialogRef.value
 
 const form = reactive({ patient: {} })
 const errors = ref({})
 const loading = ref(false)
+const disabled = ref(false)
 
 const store = useCallsStore()
+if (store.statuses.length === 0)
+    store.index()
+
+const followUps = useFollowUpsStore()
 
 const patients = usePatientsStore()
 if (patients.statuses.length === 0)
     patients.index()
-// const patient = reactive(patients.items.find((item) => item.id == id))
-// const followup = computed(() => [1].includes(form.patient_status))
 
 const handleSubmit = async () => {
     loading.value = true
@@ -119,8 +124,15 @@ const handleSubmit = async () => {
 
     loading.value = false
 
-    if (statusText === 'OK')
+    if (statusText === 'OK') {
         dialogRef.value.close();
+        if(followUpId){
+            const followUp = followUps.items.find(f => f.id == followUpId)
+            followUp.status = followUps.statuses.find(s => s.id == 19)
+            const p = patients.items.find(p => p.id == patient.value)
+            p.status = patients.statuses.find(s => s.id == form.patient.status)
+        }
+    }
     else if (status === 422)
         errors.value = data.errors
     else
@@ -160,8 +172,6 @@ watch(() => form.patient.status, (v) => {
 })
 
 watch(computed(() => Object.assign({}, form)), (value, old) => {
-    console.log(value, old);
-
     Object.keys(form).forEach((key) => {
         if (key == 'follow_up') {
             ['due_date', 'desc'].forEach(k => {
@@ -173,11 +183,21 @@ watch(computed(() => Object.assign({}, form)), (value, old) => {
 }, { deep: true })
 
 onMounted(() => {
-    if (id)
+    if (id) {
         patient.value = +id
+        disabled.value = true
+    }
     else if (store.filters.patient)
         patient.value = +store.filters.patient
 
+    if (followUpId) {
+        const followUp = followUps.items.find(f => f.id == followUpId)
+        if (followUp) {
+            patient.value = followUp.patient.id
+            form.follow_up_id = followUpId
+            disabled.value = true
+        }
+    }
 })
 </script>
 

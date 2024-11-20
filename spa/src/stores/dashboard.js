@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { usePatientsStore } from "./patients";
+import { useCallsStore } from "./calls";
 
 export const useDashboardStore = defineStore("dashboard", {
     state: () => ({
@@ -16,6 +18,14 @@ export const useDashboardStore = defineStore("dashboard", {
             this.fetching = false;
 
             if (statusText === "OK") {
+                const patients = usePatientsStore()
+                patients.statuses = data.statuses.patient
+                
+                const calls = useCallsStore()
+                calls.statuses = data.statuses.call
+
+                delete data.statuses
+
                 Object.keys(data).forEach((k) => (this.charts[k] = data[k]));
             }
         },

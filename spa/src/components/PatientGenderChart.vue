@@ -8,6 +8,7 @@
 </template>
 
 <script setup>
+import { useGendersStore } from '@/stores/genders';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ref, onMounted, inject, computed, reactive } from "vue";
 
@@ -15,13 +16,15 @@ const props = defineProps({ data: { type: Array, default: ({}) } })
 
 const { t } = inject('service')
 
+const store = useGendersStore()
+
 const chartOptions = ref(null);
 
 const chartData = computed(() => ({
-    labels: Object.keys(props.data).map(g => t(g)),
+    labels: store.items.map(i => t(i)),
     datasets: [
         {
-            data: Object.values(props.data),
+            data: store.items.map(i => props.data[i] || 0),
             backgroundColor: ['#FF6384', '#36A2EB'],
         }
     ]

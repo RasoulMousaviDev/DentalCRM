@@ -44,6 +44,10 @@ class Patient extends Model
     //     'status'
     // ];
 
+    public function user(): BelongsTo{
+        return $this->belongsTo(User::class);
+    }
+
     public function mobiles(): HasMany
     {
         return $this->hasMany(PatientMobile::class);

@@ -20,12 +20,7 @@ class PatientController extends Controller
 
         $columns = ['firstname', 'lastname', 'telephone', 'birthday'];
 
-        $patients = Patient::when($request->input('query'), function ($query, $value) use ($columns) {
-            $query->whereAny($columns, 'like', "%{$value}%")
-                ->orWhereHas('mobiles', function (Builder $query) use ($value) {
-                    $query->where('number', 'like', "%{$value}%");
-                });
-        })->when($request->input('id'), function ($query, $id) {
+        $patients = Patient::when($request->input('id'), function ($query, $id) {
             $query->where('id', $id);
         })->when($request->input('gender'), function ($query, $gender) {
             $query->where('gender', $gender);
@@ -59,12 +54,12 @@ class PatientController extends Controller
         $dates = ['created_at', 'updated_at'];
 
         foreach ($dates as $date) {
-            $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
-                ->setTimezone('Asia/Tehran')
-                ->{$i ? 'endOfDay' : 'startOfDay'}()
-                ->format('Y-m-d H:i:s'));
-
             $patients->when($request->input($date), function ($query, $value) use ($date) {
+                $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+                    ->setTimezone('Asia/Tehran')
+                    ->{$i ? 'endOfDay' : 'startOfDay'}()
+                    ->format('Y-m-d H:i:s'));
+                    
                 $query->whereBetween($date, $value);
             });
         }
@@ -118,6 +113,14 @@ class PatientController extends Controller
 
     public function show(Patient $patient)
     {
+        $patient->load([
+            'mobiles',
+            'city:id,title',
+            'province:id,title',
+            'leadSource:id,title',
+            'treatments:id,title',
+            'status'
+        ]);
         return response()->json($patient);
     }
 

@@ -32,6 +32,7 @@ class StatusSeeder extends Seeder
             ['value' => 'عودت داده شده', 'severity' => 'danger'],
             ['value' => 'از دست رفته', 'severity' => 'danger'],
             ['value' => 'لغو شده', 'severity' => 'danger'],
+            ['value' => 'انجام شد', 'severity' => 'success'],
         ]);
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IndexFollowupRequest;
-use App\Models\Followup;
+use App\Http\Requests\IndexFollowUpRequest;
+use App\Models\FollowUp;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Morilog\Jalali\Jalalian;
 
 class FollowUpController extends Controller
@@ -12,29 +14,16 @@ class FollowUpController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(IndexFollowupRequest $request)
+    public function index(Request $request)
     {
         $rows = $request->input('rows', 10);
 
-        $patient = $request->get('patient');
+        $followUps = FollowUp::latest()
+            ->with('status:id,value,severity')
+            ->with('patient:id,firstname,lastname');
 
-        $followups = Followup::latest();
-
-        if ($patient)
-            $followups->where('patient_id', $patient);
-        else
-            $followups->with(['patient' => fn($q) => $q->without([
-                'mobiles',
-                'city',
-                'province',
-                'leadSource',
-                'status'
-            ])->select('id', 'firstname', 'lastname')]);
-
-        $followups = $followups->when($request->input('query'), function ($query, $value) {
-            $query->whereHas('patient', function (Builder $query) use ($value) {
-                $query->whereAny(['firstname', 'lastname'], 'like', "%{$value}%");
-            })->orWhere('desc', 'like', "%{$value}%");
+        $followUps = $followUps->when($request->input('patient'), function ($query, $patient) {
+            $query->where('patient_id', $patient);
         })->when($request->input('firstname'), function ($query, $firstname) {
             $query->whereHas('patient', function (Builder $query) use ($firstname) {
                 $query->where('firstname', 'like', "%{$firstname}%");
@@ -43,15 +32,28 @@ class FollowUpController extends Controller
             $query->whereHas('patient', function (Builder $query) use ($lastname) {
                 $query->where('lastname', 'like', "%{$lastname}%");
             });
-        })->when($request->input('due_date'), function ($query, $due_date) {
-            $due_date = Jalalian::fromFormat('Y/m/d', $due_date)->toCarbon()->format('Y-m-d');
-            $query->whereDate('due_date', $due_date);
         })->when($request->input('status'), function ($query, $status) {
             $query->where('status', $status);
         });
 
-        $followups = $followups->paginate($rows);
+        $dates = ['due_date', 'created_at', 'updated_at'];
 
-        return response()->json($this->paginate($followups));
+        foreach ($dates as $date) {
+            $followUps->when($request->input($date), function ($query, $value) use ($date) {
+                $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+                    ->setTimezone('Asia/Tehran')
+                    ->{$i ? 'endOfDay' : 'startOfDay'}()
+                    ->format('Y-m-d H:i:s'));
+                $query->whereBetween($date, $value);
+            });
+        }
+
+        $followUps = $followUps->paginate($rows);
+
+        $response = $this->paginate($followUps);
+
+        $response['statuses'] = FollowUp::model()->statuses;
+
+        return response()->json($response);
     }
 }
