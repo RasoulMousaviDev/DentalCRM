@@ -21,6 +21,6 @@ class UserSeeder extends Seeder
             'password' => '123456789',
             'role_id' => 1,
             'status' => true
-        ]);
+        ])->roles()->attach([1]);
     }
 }

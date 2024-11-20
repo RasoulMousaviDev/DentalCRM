@@ -24,7 +24,7 @@ class CallController extends Controller
         $rows = $request->input('rows', 10);
 
         $calls = Call::latest()->with('status:id,value,severity')
-        ->with('patient:id,firstname,lastname');
+            ->with('patient:id,firstname,lastname');
 
         $calls = $calls->when($request->input('patient'), function ($query, $patient) {
             $query->where('patient_id', $patient);
@@ -45,9 +45,7 @@ class CallController extends Controller
                 ->format('Y-m-d H:i:s'));
             $query->whereBetween('created_at', $date);
         })->when($request->input('status'), function ($query, $status) {
-            $query->whereHas('status', function (Builder $query) use ($status) {
-                $query->where('id', $status);
-            });
+            $query->where('status', $status);
         });
 
 

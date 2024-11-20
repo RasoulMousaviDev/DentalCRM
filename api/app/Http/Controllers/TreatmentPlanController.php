@@ -7,6 +7,8 @@ use App\Http\Requests\StoreTreatmentPlanRequest;
 use App\Http\Requests\UpdateTreatmentPlanRequest;
 use App\Models\Patient;
 use App\Models\TreatmentPlan;
+use Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class TreatmentPlanController extends Controller
@@ -18,24 +20,48 @@ class TreatmentPlanController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $patient = $request->get('patient');
+        $treatmentPlans = TreatmentPlan::latest()
+            ->with('status:id,value,severity')
+            ->with('patient:id,firstname,lastname');
 
-        $treatmentPlans = TreatmentPlan::latest();
+        $treatmentPlans = $treatmentPlans->when($request->input('patient'), function ($query, $patient) {
+            $query->where('patient_id', $patient);
+        })->when($request->input('firstname'), function ($query, $firstname) {
+            $query->whereHas('patient', function (Builder $query) use ($firstname) {
+                $query->where('firstname', 'like', "%{$firstname}%");
+            });
+        })->when($request->input('lastname'), function ($query, $lastname) {
+            $query->whereHas('patient', function (Builder $query) use ($lastname) {
+                $query->where('lastname', 'like', "%{$lastname}%");
+            });
+        })->when($request->input('visit_type'), function ($query, $type) {
+            $query->where('visit_type', $type);
+        })->when($request->input('payment_method'), function ($query, $method) {
+            $query->where('payment_method', $method);
+        })->when($request->input('status'), function ($query, $status) {
+            $query->where('status', $status);
+        });
 
-        if ($patient)
-            $treatmentPlans->where('patient_id', $patient);
-        else
-            $treatmentPlans->with(['patient' => fn($q) => $q->without([
-                'mobiles',
-                'city',
-                'province',
-                'leadSource',
-                'status'
-            ])->select('id', 'firstname', 'lastname')]);
+        $dates = ['created_at', 'updated_at'];
+
+        foreach ($dates as $date) {
+            $treatmentPlans->when($request->input($date), function ($query, $value) use ($date) {
+                $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+                    ->setTimezone('Asia/Tehran')
+                    ->{$i ? 'endOfDay' : 'startOfDay'}()
+                    ->format('Y-m-d H:i:s'));
+
+                $query->whereBetween($date, $value);
+            });
+        }
 
         $treatmentPlans = $treatmentPlans->paginate($rows);
 
-        return response()->json($this->paginate($treatmentPlans));
+        $response = $this->paginate($treatmentPlans);
+
+        $response['statuses'] = TreatmentPlan::model()->statuses;
+
+        return response()->json($response);
     }
 
     /**
@@ -53,7 +79,6 @@ class TreatmentPlanController extends Controller
             'start_date',
             'treatments_details',
             'desc',
-            'status'
         ]);
 
         $patient = Patient::find($request->get('patient'));

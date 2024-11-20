@@ -1,100 +1,68 @@
 <template>
-    <form @submit.prevent="handleSubmit()" @keypress.enter.prevent="" class="flex flex-col gap-4 w-full md:w-[30rem]">
-        <div class="flex flex-col gap-2">
-            <label>{{ $t('firstname') }}</label>
+    <form @submit.prevent="handleSubmit()" class="flex w-full gap-4 [&>span]:flex-1">
+        <FloatLabel variant="on" class="max-w-32">
+            <InputText v-model="filters.patient" fluid class="ltr" v-keyfilter.int />
+            <label>{{ $t('patient-id') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
             <InputText v-model="filters.firstname" fluid />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label>{{ $t('lastname') }}</label>
+            <label>{{ $t('firstname') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
             <InputText v-model="filters.lastname" fluid />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label>{{ $t('appointment-date') }}</label>
-            <DatePicker v-model="date" class="w-full" :placeholder="$t('choose')"
-                :inputClass="{ 'ltr': filters.due_date }" panelClass="ltr" dateFormat="yy/mm/dd"
-                showButtonBar @clearClick="date = null" />
-        </div>
-        <div class="flex flex-col gap-2 grow">
-            <label>{{ $t('treatment') }}</label>
-            <Select v-model="filters.treatment" :options="treatments.items" :loading="treatments.fetching"
-                optionLabel="title" optionValue="id" fluid  :placeholder="$t('choose')" show-clear />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label> {{ $t('status') }}</label>
-            <Select v-model="filters.status" :options="statuses" optionValue="value" fluid 
-                :placeholder="$t('choose')" show-clear>
+            <label>{{ $t('lastname') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.visit_type" :options="['in-person', 'online']" :optionLabel="(opt) => $t(opt)"
+                fluid show-clear />
+            <label>{{ $t('visit-type') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.payment_method" :options="['cash', 'installments']" :optionLabel="(opt) => $t(opt)"
+                fluid show-clear />
+            <label>{{ $t('payment-method') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear>
                 <template #value="{ value }">
-                    <Tag v-if="value" class="text-xs" v-bind="getTag(value)" />
+                    <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
                 </template>
-                <template #option="{ option: { value, severity } }">
-                    <Tag :value="$t(value)" :severity="severity" class="text-xs" />
+                <template #option="{ option }">
+                    <Tag v-bind="option" class="text-xs" />
                 </template>
             </Select>
-        </div>
-        <div class="flex gap-2 mt-4">
-            <Button :label="$t('back')" severity="secondary" class="ml-auto" @click="popover.hide()" />
-            <Button v-if="Object.keys(filters).length > 0" icon="pi pi-filter-slash" :label="$t('clear')"
-                severity="warn" outlined @click="clearFilters()" />
-            <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" />
-        </div>
+            <label> {{ $t('status') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" class="ltr w-full"
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+            <label> {{ $t('created_at') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <DatePicker v-model="filters.updated_at" selectionMode="range" :manualInput="false" class="ltr w-full"
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+            <label> {{ $t('updated_at') }}</label>
+        </FloatLabel>
+        <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" class="w-28 shrink-0"
+            :loading="store.fetching" />
     </form>
 </template>
 
 <script setup>
-import { useAppointmentsStore } from '@/stores/appointments';
-import { useTreatmentsStore } from '@/stores/treatments';
-import { computed, inject, onMounted, reactive, watch } from 'vue';
+import { useTreatmentPlansStore } from '@/stores/treatment-plans';
+import { inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
 
-const { popover, t } = inject('service')
+const { route } = inject('service')
 
-const statuses = reactive([
-    { value: 'pending', severity: 'warn' },
-    { value: 'visited', severity: 'success' },
-    { value: 'missed', severity: 'danger' },
-    { value: 'canceled', severity: 'info' },
-])
+const { patient = null } = route.query || {}
 
-const filters = reactive({})
+const filters = reactive({ patient })
 
-const treatments = useTreatmentsStore()
-treatments.index()
-
-const date = computed({
-    get: () => {
-        if (filters.due_date) {
-            const d = filters.due_date.split('/');
-            return new Date(d[0], d[1] - 1, d[2]);
-        }
-        return null
-    },
-    set: (v) => {
-        if (v) filters.due_date = [
-            v.getFullYear(),
-            ('0' + (v.getMonth() + 1)).slice(-2),
-            ('0' + v.getDate()).slice(-2)
-        ].join('/')
-        else delete filters.due_date
-    }
-})
-
-const appointments = useAppointmentsStore()
+const store = useTreatmentPlansStore()
 
 const handleSubmit = async () => {
-    popover.value.hide()
-    appointments.filters = filters
-    appointments.index()
-}
-
-const clearFilters = () => {
-    popover.value.hide()
-    appointments.filters = {}
-    appointments.index()
-}
-
-const getTag = (value) => {
-    const item = Object.assign({}, statuses.find((item) => item.value == value))
-    item.value = t(item.value)
-    return item
+    store.filters = filters
+    store.index()
 }
 
 watch(filters, () => {
@@ -103,10 +71,9 @@ watch(filters, () => {
     })
 }, { deep: true })
 
-onMounted(() => {
-    Object.assign(filters, appointments.filters)
-    delete filters.query
-})
+onMounted(() => Object.assign(filters, store.filters))
+
+onBeforeUnmount(() => store.filters = {})
 </script>
 
 <style lang="scss" scoped></style>

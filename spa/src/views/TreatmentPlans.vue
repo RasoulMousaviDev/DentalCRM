@@ -3,13 +3,15 @@
         <DataTable :value="store.items" tableStyle="min-width: 50rem" row-hover editMode="cell"
             class="[&_tbody>tr]:cursor-pointer" @cell-edit-complete="onCellEditComplete" @row-click="onRowClick">
             <template #header>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold ml-auto">
-                        {{ $t('treatment-plans') }}
-                    </span>
-                    <Button icon="pi pi-filter" :label="$t('filter')" severity="secondary" @click="popover.show" />
-                    <Button icon="pi pi-plus" :label="$t('new-treatment-plan')" severity="success" as="router-link"
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold">{{ $t('treatment-plans') }}</span>
+                        <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
+                        <hr class="grow !ml-2"></hr>
+                        <Button icon="pi pi-plus" :label="$t('new-plan')" severity="success" as="router-link"
                         :to="{ name: 'TreatmentPlanCreate' }" />
+                    </div>
+                    <TreatmentPlanFilters />
                 </div>
             </template>
             <template #empty>
@@ -32,7 +34,7 @@
                 :header="$t('discount')" class="w-36" />
             <Column field="status" :header="$t('status')" class="w-40">
                 <template #body="{ data: { status } }">
-                    <Tag :value="$t(status)" :severity="severities[status]" class="cursor-pointer" />
+                    <Tag v-bind="status" />
                 </template>
                 <template #editor="{ data, field }">
                     <Select v-model="data[field]" option-value="value" focusOnHover
@@ -54,14 +56,13 @@
 </template>
 
 <script setup>
+import TreatmentPlanFilters from '@/components/TreatmentPlanFilters.vue';
 import { useTreatmentPlansStore } from '@/stores/treatment-plans';
-import { reactive, inject, defineAsyncComponent } from 'vue';
+import { reactive, inject } from 'vue';
 
 const severities = reactive({ valid: "info", invalid: "warn", done: "success" })
 
-const { toast, popover, router } = inject('service')
-
-popover.value.component = defineAsyncComponent(() => import('@/components/TreatmentPlanFilters.vue'));
+const { toast, router } = inject('service')
 
 const store = useTreatmentPlansStore()
 store.index()
@@ -82,7 +83,6 @@ const onCellEditComplete = async (event) => {
         }
     }
 };
-
 
 const onRowClick = (e) => {
     if (e.originalEvent.target.className != 'p-tag-label') {

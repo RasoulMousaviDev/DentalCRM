@@ -18,7 +18,7 @@ class PatientController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $columns = ['firstname', 'lastname', 'telephone', 'birthday'];
+        $columns = ['firstname', 'lastname', 'telephone'];
 
         $patients = Patient::when($request->input('id'), function ($query, $id) {
             $query->where('id', $id);
@@ -26,24 +26,16 @@ class PatientController extends Controller
             $query->where('gender', $gender);
         })->when($request->input('mobile'), function ($query, $mobile) {
             $query->whereHas('mobiles', function (Builder $query) use ($mobile) {
-                $query->where('number', $mobile);
+                $query->where('number', 'like', "%{$mobile}%");
             });
         })->when($request->input('province'), function ($query, $province) {
-            $query->whereHas('province', function (Builder $query) use ($province) {
-                $query->where('id', $province);
-            });
+            $query->where('province', $province);
         })->when($request->input('city'), function ($query, $city) {
-            $query->whereHas('city', function (Builder $query) use ($city) {
-                $query->where('id', $city);
-            });
+            $query->where('city', $city);
         })->when($request->input('lead_source'), function ($query, $leadSource) {
-            $query->whereHas('lead_source', function (Builder $query) use ($leadSource) {
-                $query->where('id', $leadSource);
-            });
+            $query->where('lead_source', $leadSource);
         })->when($request->input('status'), function ($query, $status) {
-            $query->whereHas('status', function (Builder $query) use ($status) {
-                $query->where('id', $status);
-            });
+            $query->where('status', $status);
         });
 
         foreach ($columns as $column)
@@ -51,7 +43,7 @@ class PatientController extends Controller
                 $query->where($column, 'like', "%{$value}%");
             });
 
-        $dates = ['created_at', 'updated_at'];
+        $dates = ['birthday', 'created_at', 'updated_at'];
 
         foreach ($dates as $date) {
             $patients->when($request->input($date), function ($query, $value) use ($date) {
@@ -59,7 +51,7 @@ class PatientController extends Controller
                     ->setTimezone('Asia/Tehran')
                     ->{$i ? 'endOfDay' : 'startOfDay'}()
                     ->format('Y-m-d H:i:s'));
-                    
+
                 $query->whereBetween($date, $value);
             });
         }

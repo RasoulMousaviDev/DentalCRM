@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamp('start_date')->nullable();
             $table->json('treatments_details');
             $table->string('desc')->nullable();
-            $table->enum('status', ['invalid', 'valid', 'done'])->default('valid');
+            $table->foreignId('status')->default(19)->constrained('statuses');
             $table->timestamps();
         });
     }

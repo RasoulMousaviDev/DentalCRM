@@ -18,7 +18,7 @@ class StoreTreatmentPlanRequest extends FormRequest
             'payment_method' => 'required|in:cash,installments',
             'visit_type' => 'required|in:in-person,online',
             'months_count' => 'required_if:payment_method,installments|integer|in:3,6,9,12',
-            'checks_count' => 'required_if:payment_method,installments|integer|in:3,6,9,12',
+            'checks_count' => 'required_if:payment_method,installments|integer',
             'deposit_amount' => 'required_if:payment_method,installments|numeric|between:100000,100000000',
             'start_date' => 'required_if:payment_method,installments|date',
             'total_amount' => 'required|numeric',

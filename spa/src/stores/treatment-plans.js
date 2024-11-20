@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useTreatmentPlansStore = defineStore("treatment-plans", {
     state: () => ({
         items: [],
+        statuses: [],
         fetching: true,
         pagiantor: { totalRecords: 0 },
         filters: {},
@@ -23,6 +24,7 @@ export const useTreatmentPlansStore = defineStore("treatment-plans", {
 
             if (statusText === "OK") {
                 this.items = data.items;
+                this.statuses = data.statuses;
                 this.pagiantor = data.pagiantor;
             }
         },

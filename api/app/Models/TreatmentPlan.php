@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Casts\JDate;
+use App\Models\Model as ModelsModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,6 +24,7 @@ class TreatmentPlan extends Model
         'discount_amount',
         'start_date',
         'treatments_details',
+        'visit_type',
         'desc',
         'status',
     ];
@@ -31,6 +35,14 @@ class TreatmentPlan extends Model
         'start_date' => 'timestamp',
         'treatments_details' => 'object'
     ];
+
+    protected function startDate(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => Carbon::parse($value)->setTimezone('Asia/Tehran')->format('Y-m-d H:i:s'),
+            get: fn($value) => Carbon::parse($value)->toIso8601String()
+        );
+    }
 
     public function patient(): BelongsTo
     {
@@ -51,5 +63,15 @@ class TreatmentPlan extends Model
     public function getToothsCountAttribute()
     {
         return $this->details()->distinct('tooth')->count();
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class, 'status');
+    }
+
+    public static function model()
+    {
+        return ModelsModel::firstWhere('name', TreatmentPlan::class);
     }
 }

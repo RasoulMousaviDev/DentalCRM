@@ -8,7 +8,6 @@ export const usePatientsStore = defineStore("patients", {
         fetching: false,
         pagiantor: { totalRecords: 0 },
         filters: {},
-        timer: null,
     }),
     actions: {
         async index() {
@@ -46,9 +45,9 @@ export const usePatientsStore = defineStore("patients", {
                 this.fetching = false;
 
                 if (res.statusText === "OK") {
-                    this.item = res.data
-                    this.items.length <1 && this.items.push(res.data)
-                };
+                    this.item = res.data;
+                    this.items.length < 1 && this.items.push(res.data);
+                }
 
                 return res;
             }
@@ -82,13 +81,10 @@ export const usePatientsStore = defineStore("patients", {
             this.pagiantor.page = page + 1;
             return this.index();
         },
-        search(query) {
-            clearTimeout(this.timer);
-            if (query != undefined) {
-                this.timer = setTimeout(async () => {
-                    this.filters = { query };
-                    await this.index();
-                }, 300);
+        async search(mobile) {
+            if (mobile != undefined) {
+                this.filters = { mobile };
+                await this.index();
             }
             return this.items;
         },
