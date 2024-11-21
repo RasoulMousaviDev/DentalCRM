@@ -87,7 +87,7 @@ class PatientController extends Controller
             'desc'
         ]);
 
-        $patient = Patient::create($form);
+        $patient = auth()->user()->patients()->create($form);
 
         $mobiles = $request->get('mobiles');
 
