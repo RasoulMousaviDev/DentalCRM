@@ -20,7 +20,7 @@ class TreatmentController extends Controller
 
     public function store(StoreTreatmentRequest $request)
     {
-        $form = $request->only(['title', 'cost', 'order', 'status']);
+        $form = $request->only(['title', 'order', 'status']);
 
         Treatment::create($form)->save();
 

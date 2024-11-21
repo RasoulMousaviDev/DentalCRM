@@ -21,8 +21,6 @@
                 </template>
             </Column>
             <Column field="title" :header="$t('title')" />
-            <Column :field="({ cost }) => [new Intl.NumberFormat().format(cost), $t('toman')].join(' ')"
-                :header="$t('cost')" class="w-44" />
             <Column field="status" :header="$t('status')" class="w-24">
                 <template #body="{ data: { status } }">
                     <Tag v-if="status" severity="success" :value="$t('active')" />

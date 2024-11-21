@@ -12,7 +12,7 @@ class Treatment extends Model
 {
     use HasFactory;
 
-    public $fillable = ['title', 'cost', 'order', 'status'];
+    public $fillable = ['title', 'order', 'status'];
 
     protected $casts = [
         'status' => 'boolean',

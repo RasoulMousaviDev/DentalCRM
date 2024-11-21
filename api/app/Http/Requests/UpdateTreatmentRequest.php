@@ -16,7 +16,6 @@ class UpdateTreatmentRequest extends FormRequest
     {
         return [
             'title' => 'required|string|unique:treatments,title,' . $this->treatment->id,
-            'cost' => 'required|numeric|between:100000,100000000',
             'status' => 'required|boolean'
         ];
     }

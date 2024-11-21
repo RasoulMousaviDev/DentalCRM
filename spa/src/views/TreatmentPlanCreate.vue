@@ -153,8 +153,6 @@
                             <li v-if="treatment.tooths.length > 0" class="flex flex-col gap-8">
                                 <div class="flex justify-between items-center font-bold">
                                     <span>{{ getTreatment(key, 'title') }}</span>
-                                    <span>{{ [new Intl.NumberFormat().format(getTreatment(key, 'cost') *
-                                        treatment.tooths.length), $t('toman')].join(' ') }}</span>
                                 </div>
                                 <ul class="flex flex-col gap-3">
                                     <template v-for="(tooths, i) in getToothsPostion(treatment.tooths)" :key="i">
@@ -300,7 +298,6 @@ const total_amount = computed(() => {
         Object.entries(form.treatments_details).forEach(([key, { tooths, services }]) => {
             if (tooths.length > 0) {
                 const treatment = treatments.items.find(({ id }) => id == key)
-                amount += treatment?.cost * tooths.length
                 Object.entries(services).forEach(([k, v]) => {
                     if (v) {
                         const services = treatment.services.find(({ id }) => id == k)

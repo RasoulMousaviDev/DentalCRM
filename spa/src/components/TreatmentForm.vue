@@ -7,16 +7,6 @@
             </FloatLabel>
             <small v-if="errors.title" v-text="errors.title[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-1">
-            <InputGroup class="ltr">
-                <InputGroupAddon class="!px-4">{{ $t('toman') }}</InputGroupAddon>
-                <FloatLabel variant="on" class="rtl">
-                    <InputNumber v-model="form.cost" fluid :invalid="errors.cost" class="ltr" @input="delete errors.cost" />
-                    <label>{{ $t('cost') }}</label>
-                </FloatLabel>
-            </InputGroup>
-            <small v-if="errors.cost" v-text="errors.cost[0]" class="text-red-500" />
-        </div>
         <div class="flex justify-between items-center pr-2">
             <label> {{ $t('status') }}</label>
             <ToggleButton v-model="form.status" class="w-20" :onLabel="$t('active')" :offLabel="$t('deactive')" />
@@ -39,7 +29,7 @@ const treatments = useTreatmentsStore()
 const dialogRef = inject('dialogRef')
 const { treatment } = dialogRef.value.data || {}
 
-const form = reactive({ title: '', cost: null, order: treatments.items.length + 1, status: true })
+const form = reactive({ title: '', order: treatments.items.length + 1, status: true })
 const errors = ref({})
 const loading = ref(false)
 

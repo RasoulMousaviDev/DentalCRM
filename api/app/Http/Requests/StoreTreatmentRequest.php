@@ -15,7 +15,6 @@ class StoreTreatmentRequest extends FormRequest
     {
         return [
             'title' => 'required|string|unique:treatments',
-            'cost' => 'required|numeric|between:100000,100000000',
             'status' => 'required|boolean'
         ];
     }
