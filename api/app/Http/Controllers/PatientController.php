@@ -62,7 +62,7 @@ class PatientController extends Controller
             'province:id,title',
             'leadSource:id,title',
             'treatments:id,title',
-            'user:name',
+            'user',
             'status'
         ])->latest()->paginate($rows);
 
@@ -112,6 +112,7 @@ class PatientController extends Controller
             'province:id,title',
             'leadSource:id,title',
             'treatments:id,title',
+            'user',
             'status'
         ]);
         return response()->json($patient);
