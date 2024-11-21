@@ -59,7 +59,7 @@ import PatientGenderChart from '@/components/PatientGenderChart.vue';
 import PatientLeadSourceChart from '@/components/PatientLeadSourceChart.vue';
 import PatientStatusChart from '@/components/PatientStatusChart.vue';
 import PatientTreatmentChart from '@/components/PatientTreatmentChart.vue';
-import ReceptionChart from '@/components/ReceptionChart.vue';
+import ReceptionChart from '@/components/AppointmentStatusChart.vue';
 import { useDashboardStore } from '@/stores/dashboard';
 
 import { reactive, ref, onMounted, computed, inject } from "vue";

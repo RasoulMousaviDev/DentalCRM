@@ -46,27 +46,27 @@ class Patient extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user');
     }
 
     public function mobiles(): HasMany
     {
-        return $this->hasMany(PatientMobile::class);
+        return $this->hasMany(PatientMobile::class, 'patient');
     }
 
     public function calls(): HasMany
     {
-        return $this->hasMany(Call::class);
+        return $this->hasMany(Call::class, 'patient');
     }
 
     public function followUps(): HasMany
     {
-        return $this->hasMany(FollowUp::class);
+        return $this->hasMany(FollowUp::class, 'patient');
     }
 
     public function appointments(): HasMany
     {
-        return $this->hasMany(Appointment::class, 'patient', 'id');
+        return $this->hasMany(Appointment::class, 'patient');
     }
 
     public function treatments(): BelongsToMany
@@ -76,12 +76,12 @@ class Patient extends Model
 
     public function treatmentPlans(): HasMany
     {
-        return $this->hasMany(TreatmentPlan::class, 'patient', 'id');
+        return $this->hasMany(TreatmentPlan::class, 'patient');
     }
 
     public function photos(): HasMany
     {
-        return $this->hasMany(Photo::class);
+        return $this->hasMany(Photo::class, 'patient');
     }
 
     public function province(): BelongsTo

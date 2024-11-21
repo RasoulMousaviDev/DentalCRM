@@ -28,12 +28,10 @@
                 :header="$t('name-and-family')" />
             <Column :field="({ mobiles }) => mobiles.map(({ number }) => number).join(' | ')" :header="$t('mobile')"
                 body-class="ltr !text-left" />
-            <Column field="telephone" :header="$t('telephone')" body-class="ltr !text-left" />
-            <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
+            <Column :field="({ telephone }) => telephone || '-'" :header="$t('telephone')"
+                body-class="ltr !text-left" />
+            <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ') || '-'"
                 :header="$t('treatments')" class="max-w-52 truncate" />
-            <Column :field="({ province, city }) => [province, city].map(({ title }) => title).join(' / ')"
-                :header="$t('province-city')" />
-            <Column field="lead_source.title" :header="$t('lead-source')" />
             <Column field="status" :header="$t('patient-status')" class="whitespace-nowrap">
                 <template #body="{ data: { status } }">
                     <Tag v-bind="status" />
@@ -79,11 +77,8 @@ const create = async () => {
 const edit = async (data) => {
     const patient = Object.assign({}, data)
     patient.mobiles = patient.mobiles.map(({ number }) => number)
-    patient.province = patient.province.id
-    patient.city = patient.city.id
-    patient.status = patient.status.id
-    patient.lead_source = patient.lead_source.id
     patient.treatments = patient.treatments.map(({ id }) => id)
+    patient.status = patient.status.id
 
     dialog.open(PatientForm, {
         props: { header: t('editPatient'), modal: true },

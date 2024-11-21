@@ -1,9 +1,15 @@
 <template>
-    <form @submit.prevent="handleSubmit()" class="flex w-full gap-4 [&>span]:flex-1">
-        <FloatLabel variant="on" class="max-w-20">
-            <InputText v-model="filters.id" fluid class="ltr" v-keyfilter.int />
-            <label>{{ $t('id') }}</label>
-        </FloatLabel>
+    <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
+        <template v-if="$route.name != 'Patient'">
+            <FloatLabel variant="on">
+                <InputText v-model="filters.patient" fluid class="ltr" v-keyfilter.int />
+                <label>{{ $t('patient-id') }}</label>
+            </FloatLabel>
+            <FloatLabel variant="on">
+                <InputText v-model="filters.user" fluid />
+                <label>{{ $t('consultant') }}</label>
+            </FloatLabel>
+        </template>
         <FloatLabel variant="on">
             <InputText v-model="filters.firstname" fluid />
             <label>{{ $t('firstname') }}</label>
@@ -43,7 +49,7 @@
                 showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
             <label> {{ $t('updated_at') }}</label>
         </FloatLabel>
-        <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" class="w-32"
+        <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" class="w-32 mr-auto"
             :loading="store.fetching" />
     </form>
 </template>

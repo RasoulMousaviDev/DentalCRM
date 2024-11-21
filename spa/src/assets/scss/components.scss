@@ -87,3 +87,11 @@ button:has(.p-badge){
 .p-datepicker-time-picker{
     @apply ltr;
 }
+
+.p-datatable-footer:not(:has(:first-child)){
+    @apply py-0 #{!important};
+}
+
+.p-datepicker-panel{
+    @apply -translate-x-[3.25rem]
+}

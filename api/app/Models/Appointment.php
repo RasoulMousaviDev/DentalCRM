@@ -34,11 +34,6 @@ class Appointment extends Model
         return $this->belongsToMany(Treatment::class, 'appointment_treatments');
     }
 
-    public function deposits(): HasMany
-    {
-        return $this->hasMany(Deposit::class,'appointment');
-    }
-
     protected function dueDate(): Attribute
     {
         return Attribute::make(

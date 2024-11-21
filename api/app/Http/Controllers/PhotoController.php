@@ -16,7 +16,7 @@ class PhotoController extends Controller
     {
         $patient = $request->get('patient');
 
-        $calls = Photo::where('patient_id', $patient)->latest()->paginate(10);
+        $calls = Photo::where('patient', $patient)->latest()->paginate(10);
 
         return response()->json($this->paginate($calls));
     }

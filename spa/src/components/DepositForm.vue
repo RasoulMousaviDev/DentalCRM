@@ -4,12 +4,12 @@
             <InputGroup class="ltr">
                 <InputGroupAddon class="!px-4">{{ $t('toman') }}</InputGroupAddon>
                 <FloatLabel variant="on" class="rtl">
-                    <InputNumber v-model="form.amount" fluid :invalid="errors.amount" class="ltr"
-                        @input="delete errors.amount" />
-                    <label>{{ $t('amount') }}</label>
+                    <InputNumber v-model="form.deposit" fluid :invalid="errors.deposit" class="ltr"
+                        @input="delete errors.deposit" />
+                    <label>{{ $t('deposit') }}</label>
                 </FloatLabel>
             </InputGroup>
-            <small v-if="errors.amount" v-text="errors.amount[0]" class="text-red-500" />
+            <small v-if="errors.deposit" v-text="errors.deposit[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { useDepositsStore } from '@/stores/deposits';
+import { useAppointmentsStore } from '@/stores/appointments';
 import { computed, inject, reactive, ref, watch } from 'vue';
 
 const { toast } = inject('service')
@@ -37,19 +37,22 @@ const dialogRef = inject('dialogRef')
 const { data } = dialogRef.value
 
 const form = reactive({
-    appointment: data.appointment.id,
     amount: null,
-    payment_date: new Date()
+    payment_date: new Date(),
+    ...data.appointment
 })
+
 const errors = ref({})
 const loading = ref(false)
 
-const deposits = useDepositsStore()
+const appointments = useAppointmentsStore()
 
 const handleSubmit = async () => {
     loading.value = true
 
-    const { status, statusText, data } = await deposits.store(form)
+
+
+    const { status, statusText, data } = await appointments.update(data.appointment.id, form)
 
     loading.value = false
 

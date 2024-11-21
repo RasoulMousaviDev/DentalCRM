@@ -27,9 +27,12 @@
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
-                :header="$t('patient-name')" />
-            <Column field="desc" :header="$t('desc')" />
+            <Column field="user.name" :header="$t('consultant')" />
+            <template v-if="$route.name != 'Patient'">
+                <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
+                    :header="$t('patient-name')" />
+                <Column field="user.name" :header="$t('consultant')" />
+            </template>
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" />
             <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
@@ -38,6 +41,8 @@
                     <Tag v-bind="status" />
                 </template>
             </Column>
+            <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
+            <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
             <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44" body-class="!pl-0">
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
@@ -62,14 +67,14 @@ import AppointmentFilters from '@/components/AppointmentFilters.vue';
 import AppointmentForm from '@/components/AppointmentForm.vue';
 import DepositForm from '@/components/DepositForm.vue';
 import { useAppointmentsStore } from '@/stores/appointments';
-import { inject, ref } from 'vue';
+import { inject } from 'vue';
 
-const { dialog, confirm, toast, t } = inject('service')
+const { route, dialog, confirm, toast, t } = inject('service')
 
 const store = useAppointmentsStore()
-
-if (store.items.length === 0)
-    store.index()
+if (route.name == 'Patient')
+    store.filters.patient = route.params.id
+store.index()
 
 const create = async () => {
     dialog.open(AppointmentForm, {

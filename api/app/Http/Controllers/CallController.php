@@ -24,10 +24,15 @@ class CallController extends Controller
         $rows = $request->input('rows', 10);
 
         $calls = Call::latest()->with('status:id,value,severity')
-            ->with('patient:id,firstname,lastname');
+            ->with('patient:id,firstname,lastname')
+            ->with('patient.user:name');
 
-        $calls = $calls->when($request->input('patient'), function ($query, $patient) {
-            $query->where('patient_id', $patient);
+        $calls = $calls->when($request->input('user'), function ($query, $user) {
+            $query->whereHas('patient', function (Builder $query) use ($user) {
+                $query->where('user', $user);
+            });
+        })->when($request->input('patient'), function ($query, $patient) {
+            $query->where('patient', $patient);
         })->when($request->input('firstname'), function ($query, $firstname) {
             $query->whereHas('patient', function (Builder $query) use ($firstname) {
                 $query->where('firstname', 'like', "%{$firstname}%");

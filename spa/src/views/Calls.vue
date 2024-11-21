@@ -8,7 +8,8 @@
                         <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
                         <hr class="grow !ml-2">
                         </hr>
-                        <Button icon="pi pi-plus" :label="$t('new-call')" severity="success" class="w-32" @click="create()" />
+                        <Button icon="pi pi-plus" :label="$t('new-call')" severity="success" class="w-32"
+                            @click="create()" />
                     </div>
                     <CallFilters />
                 </div>
@@ -26,12 +27,15 @@
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
-                :header="$t('patient-name')" />
+            <template v-if="$route.name != 'Patient'">
+                <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
+                    :header="$t('patient-name')" />
+                <Column field="user.name" :header="$t('consultant')" />
+            </template>
             <Column field="mobile" :header="$t('mobile')" />
             <Column field="desc" :header="$t('desc')" />
             <Column field="log" :header="$t('log')" />
-            <Column field="status" :header="$t('status')">
+            <Column field="status" :header="$t('call-status')">
                 <template #body="{ data: { status } }">
                     <Tag v-bind="status" />
                 </template>
@@ -47,9 +51,11 @@ import CallForm from '@/components/CallForm.vue';
 import { useCallsStore } from '@/stores/calls';
 import { inject, watch } from 'vue';
 
-const { dialog, t } = inject('service')
+const { route, dialog, t } = inject('service')
 
 const store = useCallsStore()
+if (route.name == 'Patient')
+    store.filters.patient = route.params.id
 store.index()
 
 const create = async () => {

@@ -14,7 +14,7 @@ class Call extends Model
     
     public $fillable = ['status', 'mobile',  'desc', 'log'];
 
-    public $hidden = ['patient_id', 'updated_at'];
+    public $hidden = ['updated_at'];
 
     protected $casts = [
         'created_at' => JDate::class,
@@ -22,7 +22,7 @@ class Call extends Model
 
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'patient');
     }
 
     public function status(): BelongsTo

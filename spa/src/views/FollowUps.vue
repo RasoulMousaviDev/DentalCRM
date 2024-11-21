@@ -6,7 +6,8 @@
                     <div class="flex items-center gap-2">
                         <span class="text-2xl font-bold">{{ $t('follow-ups') }}</span>
                         <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
-                        <hr class="grow"></hr>
+                        <hr class="grow">
+                        </hr>
                     </div>
                     <FollowUpFilters />
                 </div>
@@ -24,8 +25,11 @@
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
-                :header="$t('patient-name')" />
+            <template v-if="$route.name != 'Patient'">
+                <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
+                    :header="$t('patient-name')" />
+                <Column field="user.name" :header="$t('consultant')" />
+            </template>
             <Column field="desc" :header="$t('desc')" />
             <Column field="due_date" :header="$t('due-date')" bodyClass="ltr" class="w-44" />
             <Column field="status" :header="$t('status')" class="w-32">
@@ -53,9 +57,11 @@ import FollowUpFilters from '@/components/FollowUpFilters.vue';
 import { useFollowUpsStore } from '@/stores/follow-ups';
 import { inject } from 'vue';
 
-const { dialog, t } = inject('service')
+const { route, dialog, t } = inject('service')
 
 const store = useFollowUpsStore()
+if (route.name == 'Patient')
+    store.filters.patient = route.params.id
 store.index()
 
 const done = async (id) => {

@@ -11,7 +11,7 @@
         <ul v-if="data" class="grid grid-cols-5 border-t translate-y-4">
             <li v-for="(key, i) in keys" :key="key"
                 class="flex items-center justify-between gap-2 px-4 py-3 last:justify-start"
-                :class="{ 'border-b': i < 13, 'col-span-2': i == 10 || i == 11, 'col-span-full': i == 14, 'border-l': ![4, 9, 12].includes(i) }">
+                :class="{ 'border-b': i < 13, 'col-span-2': i == 10 || i == 11, 'col-span-full': i == 14, 'border-l': ![4, 9, 12, 13].includes(i) }">
                 <span class="opacity-70">{{ $t(key.replace('_', '-')) }}:</span>
                 <div v-if="key == 'mobiles'" class="flex gap-2">
                     <Chip v-for="mobile in data.mobiles" :label="mobile.number" />

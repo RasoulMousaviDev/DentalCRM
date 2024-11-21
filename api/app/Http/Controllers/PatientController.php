@@ -20,7 +20,9 @@ class PatientController extends Controller
 
         $columns = ['firstname', 'lastname', 'telephone'];
 
-        $patients = Patient::when($request->input('id'), function ($query, $id) {
+        $patients = Patient::when($request->input('user'), function ($query, $user) {
+            $query->where('user', $user);
+        })->when($request->input('id'), function ($query, $id) {
             $query->where('id', $id);
         })->when($request->input('gender'), function ($query, $gender) {
             $query->where('gender', $gender);
@@ -58,12 +60,9 @@ class PatientController extends Controller
 
         $patients = $patients->with([
             'mobiles',
-            'city:id,title',
-            'province:id,title',
-            'leadSource:id,title',
+            'user:id,name',
             'treatments:id,title',
-            'user',
-            'status'
+            'status:id,value,severity'
         ])->latest()->paginate($rows);
 
         $response = $this->paginate($patients);
@@ -99,7 +98,12 @@ class PatientController extends Controller
 
         $patient->treatments()->attach($treatments);
 
-        $patient = $patient->latest()->first();
+        $patient = $patient->with([
+            'mobiles',
+            'user:id,name',
+            'treatments:id,title',
+            'status:id,value,severity'
+        ])->latest()->first();
 
         return response()->json($patient);
     }
@@ -112,7 +116,7 @@ class PatientController extends Controller
             'province:id,title',
             'leadSource:id,title',
             'treatments:id,title',
-            'user',
+            'user:name',
             'status'
         ]);
         return response()->json($patient);
@@ -138,6 +142,13 @@ class PatientController extends Controller
         $patient->update($form);
 
         $patient->refresh();
+
+        $patient->load([
+            'mobiles',
+            'user:id,name',
+            'treatments:id,title',
+            'status:id,value,severity'
+        ]);
 
         return response()->json($patient);
     }

@@ -20,10 +20,15 @@ class AppointmentController extends Controller
 
         $appointments = Appointment::with('treatments:id,title')
             ->with('patient:id,firstname,lastname')
-            ->with('status:id,value,severity');
+            ->with('status:id,value,severity')
+            ->with('patient.user:name');
 
-        $appointments = $appointments->when($request->input('patient'), function ($query, $patient) {
-            $query->where('patient_id', $patient);
+        $appointments = $appointments->when($request->input('user'), function ($query, $user) {
+            $query->whereHas('patient', function (Builder $query) use ($user) {
+                $query->where('user', $user);
+            });
+        })->when($request->input('patient'), function ($query, $patient) {
+            $query->where('patient', $patient);
         })->when($request->input('firstname'), function ($query, $firstname) {
             $query->whereHas('patient', function (Builder $query) use ($firstname) {
                 $query->where('firstname', 'like', "%{$firstname}%");
@@ -64,7 +69,12 @@ class AppointmentController extends Controller
 
         $appointment->treatments()->attach($treatments);
 
-        $appointment = $patient->appointments()->with('treatments:id,title')->latest()->first();
+        $appointment = $patient->appointments()
+            ->with('treatments:id,title')
+            ->with('patient:id,firstname,lastname')
+            ->with('status:id,value,severity')
+            ->with('patient.user:name')
+            ->latest()->first();
 
         $status = Status::firstWhere('name', 'appointment-set')->id;
 
@@ -84,7 +94,7 @@ class AppointmentController extends Controller
         if (in_array($form['status'], [4, 5, 6]))
             $appointment->patient()->update($form);
 
-        if ($form['status'] == 15){
+        if ($form['status'] == 15) {
             $form['refund_date'] = Carbon::now()->toIso8601String();
             $appointment->deposits()->update($form);
         }

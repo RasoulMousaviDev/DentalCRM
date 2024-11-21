@@ -61,24 +61,16 @@ class DashboardController extends Controller
             ->groupBy('status')
             ->pluck('count', 'status');
 
-        $depositsStatusCount = Deposit::select('status', DB::raw('COUNT(DISTINCT appointment) as count'))
-            ->whereBetween('created_at', $period)
-            ->groupBy('status')
-            ->pluck('count', 'status');
-
-        $receptionReport = $appointmentsStatusCount->concat($depositsStatusCount);
-
         $statuses = [
+            'appointment' => Appointment::model()->statuses,
             'patient' => Patient::model()->statuses,
             'call' => Call::model()->statuses,
-            'appointment' => Appointment::model()->statuses,
-            'deposit' => Deposit::model()->statuses
         ];
 
         return response()->json(compact(
             'patientLeadSources',
             'patientTreatments',
-            'receptionReport',
+            'appointmentsStatusCount',
             'appointmentCount',
             'patientStatuses',
             'patientGenders',

@@ -16,15 +16,15 @@ class StorePatientRequest extends FormRequest
         return [
             'firstname' => 'required|string',
             'lastname' => 'required|string',
-            'birthday' => 'required|date',
+            'status' => 'required|exists:statuses,id',
+            'birthday' => 'required_unless:status,1,null|nullable|date',
             'gender'=> 'required|in:male,female',
             'mobiles' => 'required|array|min:1',
             'mobiles.*' => 'required|numeric|digits:11|starts_with:09|unique:patient_mobiles,number',
-            'telephone' => 'required|numeric|digits:11|starts_with:0|unique:patients,telephone',
+            'telephone' => 'required_unless:status,1,null|nullable|numeric|digits:11|starts_with:0|unique:patients,telephone',
             'province' => 'required|exists:provinces,id',
             'city' => 'required|exists:cities,id',
             'lead_source' => 'required|exists:lead_sources,id',
-            'status' => 'required|exists:statuses,id',
             'desc' => 'nullable|string',
             'treatments' => 'nullable|array',
             'treatments.*' => 'required|exists:treatments,id'

@@ -16,8 +16,6 @@ class FollowUp extends Model
 
     public $fillable = ['due_date', 'desc', 'status'];
 
-    public $hidden = ['patient_id'];
-
     protected $casts = [
         'due_date' => JDate::class,
         'created_at' => JDate::class,
@@ -26,7 +24,7 @@ class FollowUp extends Model
 
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'patient');
     }
 
     protected function dueDate(): Attribute

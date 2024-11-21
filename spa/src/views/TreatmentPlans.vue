@@ -7,9 +7,10 @@
                     <div class="flex items-center gap-2">
                         <span class="text-2xl font-bold">{{ $t('treatment-plans') }}</span>
                         <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
-                        <hr class="grow !ml-2"></hr>
+                        <hr class="grow !ml-2">
+                        </hr>
                         <Button icon="pi pi-plus" :label="$t('new-plan')" severity="success" as="router-link"
-                        :to="{ name: 'TreatmentPlanCreate' }" />
+                            :to="{ name: 'TreatmentPlanCreate' }" />
                     </div>
                     <TreatmentPlanFilters />
                 </div>
@@ -19,8 +20,16 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
-            <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
-                :header="$t('patient-name')" class="w-40" />
+            <Column :header="$t('row')" class="w-20">
+                <template #body="{ index }">
+                    {{ index + 1 }}
+                </template>
+            </Column>
+            <template v-if="$route.name != 'Patient'">
+                <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
+                    :header="$t('patient-name')" />
+                <Column field="user.name" :header="$t('consultant')" />
+            </template>
             <Column :field="({ visit_type }) => $t(visit_type)" :header="$t('visit-type')" class="w-28" />
             <Column field="desc" :header="$t('desc')" body-class="truncate" />
             <Column :field="({ payment_method }) => $t(payment_method)" :header="$t('payment-method')" class="w-36" />
@@ -39,7 +48,7 @@
                 <template #editor="{ data, field }">
                     <Select v-model="data[field]" option-value="value" focusOnHover
                         :options="Object.entries(severities).map(([value, severity]) => ({ value, severity }))" fluid
-                         :placeholder="$t('choose')" class="-my-2">
+                        :placeholder="$t('choose')" class="-my-2">
                         <template #value="{ value }">
                             <Tag :value="$t(value)" :severity="severities[value]" />
                         </template>
@@ -62,9 +71,11 @@ import { reactive, inject } from 'vue';
 
 const severities = reactive({ valid: "info", invalid: "warn", done: "success" })
 
-const { toast, router } = inject('service')
+const { toast, router, route } = inject('service')
 
 const store = useTreatmentPlansStore()
+if (route.name == 'Patient')
+    store.filters.patient = route.params.id
 store.index()
 
 const onCellEditComplete = async (event) => {

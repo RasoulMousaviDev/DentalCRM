@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('follow_ups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients');
+            $table->foreignId('patient')->constrained('patients');
             $table->date('due_date');
             $table->string('desc');
             $table->foreignId('status')->default(13)->constrained('statuses');

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('calls', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients');
+            $table->foreignId('patient')->constrained('patients');
             $table->foreignId('status')->constrained('statuses');
             $table->string('mobile', 11);
             $table->string('desc');

@@ -14,11 +14,9 @@ class PatientMobile extends Model
 
     public $fillable = ['number'];
 
-    public $hidden = ['patient_id'];
-
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'patient');
     }
 
 }

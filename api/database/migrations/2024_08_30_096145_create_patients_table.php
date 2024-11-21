@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user')->constrained('users');
             $table->string('firstname');
             $table->string('lastname');
-            $table->string('birthday', 10);
-            $table->string('telephone', 11);
+            $table->string('birthday', 10)->nullable();
+            $table->string('telephone', 11)->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->text('desc')->nullable();
             $table->foreignId('status')->constrained('statuses');

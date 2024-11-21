@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('patient')->constrained('patients');
             $table->timestamp('due_date');
             $table->string('desc')->nullable();
+            $table->integer('deposit')->default(0);
             $table->foreignId('status')->default(13)->constrained('statuses');
             $table->timestamps();
         });
