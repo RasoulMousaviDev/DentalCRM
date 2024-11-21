@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\JDate;
 use Carbon\Carbon;
+use App\Models\Model as ModelsModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,5 +32,10 @@ class Deposit extends Model
             set: fn($value) => Carbon::parse($value)->format('Y-m-d H:i:s'),
             get: fn($value) => Carbon::parse($value)->toIso8601String()
         );
+    }
+
+    public static function model()
+    {
+        return ModelsModel::firstWhere('name', Deposit::class);
     }
 }

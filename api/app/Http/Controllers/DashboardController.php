@@ -66,11 +66,13 @@ class DashboardController extends Controller
             ->groupBy('status')
             ->pluck('count', 'status');
 
-        $receptionReport = $appointmentsStatusCount->merge($depositsStatusCount);
+        $receptionReport = $appointmentsStatusCount->concat($depositsStatusCount);
 
         $statuses = [
             'patient' => Patient::model()->statuses,
             'call' => Call::model()->statuses,
+            'appointment' => Appointment::model()->statuses,
+            'deposit' => Deposit::model()->statuses
         ];
 
         return response()->json(compact(
@@ -84,7 +86,7 @@ class DashboardController extends Controller
             'patientCount',
             'callStatuses',
             'callCount',
-            'statuses'
+            'statuses',
         ));
     }
 }

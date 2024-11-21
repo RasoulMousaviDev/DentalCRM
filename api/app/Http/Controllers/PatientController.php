@@ -62,6 +62,7 @@ class PatientController extends Controller
             'province:id,title',
             'leadSource:id,title',
             'treatments:id,title',
+            'user:name',
             'status'
         ])->latest()->paginate($rows);
 

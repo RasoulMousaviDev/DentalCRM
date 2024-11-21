@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { usePatientsStore } from "./patients";
 import { useCallsStore } from "./calls";
+import { useAppointmentsStore } from "./appointments";
+import { useDepositsStore } from "./deposits";
 
 export const useDashboardStore = defineStore("dashboard", {
     state: () => ({
@@ -23,6 +25,12 @@ export const useDashboardStore = defineStore("dashboard", {
                 
                 const calls = useCallsStore()
                 calls.statuses = data.statuses.call
+
+                const appointments = useAppointmentsStore()
+                appointments.statuses = data.statuses.appointment
+
+                const deposits = useDepositsStore()
+                deposits.statuses = data.statuses.deposit
 
                 delete data.statuses
 

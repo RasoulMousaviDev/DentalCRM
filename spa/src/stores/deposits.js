@@ -4,6 +4,7 @@ import { useAppointmentsStore } from "./appointments";
 export const useDepositsStore = defineStore("deposits", {
     state: () => ({
         items: [],
+        statuses: [],
         fetching: true,
         pagiantor: { totalRecords: 0 },
         filters: {},
@@ -21,6 +22,7 @@ export const useDepositsStore = defineStore("deposits", {
 
             if (statusText === "OK") {
                 this.items = data.items;
+                this.statuses = data.statuses;
                 this.pagiantor = data.pagiantor;
             }
         },

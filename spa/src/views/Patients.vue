@@ -23,19 +23,18 @@
                 <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
             </template>
             <Column field="id" :header="$t('id')" />
+            <Column field="user.name" :header="$t('consultant')" />
             <Column :field="({ firstname, lastname }) => [firstname, lastname].join(' ')"
                 :header="$t('name-and-family')" />
             <Column :field="({ mobiles }) => mobiles.map(({ number }) => number).join(' | ')" :header="$t('mobile')"
                 body-class="ltr !text-left" />
             <Column field="telephone" :header="$t('telephone')" body-class="ltr !text-left" />
-            <Column field="birthday" :header="$t('birthday')" body-class="ltr !text-left" />
-            <Column :field="({ gender }) => $t(gender)" :header="$t('gender')" />
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" class="max-w-52 truncate" />
             <Column :field="({ province, city }) => [province, city].map(({ title }) => title).join(' / ')"
                 :header="$t('province-city')" />
             <Column field="lead_source.title" :header="$t('lead-source')" />
-            <Column field="status" :header="$t('status')" class="whitespace-nowrap">
+            <Column field="status" :header="$t('patient-status')" class="whitespace-nowrap">
                 <template #body="{ data: { status } }">
                     <Tag v-bind="status" />
                 </template>

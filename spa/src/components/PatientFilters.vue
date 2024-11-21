@@ -56,7 +56,7 @@
                     <Tag v-bind="option" class="text-xs" />
                 </template>
             </Select>
-            <label> {{ $t('status') }}</label>
+            <label> {{ $t('patient-status') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" class="ltr w-full"

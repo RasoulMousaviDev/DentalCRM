@@ -9,11 +9,20 @@
 </template>
 
 <script setup>
+import { useAppointmentsStore } from '@/stores/appointments';
+import { useDepositsStore } from '@/stores/deposits';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ref, onMounted, inject, computed, reactive } from "vue";
 const props = defineProps({ data: { type: Array, default: ({}) } })
 
-const { t } = inject('service')
+const appointments = useAppointmentsStore()
+const deposits = useDepositsStore()
+
+const statuses = computed(() => ([
+    ...appointments.statuses.slice(0, 3),
+    ...deposits.statuses,
+    ...appointments.statuses.slice(3),
+]))
 
 const chartOptions = ref();
 const backgroundColor = [
@@ -22,13 +31,14 @@ const backgroundColor = [
     "#D81B8D", "#1BB8D8", "#D84F1B", "#8B1BD8", "#D81B33",
     "#1BD84F", "#D883A0", "#4F8BD8", "#1BD8FF", "#D8A11B"
 ]
+
 const chartData = computed(() => ({
-    labels: Object.keys(props.data).map(g => t(g)),
+    labels: statuses.value.map(i => i.value.replace('در انتظار', 'نوبت').replace('پرداخت شده', 'بیعانه')),
     datasets: [
         {
             label: ['', ''],
             backgroundColor: backgroundColor.map(b => b + 'cc'),
-            data: Object.values(props.data)
+            data: statuses.value.map(s => props.data[s.id] || 0)
         },
 
     ]
