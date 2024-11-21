@@ -7,6 +7,7 @@ use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
+use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -64,6 +65,10 @@ class AppointmentController extends Controller
         $appointment->treatments()->attach($treatments);
 
         $appointment = $patient->appointments()->with('treatments:id,title')->latest()->first();
+
+        $status = Status::firstWhere('name', 'appointment-set')->id;
+
+        $patient->update(compact('status'));
 
         return response()->json($appointment);
     }
