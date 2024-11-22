@@ -25,7 +25,7 @@ class StatusSeeder extends Seeder
             ['name' => 'not-needed', 'value' => 'نیاز ندارد', 'severity' => 'danger'],
             ['name' => 'successful', 'value' => 'موفق', 'severity' => 'success'],
             ['name' => 'unsuccessful', 'value' => 'ناموفق', 'severity' => 'danger'],
-            ['name' => 'wrong-number', 'value' => 'شماره اشتباه است', 'severity' => 'help'],
+            ['name' => 'wrong-number', 'value' => 'شماره اشتباه است', 'severity' => 'secondary'],
             ['name' => 'waiting', 'value' => 'در انتظار', 'severity' => 'warn'],
             ['name' => 'paid', 'value' => 'پرداخت شده', 'severity' => 'success'],
             ['name' => 'refunded', 'value' => 'عودت داده شده', 'severity' => 'danger'],
