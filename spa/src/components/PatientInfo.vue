@@ -55,11 +55,11 @@ const edit = async (data) => {
     patient.province = patient.province.id
     patient.city = patient.city.id
     patient.status = patient.status.id
-    patient.lead_source = patient.lead_source.id
+    patient.lead_source = patient.lead_source.id 
 
     dialog.open(PatientForm, {
         props: { header: t('editPatient'), modal: true },
-        data: { patient }
+        data: { patient }, onClose: () => store.show(patient.id)
     })
 }
 

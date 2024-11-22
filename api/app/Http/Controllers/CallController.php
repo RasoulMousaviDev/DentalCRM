@@ -72,12 +72,13 @@ class CallController extends Controller
 
         $patient = Patient::find($request->get('patient.id'));
 
+        $patient->load('status');
+
         $status = $request->get('patient.status');
 
         if ($status == $patient->status)
             $form['log'] = __('messages.call-stored');
         else {
-            $patient->status = $patient->status()->get();
             $from = $patient->status->value;
             $patient->update(compact('status'));
             $patient->refresh();

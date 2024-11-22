@@ -205,8 +205,11 @@ watch(() => form.province, (v) => cities.index(v))
 onMounted(() => {
     if (patient)
         Object.keys(form).forEach((key) => form[key] = patient[key])
-    form.province = 8
-    form.city = 141
+    else {
+        form.province = 8
+        form.city = 141
+    }
+
 })
 </script>
 

@@ -23,7 +23,7 @@
                 </template>
             </Column>
             <Column :field="({ model }) => $t(model)" :header="$t('model')" class="w-44" />
-            <Column field="status" :header="$t('model')" class="w-44">
+            <Column field="status" :header="$t('status')" class="w-44">
                 <template #body="{ data: { status } }">
                     <Tag v-bind="status" />
                 </template>

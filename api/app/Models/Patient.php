@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\JDate;
 use App\Models\Model as ModelsModel;
+use App\Events\PatientUpdated;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,14 +36,9 @@ class Patient extends Model
         'updated_at' => JDate::class,
     ];
 
-    // protected $with = [
-    //     'mobiles',
-    //     'city:id,title',
-    //     'province:id,title',
-    //     'leadSource:id,title',
-    //     'treatments:id,title',
-    //     'status'
-    // ];
+    protected $dispatchesEvents = [
+        'updated' => PatientUpdated::class,
+    ];
 
     public function user(): BelongsTo
     {

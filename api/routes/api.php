@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Controllers\AlarmController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CallController;
 use App\Http\Controllers\CampainController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DepositController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\OTPCodeController;
@@ -64,6 +64,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{patient}', 'destroy');
     });
 
+    Route::get('alarms', [AlarmController::class, 'index']);
     Route::get('provinces', [ProvinceController::class, 'index']);
     Route::get('cities', [CityController::class, 'index']);
     Route::get('lead-sources', [LeadSourceController::class, 'index']);
@@ -92,12 +93,6 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/{photo}', 'show');
         Route::post('/{photo}', 'update');
         Route::delete('/{photo}', 'destroy');
-    });
-
-    Route::controller(DepositController::class)->prefix('deposits')->group(function () {
-        Route::get('', 'index');
-        Route::post('', 'store');
-        Route::patch('/{deposit}', 'update');
     });
 
     Route::controller(CampainController::class)->prefix('campains')->group(function () {

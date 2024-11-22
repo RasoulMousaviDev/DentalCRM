@@ -90,13 +90,24 @@ class TreatmentPlanController extends Controller
 
         $patient->treatmentPlans()->create($form)->save();
 
-        $treatmentPlan = $patient->treatmentPlans()->latest()->first();
+        $treatmentPlan = $patient->treatmentPlans()
+            ->with('status:id,value,severity')
+            ->with('patient:id,firstname,lastname')
+            ->with('patient.user:name')
+            ->latest()
+            ->first();
 
         return response()->json($treatmentPlan);
     }
 
     public function show(TreatmentPlan $treatmentPlan)
     {
+        $treatmentPlan->load([
+            'status:id,value,severity',
+            'patient:id,firstname,lastname',
+            'patient.user:name'
+        ]);
+        
         return response()->json($treatmentPlan);
     }
 
@@ -104,26 +115,15 @@ class TreatmentPlanController extends Controller
     {
         $status = $request->get('status');
 
-        if ($status == 'sent') {
-            if ($treatmentPlan->status != 'editing')
-                return response()->json(['message' => __('messages.you-cannot-deleted')], 400);
-            if ($treatmentPlan->details()->count() < 1)
-                return response()->json(['message' => __('messages.minimum-one-details-added')], 400);
-            //send sms
-            $treatmentPlan->update(['sent_at' => now()]);
-        }
-
         $treatmentPlan->update(compact('status'));
 
         $treatmentPlan->refresh();
 
-        $treatmentPlan->load(['patient' => fn($q) => $q->without([
-            'mobiles',
-            'city',
-            'province',
-            'leadSource',
-            'status'
-        ])->select('id', 'firstname', 'lastname')]);
+        $treatmentPlan->load([
+            'status:id,value,severity',
+            'patient:id,firstname,lastname',
+            'patient.user:name'
+        ]);
 
         return response()->json($treatmentPlan);
     }

@@ -10,6 +10,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
+use function Laravel\Prompts\alert;
+
 class SendSMS implements ShouldQueue
 {
     use Queueable;
@@ -27,6 +29,8 @@ class SendSMS implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::alert($this->mobile . ' <- ' . $this->text);
+
         SMS::send($this->mobile, $this->text);
     }
 }

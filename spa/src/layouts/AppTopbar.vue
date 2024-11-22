@@ -1,12 +1,13 @@
 <script setup>
+import AutoComplete from 'primevue/autocomplete';
 import AppConfigurator from './AppConfigurator.vue';
 import IconSikai from '@/components/icon/Sakai.vue'
 import { useCookie } from '@/composables/cookie';
 import { useLayout } from '@/composables/layout';
 import { useAuthStore } from '@/stores/auth';
+import { useAlarmsStore } from '@/stores/alarms';
 import { useRolesStore } from '@/stores/roles';
 import { usePatientsStore } from '@/stores/patients';
-import AutoComplete from 'primevue/autocomplete';
 import { defineAsyncComponent, inject, ref, watch, computed, onMounted } from 'vue';
 
 const ChangePasswordForm = defineAsyncComponent(() => import('@/components/ChangePasswordForm.vue'));
@@ -31,10 +32,12 @@ const items = computed(() => {
             items: auth.user.roles.map((id) => {
                 const { title: label } = roles.items.find(role => role.id == id) || {}
                 const icon = '' + (id == auth.user.role.id ? 'pi pi-check' : 'w-4')
-                return { label, icon, command: async () => {
-                    await auth.changeRole(id) ;
-                    router.replace('/')
-                }}
+                return {
+                    label, icon, command: async () => {
+                        await auth.changeRole(id);
+                        router.replace('/')
+                    }
+                }
             })
         });
 
@@ -99,6 +102,20 @@ const optionSelect = ({ value: { id } }) => {
     router.push({ name: 'PatientDetails', params: { id } })
 }
 
+const handleClick = (name) => {
+    if (name == 'periodic-visits')
+        router.push('/appointments')
+    else if (name == 'appointments')
+        router.push('/appointments')
+    else if (name == 'follow-ups')
+        router.push('/follow-ups')
+
+}
+
+const alarms = useAlarmsStore()
+alarms.index()
+onMounted(() => setTimeout(() => alarms.index(), 3000))
+
 </script>
 
 <template>
@@ -120,6 +137,18 @@ const optionSelect = ({ value: { id } }) => {
             <InputIcon class="pi pi-search" />
         </IconField>
         <div class="layout-topbar-actions">
+
+            <div class="flex gap-4 [&_.p-button-label]:hidden">
+                <Button icon="pi pi-calendar-times" rounded outlined :badge="`${alarms.items.periodic_visits || 0}`"
+                    badgeSeverity="success" v-tooltip.bottom="$t('periodic-visits')"
+                    @click="handleClick('periodic-visits')" />
+                <Button icon="pi pi-calendar" rounded outlined :badge="`${alarms.items.appointments || 0}`"
+                    badgeSeverity="success" v-tooltip.bottom="$t('appointments')"
+                    @click="handleClick('appointments')" />
+                <Button icon="pi pi-list-check" rounded outlined :badge="`${alarms.items.follow_ups || 0}`"
+                    badgeSeverity="success" v-tooltip.bottom="$t('follow-ups')" @click="handleClick('follow-ups')" />
+            </div>
+            <span class="w-px h-6 my-auto bg-current"></span>
             <div class="layout-config-menu">
                 <div class="relative">
                     <button

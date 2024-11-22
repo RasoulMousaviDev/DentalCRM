@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangeRoleRequest;
 use App\Http\Requests\LoginRequest;
+use App\Models\Appointment;
+use App\Models\FollowUp;
 use Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\RateLimiter;
 
 class AuthController extends Controller
@@ -33,7 +36,7 @@ class AuthController extends Controller
     public function me()
     {
         $user = auth()->user();
-
+        
         $user = [
             'name' => $user->name,
             'role' => $user->role,
@@ -47,7 +50,7 @@ class AuthController extends Controller
     public function changeRole(ChangeRoleRequest $request)
     {
         $role_id = $request->only('id');
-        
+
         $user = auth()->user;
 
         if ($user->hasRole($role_id)) {

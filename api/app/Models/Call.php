@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\JDate;
+use App\Events\CallCreated;
 use App\Models\Model as ModelsModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,10 @@ class Call extends Model
 
     protected $casts = [
         'created_at' => JDate::class,
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => CallCreated::class,
     ];
 
     public function patient(): BelongsTo
