@@ -19,7 +19,8 @@ import AppFooter from './AppFooter.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRolesStore } from '@/stores/roles';
 import { useLayout } from '@/composables/layout';
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeMount, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const { layoutConfig, layoutState, isSidebarActive, resetMenu } = useLayout();
 
@@ -73,6 +74,14 @@ function isOutsideClicked(event) {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
+const router = useRouter()
+const route = useRoute()
+onBeforeMount(() => {
+    if(!auth.user.menu.some((opt) => opt.name == route.path)){
+        const otpion = auth.user.menu[0]
+        router.replace(otpion.route)
+    }
+})
 </script>
 
 <style lang="scss" scoped></style>
