@@ -62,7 +62,7 @@ import PatientTreatmentChart from '@/components/PatientTreatmentChart.vue';
 import ReceptionChart from '@/components/AppointmentStatusChart.vue';
 import { useDashboardStore } from '@/stores/dashboard';
 
-import { reactive, ref, onMounted, computed, inject } from "vue";
+import { reactive, computed } from "vue";
 
 const store = useDashboardStore()
 

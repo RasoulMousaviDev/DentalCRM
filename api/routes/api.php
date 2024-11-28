@@ -31,6 +31,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('me', 'me');
         Route::post('refresh', 'refresh');
         Route::post('logout', 'logout');
+        Route::post('change-role', 'changeRole');
+
     });
 
     Route::controller(OTPCodeController::class)->prefix('otp-code')->withoutMiddleware('auth:api')->group(function () {
