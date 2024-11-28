@@ -51,7 +51,7 @@ class AuthController extends Controller
     {
         $role_id = $request->only('id');
 
-        $user = auth()->user;
+        $user = auth()->user();
 
         if ($user->hasRole($role_id)) {
             $user->update(compact('role_id'));
