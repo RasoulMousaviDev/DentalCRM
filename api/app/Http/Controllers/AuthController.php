@@ -49,7 +49,7 @@ class AuthController extends Controller
 
     public function changeRole(ChangeRoleRequest $request)
     {
-        $role_id = $request->only('id');
+        $role_id = $request->input('id');
 
         $user = auth()->user();
 

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -78,13 +79,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasRole($role)
     {
-        $user = User::find(Auth::user()->id);
-
+        Log::alert($role);
         if (is_numeric($role))
-            return $user->roles()->where('id', $role)->exists();
+            return $this->roles()->where('id', $role)->exists();
 
         if (is_string($role))
-            return $user->roles()->where('name', $role)->exists();
+            return $this->roles()->where('name', $role)->exists();
 
 
         return false;
