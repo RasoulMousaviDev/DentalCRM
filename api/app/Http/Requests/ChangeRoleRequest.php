@@ -17,7 +17,7 @@ class ChangeRoleRequest extends FormRequest
         $userId = auth()->id();
 
         return [
-            'role' => [
+            'id' => [
                 'required',
                 'integer',
                 'exists:roles,id',
