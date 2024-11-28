@@ -5,7 +5,7 @@
                 <Button icon="pi pi-chevron-right" text rounded @click="() => treatRef.scrollTo(0, 0)" />
                 <div ref="treatRef" class="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth">
                     <ul class="flex gap-4 p-2">
-                        <li v-for="(item, i) in treatments.items" :key="i" class="shrink-0">
+                        <li v-for="(item, i) in treatments.items.filter(item => item.status)" :key="i" class="shrink-0">
                             <Button :label="item.title" :severity="currentTab == item.id ? 'primary' : 'secondary'"
                                 :badge="form.treatments_details[`${item.id}`]?.tooths.length || null"
                                 @click="selectTreatment(item.id)" />
@@ -173,7 +173,7 @@
             <ul class="flex flex-col gap-4">
                 <li v-for="(option, service) in treatment.services" :key="service">
                     <div class="flex items-center justify-between">
-                        <span>{{ getOption(key, service, option, ' title') }}</span>
+                        <span>{{ getOption(key, service, option, 'title') }}</span>
                                                     <span>{{ [new Intl.NumberFormat().format(getOption(key, service,
                                                         option,
                                                         'cost') *
@@ -263,7 +263,7 @@ const services = useTreatmentServicesStore()
 services.items = []
 
 const form = reactive({
-    patient: +patient,
+    patient: +patient || null,
     treatments_details: {},
     payment_method: 'cash',
     visit_type: 'in-person',

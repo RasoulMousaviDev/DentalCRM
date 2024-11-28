@@ -28,7 +28,7 @@
             <template v-if="$route.name != 'Patient'">
                 <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
                     :header="$t('patient-name')" />
-                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="user.name"
+                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="patient.user.name"
                     :header="$t('consultant')" />
             </template>
             <Column :field="({ visit_type }) => $t(visit_type)" :header="$t('visit-type')" class="w-28" />

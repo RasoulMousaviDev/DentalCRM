@@ -104,10 +104,10 @@ class CallController extends Controller
         if ($status == $patient->status)
             $form['log'] = __('messages.call-stored');
         else {
-            $from = $patient->status->value;
+            $from = $patient->toArray()['status']['value'];
             $patient->update(compact('status'));
             $patient->refresh();
-            $to = $patient->status->value;
+            $to = $patient->toArray()['status']['value'];
             $form['log'] = __('messages.patient-status-changed', compact('from', 'to'));
         }
 
