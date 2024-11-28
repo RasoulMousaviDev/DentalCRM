@@ -34,20 +34,20 @@ class AppointmentController extends Controller
         $appointments = Appointment::with([
             'treatments:id,title',
             'patient:id,firstname,lastname',
-            'status:id,value,severity'
+            'status:id,value,severity',
+            $isAdmin ? 'patient.user:name' : null
         ]);
 
-        $appointments = $isAdmin ?
-            $appointments->with('patient.user:name') :
-            $appointments->whereHas('patient', function (Builder $query) use ($user) {
-                $query->where('user', $user->id);
-            });
 
         if ($isAdmin) $appointments->when($request->input('user'), function ($query, $user) {
             $query->whereHas('patient.user', function (Builder $query) use ($user) {
                 $query->where('name', 'like', "%{$user}%");
             });
         });
+        else $appointments = $appointments->whereHas('patient', function (Builder $query) use ($user) {
+            $query->where('user', $user->id);
+        });
+
 
         foreach ($searchableFields as $field) {
             $appointments->when($request->input($field), function ($query, $value) use ($field) {
