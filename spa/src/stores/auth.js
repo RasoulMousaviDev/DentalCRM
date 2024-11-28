@@ -1,6 +1,5 @@
 import { useCookie } from "@/composables/cookie";
 import { defineStore } from "pinia";
-import { useRolesStore } from "./roles";
 
 export const useAuthStore = defineStore("auth", {
     state: () => ({

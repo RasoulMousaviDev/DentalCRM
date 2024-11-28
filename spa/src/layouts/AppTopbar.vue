@@ -14,7 +14,7 @@ const ChangePasswordForm = defineAsyncComponent(() => import('@/components/Chang
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
-const { router, dialog, t, confirm } = inject('service')
+const { router, dialog, t, confirm, route } = inject('service')
 
 const auth = useAuthStore()
 
@@ -35,7 +35,10 @@ const items = computed(() => {
                 return {
                     label, icon, command: async () => {
                         await auth.changeRole(id);
-                        router.replace('/')
+                        const otpion = auth.user.menu[0]
+                        if (otpion.route == route.path)
+                            location.reload()
+                        else router.replace(otpion.route)
                     }
                 }
             })
