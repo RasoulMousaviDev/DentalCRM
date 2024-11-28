@@ -6,6 +6,7 @@ use App\Http\Requests\IndexTreatmentPlanRequest;
 use App\Http\Requests\StoreTreatmentPlanRequest;
 use App\Http\Requests\UpdateTreatmentPlanRequest;
 use App\Models\Patient;
+use App\Models\Role;
 use App\Models\TreatmentPlan;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -20,47 +21,59 @@ class TreatmentPlanController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $treatmentPlans = TreatmentPlan::latest()
-            ->with('status:id,value,severity')
-            ->with('patient:id,firstname,lastname')
-            ->with('patient.user:name');
+        $searchableFields = ['firstname', 'lastname'];
 
-        $treatmentPlans = $treatmentPlans->when($request->input('user'), function ($query, $user) {
-            $query->whereHas('patient', function (Builder $query) use ($user) {
-                $query->where('user', $user);
+        $filterableFields = ['patient', 'visit_type', 'payment_method', 'status'];
+
+        $dateFields = ['created_at', 'updated_at'];
+
+        $user = auth()->user();
+
+        $roles = Role::whereIn('name', ['super-admin', 'admin'])->pluck('id');
+
+        $isAdmin = collect($roles)->contains($user->role->id);
+
+        $treatmentPlans = $isAdmin ?
+            TreatmentPlan::with('patient.user:name') :
+            TreatmentPlan::whereHas('patient', function (Builder $query) use ($user) {
+                $query->where('user', $user->id);
             });
-        })->when($request->input('patient'), function ($query, $patient) {
-            $query->where('patient', $patient);
-        })->when($request->input('firstname'), function ($query, $firstname) {
-            $query->whereHas('patient', function (Builder $query) use ($firstname) {
-                $query->where('firstname', 'like', "%{$firstname}%");
+
+        if ($isAdmin) $treatmentPlans->when($request->input('user'), function ($query, $user) {
+            $query->whereHas('patient.user', function (Builder $query) use ($user) {
+                $query->where('name', 'like', "%{$user}%");
             });
-        })->when($request->input('lastname'), function ($query, $lastname) {
-            $query->whereHas('patient', function (Builder $query) use ($lastname) {
-                $query->where('lastname', 'like', "%{$lastname}%");
-            });
-        })->when($request->input('visit_type'), function ($query, $type) {
-            $query->where('visit_type', $type);
-        })->when($request->input('payment_method'), function ($query, $method) {
-            $query->where('payment_method', $method);
-        })->when($request->input('status'), function ($query, $status) {
-            $query->where('status', $status);
         });
 
-        $dates = ['created_at', 'updated_at'];
+        foreach ($searchableFields as $field) {
+            $treatmentPlans->when($request->input($field), function ($query, $value) use ($field) {
+                $query->whereHas('patient', function (Builder $query) use ($field, $value) {
+                    $query->where($field, 'like', "%{$value}%");
+                });
+            });
+        }
 
-        foreach ($dates as $date) {
-            $treatmentPlans->when($request->input($date), function ($query, $value) use ($date) {
-                $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+        foreach ($filterableFields as $field) {
+            $treatmentPlans->when($request->input($field), function ($query, $value) use ($field) {
+                $query->where($field, $value);
+            });
+        }
+
+        foreach ($dateFields as $field) {
+            $treatmentPlans->when($request->input($field), function ($query, $value) use ($field) {
+                $field = collect($field)->map(fn($d, $i) => Carbon::parse($d)
                     ->setTimezone('Asia/Tehran')
                     ->{$i ? 'endOfDay' : 'startOfDay'}()
                     ->format('Y-m-d H:i:s'));
 
-                $query->whereBetween($date, $value);
+                $query->whereBetween($field, $value);
             });
         }
 
-        $treatmentPlans = $treatmentPlans->paginate($rows);
+        $treatmentPlans = $treatmentPlans->with([
+            'patient:id,firstname,lastname',
+            'status:id,value,severity'
+        ])->latest()->paginate($rows);
 
         $response = $this->paginate($treatmentPlans);
 
@@ -107,7 +120,7 @@ class TreatmentPlanController extends Controller
             'patient:id,firstname,lastname',
             'patient.user:name'
         ]);
-        
+
         return response()->json($treatmentPlan);
     }
 

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
+use App\Models\Role;
 use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,37 +19,66 @@ class AppointmentController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $appointments = Appointment::with('treatments:id,title')
-            ->with('patient:id,firstname,lastname')
-            ->with('status:id,value,severity')
-            ->with('patient.user:name');
+        $searchableFields = ['firstname', 'lastname'];
 
-        $appointments = $appointments->when($request->input('user'), function ($query, $user) {
-            $query->whereHas('patient', function (Builder $query) use ($user) {
-                $query->where('user', $user);
+        $filterableFields = ['patient', 'status'];
+
+        $dateFields = ['due_date', 'created_at', 'updated_at'];
+
+        $user = auth()->user();
+
+        $roles = Role::whereIn('name', ['super-admin', 'admin'])->pluck('id');
+
+        $isAdmin = collect($roles)->contains($user->role->id);
+
+        $appointments = $isAdmin ?
+            Appointment::with('patient.user:name') :
+            Appointment::whereHas('patient', function (Builder $query) use ($user) {
+                $query->where('user', $user->id);
             });
-        })->when($request->input('patient'), function ($query, $patient) {
-            $query->where('patient', $patient);
-        })->when($request->input('firstname'), function ($query, $firstname) {
-            $query->whereHas('patient', function (Builder $query) use ($firstname) {
-                $query->where('firstname', 'like', "%{$firstname}%");
+
+        if ($isAdmin) $appointments->when($request->input('user'), function ($query, $user) {
+            $query->whereHas('patient.user', function (Builder $query) use ($user) {
+                $query->where('name', 'like', "%{$user}%");
             });
-        })->when($request->input('lastname'), function ($query, $lastname) {
-            $query->whereHas('patient', function (Builder $query) use ($lastname) {
-                $query->where('lastname', 'like', "%{$lastname}%");
+        });
+
+        foreach ($searchableFields as $field) {
+            $appointments->when($request->input($field), function ($query, $value) use ($field) {
+                $query->whereHas('patient', function (Builder $query) use ($field, $value) {
+                    $query->where($field, 'like', "%{$value}%");
+                });
             });
-        })->when($request->input('due_date'), function ($query, $due_date) {
-            $query->where('due_date', 'like', "%{$due_date}%");
-        })->when($request->input('treatment'), function ($query, $treatment) {
+        }
+
+        foreach ($filterableFields as $field) {
+            $appointments->when($request->input($field), function ($query, $value) use ($field) {
+                $query->where($field, $value);
+            });
+        }
+
+        foreach ($dateFields as $field) {
+            $appointments->when($request->input($field), function ($query, $value) use ($field) {
+                $field = collect($field)->map(fn($d, $i) => Carbon::parse($d)
+                    ->setTimezone('Asia/Tehran')
+                    ->{$i ? 'endOfDay' : 'startOfDay'}()
+                    ->format('Y-m-d H:i:s'));
+
+                $query->whereBetween($field, $value);
+            });
+        }
+
+        $appointments->when($request->input('treatment'), function ($query, $treatment) {
             $query->whereHas('treatment', function (Builder $query) use ($treatment) {
                 $query->where('id', $treatment);
             });
-        })->when($request->input('status'), function ($query, $status) {
-            $query->where('status', $status);
         });
 
-
-        $appointments = $appointments->latest()->paginate($rows);
+        $appointments = $appointments->with([
+            'treatments:id,title',
+            'patient:id,firstname,lastname',
+            'status:id,value,severity'
+        ])->latest()->paginate($rows);
 
         $response = $this->paginate($appointments);
 

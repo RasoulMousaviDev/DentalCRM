@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
+use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PatientController extends Controller
 {
@@ -18,49 +20,64 @@ class PatientController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $columns = ['firstname', 'lastname', 'telephone'];
+        $searchableFields = ['firstname', 'lastname', 'telephone'];
 
-        $patients = Patient::when($request->input('user'), function ($query, $user) {
-            $query->where('user', $user);
-        })->when($request->input('id'), function ($query, $id) {
-            $query->where('id', $id);
-        })->when($request->input('gender'), function ($query, $gender) {
-            $query->where('gender', $gender);
-        })->when($request->input('mobile'), function ($query, $mobile) {
-            $query->whereHas('mobiles', function (Builder $query) use ($mobile) {
-                $query->where('number', 'like', "%{$mobile}%");
+        $filterableFields = [
+            'id',
+            'gender',
+            'province',
+            'city',
+            'lead_source',
+            'status'
+        ];
+
+        $dateFields = ['birthday', 'created_at', 'updated_at'];
+
+        $user = auth()->user();
+
+        $roles = Role::whereIn('name', ['super-admin', 'admin'])->pluck('id');
+
+        $isAdmin = collect($roles)->contains($user->role->id);
+
+        $patients = $isAdmin ? Patient::with('user:id,name') : $user->patients();
+
+        if ($isAdmin) $patients->when($request->input('user'), function ($query, $user) {
+            $query->whereHas('user', function (Builder $query) use ($user) {
+                $query->where('name', 'like', "%{$user}%");
             });
-        })->when($request->input('province'), function ($query, $province) {
-            $query->where('province', $province);
-        })->when($request->input('city'), function ($query, $city) {
-            $query->where('city', $city);
-        })->when($request->input('lead_source'), function ($query, $leadSource) {
-            $query->where('lead_source', $leadSource);
-        })->when($request->input('status'), function ($query, $status) {
-            $query->where('status', $status);
         });
 
-        foreach ($columns as $column)
-            $patients->when($request->input($column), function ($query, $value) use ($column) {
-                $query->where($column, 'like', "%{$value}%");
+        foreach ($searchableFields as $field) {
+            $patients->when($request->input($field), function ($query, $value) use ($field) {
+                $query->where($field, 'like', "%{$value}%");
             });
+        }
 
-        $dates = ['birthday', 'created_at', 'updated_at'];
+        foreach ($filterableFields as $field) {
+            $patients->when($request->input($field), function ($query, $value) use ($field) {
+                $query->where($field, $value);
+            });
+        }
 
-        foreach ($dates as $date) {
-            $patients->when($request->input($date), function ($query, $value) use ($date) {
-                $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+        foreach ($dateFields as $field) {
+            $patients->when($request->input($field), function ($query, $value) use ($field) {
+                $field = collect($field)->map(fn($d, $i) => Carbon::parse($d)
                     ->setTimezone('Asia/Tehran')
                     ->{$i ? 'endOfDay' : 'startOfDay'}()
                     ->format('Y-m-d H:i:s'));
 
-                $query->whereBetween($date, $value);
+                $query->whereBetween($field, $value);
             });
         }
 
+        $patients->when($request->input('mobile'), function ($query, $mobile) {
+            $query->whereHas('mobiles', function (Builder $query) use ($mobile) {
+                $query->where('number', 'like', "%{$mobile}%");
+            });
+        });
+
         $patients = $patients->with([
             'mobiles',
-            'user:id,name',
             'treatments:id,title',
             'status:id,value,severity'
         ])->latest()->paginate($rows);

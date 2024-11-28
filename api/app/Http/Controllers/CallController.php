@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCallRequest;
 use App\Models\Call;
 use App\Models\FollowUp;
 use App\Models\Patient;
+use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -23,38 +24,63 @@ class CallController extends Controller
     {
         $rows = $request->input('rows', 10);
 
-        $calls = Call::latest()->with('status:id,value,severity')
-            ->with('patient:id,firstname,lastname')
-            ->with('patient.user:name');
+        $searchableFields = ['firstname', 'lastname'];
 
-        $calls = $calls->when($request->input('user'), function ($query, $user) {
-            $query->whereHas('patient', function (Builder $query) use ($user) {
-                $query->where('user', $user);
+        $filterableFields = ['patient', 'status'];
+
+        $dateFields = ['due_date', 'created_at'];
+
+        $user = auth()->user();
+
+        $roles = Role::whereIn('name', ['super-admin', 'admin'])->pluck('id');
+
+        $isAdmin = collect($roles)->contains($user->role->id);
+
+        $calls = $isAdmin ?
+            Call::with('patient.user:name') :
+            Call::whereHas('patient', function (Builder $query) use ($user) {
+                $query->where('user', $user->id);
             });
-        })->when($request->input('patient'), function ($query, $patient) {
-            $query->where('patient', $patient);
-        })->when($request->input('firstname'), function ($query, $firstname) {
-            $query->whereHas('patient', function (Builder $query) use ($firstname) {
-                $query->where('firstname', 'like', "%{$firstname}%");
+
+        if ($isAdmin) $calls->when($request->input('user'), function ($query, $user) {
+            $query->whereHas('patient.user', function (Builder $query) use ($user) {
+                $query->where('name', 'like', "%{$user}%");
             });
-        })->when($request->input('lastname'), function ($query, $lastname) {
-            $query->whereHas('patient', function (Builder $query) use ($lastname) {
-                $query->where('lastname', 'like', "%{$lastname}%");
-            });
-        })->when($request->input('mobile'), function ($query, $mobile) {
-            $query->where('mobile', 'like', "%{$mobile}%");
-        })->when($request->input('created_at'), function ($query, $created_at) {
-            $date = collect($created_at)->map(fn($d, $i) => Carbon::parse($d)
-                ->setTimezone('Asia/Tehran')
-                ->{$i ? 'endOfDay' : 'startOfDay'}()
-                ->format('Y-m-d H:i:s'));
-            $query->whereBetween('created_at', $date);
-        })->when($request->input('status'), function ($query, $status) {
-            $query->where('status', $status);
         });
 
+        foreach ($searchableFields as $field) {
+            $calls->when($request->input($field), function ($query, $value) use ($field) {
+                $query->whereHas('patient', function (Builder $query) use ($field, $value) {
+                    $query->where($field, 'like', "%{$value}%");
+                });
+            });
+        }
 
-        $calls = $calls->paginate($rows);
+        foreach ($filterableFields as $field) {
+            $calls->when($request->input($field), function ($query, $value) use ($field) {
+                $query->where($field, $value);
+            });
+        }
+
+        foreach ($dateFields as $field) {
+            $calls->when($request->input($field), function ($query, $value) use ($field) {
+                $field = collect($field)->map(fn($d, $i) => Carbon::parse($d)
+                    ->setTimezone('Asia/Tehran')
+                    ->{$i ? 'endOfDay' : 'startOfDay'}()
+                    ->format('Y-m-d H:i:s'));
+
+                $query->whereBetween($field, $value);
+            });
+        }
+
+        $calls->when($request->input('mobile'), function ($query, $mobile) {
+            $query->where('mobile', 'like', "%{$mobile}%");
+        });
+
+        $calls = $calls->with([
+            'patient:id,firstname,lastname',
+            'status:id,value,severity'
+        ])->latest()->paginate($rows);
 
         $response = $this->paginate($calls);
 
