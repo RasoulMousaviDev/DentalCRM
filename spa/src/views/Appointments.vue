@@ -27,7 +27,8 @@
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column field="user.name" :header="$t('consultant')" />
+            <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="user.name"
+                :header="$t('consultant')" />
             <template v-if="$route.name != 'Patient'">
                 <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
                     :header="$t('patient-name')" />
@@ -69,6 +70,7 @@ import AppointmentFilters from '@/components/AppointmentFilters.vue';
 import AppointmentForm from '@/components/AppointmentForm.vue';
 import DepositForm from '@/components/DepositForm.vue';
 import { useAppointmentsStore } from '@/stores/appointments';
+import { useAuthStore } from '@/stores/auth';
 import { inject } from 'vue';
 
 const { route, dialog, confirm, toast, t } = inject('service')
@@ -77,6 +79,8 @@ const store = useAppointmentsStore()
 if (route.name == 'Patient')
     store.filters.patient = route.params.id
 store.index()
+
+const auth = useAuthStore()
 
 const create = async () => {
     dialog.open(AppointmentForm, {

@@ -5,7 +5,7 @@
             <InputText v-model="filters.id" fluid class="ltr" v-keyfilter.int />
             <label>{{ $t('id') }}</label>
         </FloatLabel>
-        <FloatLabel variant="on">
+        <FloatLabel v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" variant="on">
             <InputText v-model="filters.user" fluid />
             <label>{{ $t('consultant') }}</label>
         </FloatLabel>
@@ -82,6 +82,7 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/auth';
 import { useCitiesStore } from '@/stores/cities';
 import { useGendersStore } from '@/stores/genders';
 import { useLeadSourcesStore } from '@/stores/lead-sources';
@@ -98,6 +99,7 @@ const leadSources = useLeadSourcesStore()
 const cities = useCitiesStore()
 const genders = useGendersStore()
 const treatments = useTreatmentsStore()
+const auth = useAuthStore()
 
 treatments.index()
 provinces.index()

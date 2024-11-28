@@ -5,7 +5,7 @@
                 <InputText v-model="filters.patient" fluid class="ltr" v-keyfilter.int />
                 <label>{{ $t('patient-id') }}</label>
             </FloatLabel>
-            <FloatLabel variant="on">
+            <FloatLabel v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" variant="on">
                 <InputText v-model="filters.user" fluid />
                 <label>{{ $t('consultant') }}</label>
             </FloatLabel>
@@ -56,8 +56,11 @@
 
 <script setup>
 import { useAppointmentsStore } from '@/stores/appointments';
+import { useAuthStore } from '@/stores/auth';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
+
+const auth = useAuthStore()
 
 const { route } = inject('service')
 

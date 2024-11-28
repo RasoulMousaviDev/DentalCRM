@@ -67,7 +67,6 @@ import { reactive, ref, onMounted, computed, inject } from "vue";
 const store = useDashboardStore()
 
 const fdate = new Date();
-fdate.setFullYear(1998)
 fdate.setMonth(fdate.getMonth() - 1)
 
 const date = reactive({ from: fdate, to: new Date() })

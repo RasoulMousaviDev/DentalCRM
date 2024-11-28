@@ -30,7 +30,8 @@
             <template v-if="$route.name != 'Patient'">
                 <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
                     :header="$t('patient-name')" />
-                <Column field="user.name" :header="$t('consultant')" />
+                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="user.name"
+                    :header="$t('consultant')" />
             </template>
             <Column field="mobile" :header="$t('mobile')" />
             <Column field="desc" :header="$t('desc')" />
@@ -48,6 +49,7 @@
 <script setup>
 import CallFilters from '@/components/CallFilters.vue';
 import CallForm from '@/components/CallForm.vue';
+import { useAuthStore } from '@/stores/auth';
 import { useCallsStore } from '@/stores/calls';
 import { inject, watch } from 'vue';
 
@@ -57,6 +59,8 @@ const store = useCallsStore()
 if (route.name == 'Patient')
     store.filters.patient = route.params.id
 store.index()
+
+const auth = useAuthStore()
 
 const create = async () => {
     dialog.open(CallForm, {

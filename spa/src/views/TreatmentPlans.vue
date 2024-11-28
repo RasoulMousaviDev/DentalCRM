@@ -28,7 +28,8 @@
             <template v-if="$route.name != 'Patient'">
                 <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
                     :header="$t('patient-name')" />
-                <Column field="user.name" :header="$t('consultant')" />
+                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="user.name"
+                    :header="$t('consultant')" />
             </template>
             <Column :field="({ visit_type }) => $t(visit_type)" :header="$t('visit-type')" class="w-28" />
             <Column field="desc" :header="$t('desc')" body-class="truncate" />
@@ -66,6 +67,7 @@
 
 <script setup>
 import TreatmentPlanFilters from '@/components/TreatmentPlanFilters.vue';
+import { useAuthStore } from '@/stores/auth';
 import { useTreatmentPlansStore } from '@/stores/treatment-plans';
 import { reactive, inject } from 'vue';
 
@@ -77,6 +79,8 @@ const store = useTreatmentPlansStore()
 if (route.name == 'Patient')
     store.filters.patient = route.params.id
 store.index()
+
+const auth = useAuthStore()
 
 const onCellEditComplete = async (event) => {
     let { data: { id }, newValue, index, value } = event;

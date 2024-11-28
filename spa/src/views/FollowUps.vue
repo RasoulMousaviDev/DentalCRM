@@ -28,7 +28,8 @@
             <template v-if="$route.name != 'Patient'">
                 <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
                     :header="$t('patient-name')" />
-                <Column field="user.name" :header="$t('consultant')" />
+                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="user.name"
+                    :header="$t('consultant')" />
             </template>
             <Column field="desc" :header="$t('desc')" />
             <Column field="due_date" :header="$t('due-date')" bodyClass="ltr" class="w-44" />
@@ -54,6 +55,7 @@
 <script setup>
 import CallForm from '@/components/CallForm.vue';
 import FollowUpFilters from '@/components/FollowUpFilters.vue';
+import { useAuthStore } from '@/stores/auth';
 import { useFollowUpsStore } from '@/stores/follow-ups';
 import { inject } from 'vue';
 
@@ -63,6 +65,8 @@ const store = useFollowUpsStore()
 if (route.name == 'Patient')
     store.filters.patient = route.params.id
 store.index()
+
+const auth = useAuthStore()
 
 const done = async (id) => {
     dialog.open(CallForm, {

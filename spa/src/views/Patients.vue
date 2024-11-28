@@ -23,7 +23,7 @@
                 <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
             </template>
             <Column field="id" :header="$t('id')" />
-            <Column field="user.name" :header="$t('consultant')" />
+            <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="user.name" :header="$t('consultant')" />
             <Column :field="({ firstname, lastname }) => [firstname, lastname].join(' ')"
                 :header="$t('name-and-family')" />
             <Column :field="({ mobiles }) => mobiles.map(({ number }) => number).join(' | ')" :header="$t('mobile')"
@@ -57,11 +57,14 @@
 import PatientFilters from '@/components/PatientFilters.vue';
 import PatientForm from '@/components/PatientForm.vue';
 import { usePatientsStore } from '@/stores/patients';
+import { useAuthStore } from '@/stores/auth';
 import { inject, watch } from 'vue';
 
 const { dialog, confirm, toast, router, t } = inject('service')
 
 const store = usePatientsStore()
+
+const auth = useAuthStore()
 
 if (store.items.length === 0)
     store.index()

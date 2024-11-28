@@ -1,10 +1,11 @@
 import { useCookie } from "@/composables/cookie";
 import { defineStore } from "pinia";
+import { useRolesStore } from "./roles";
 
 export const useAuthStore = defineStore("auth", {
     state: () => ({
         user: {},
-        role: null
+        role: null,
     }),
     actions: {
         async login(credentials) {
@@ -15,27 +16,29 @@ export const useAuthStore = defineStore("auth", {
 
                 const cookie = useCookie();
                 cookie.set("token", token, expires_at);
-
             }
 
             return res;
         },
-        async me(){
-            const { statusText , data} = await this.axios.get("/auth/me");
+        async me() {
+            const { statusText, data } = await this.axios.get("/auth/me");
 
             if (statusText == "OK") {
                 this.user = data;
-                this.role = data.role.id
+                this.role = data.role.id;
             }
         },
         refresh() {},
         logout() {},
-        async changeRole(id){
-            const { statusText , data} = await this.axios.post("/auth/change-role", { id });
+        async changeRole(id) {
+            const { statusText, data } = await this.axios.post(
+                "/auth/change-role",
+                { id }
+            );
 
             if (statusText == "OK") {
                 this.user = data;
-                this.role = id
+                this.role = id;
             }
         },
     },
