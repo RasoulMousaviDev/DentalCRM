@@ -27,12 +27,11 @@
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="user.name"
-                :header="$t('consultant')" />
             <template v-if="$route.name != 'Patient'">
                 <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
                     :header="$t('patient-name')" />
-                <Column field="user.name" :header="$t('consultant')" />
+                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role.name)" field="patient.user.name"
+                    :header="$t('consultant')" />
             </template>
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" />

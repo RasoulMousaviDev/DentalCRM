@@ -36,16 +36,18 @@ class CallController extends Controller
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
-        $calls = $isAdmin ?
-            Call::with('patient.user:name') :
-            Call::whereHas('patient', function (Builder $query) use ($user) {
-                $query->where('user', $user->id);
-            });
+        $calls = Call::with([
+            'patient:id,firstname,lastname',
+            'status:id,value,severity'
+        ]);
 
-        if ($isAdmin) $calls->when($request->input('user'), function ($query, $user) {
+        if ($isAdmin) $calls =  $calls->with('patient.user:id,name')->when($request->input('user'), function ($query, $user) {
             $query->whereHas('patient.user', function (Builder $query) use ($user) {
                 $query->where('name', 'like', "%{$user}%");
             });
+        });
+        else $calls = $calls->whereHas('patient', function (Builder $query) use ($user) {
+            $query->where('user', $user->id);
         });
 
         foreach ($searchableFields as $field) {
@@ -77,10 +79,7 @@ class CallController extends Controller
             $query->where('mobile', 'like', "%{$mobile}%");
         });
 
-        $calls = $calls->with([
-            'patient:id,firstname,lastname',
-            'status:id,value,severity'
-        ])->latest()->paginate($rows);
+        $calls = $calls->latest()->paginate($rows);
 
         $response = $this->paginate($calls);
 

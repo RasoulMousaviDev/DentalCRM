@@ -35,11 +35,9 @@ class AppointmentController extends Controller
             'treatments:id,title',
             'patient:id,firstname,lastname',
             'status:id,value,severity',
-            $isAdmin ? 'patient.user:name' : null
         ]);
 
-
-        if ($isAdmin) $appointments->when($request->input('user'), function ($query, $user) {
+        if ($isAdmin) $appointments = $appointments->with('patient.user:id,name')->when($request->input('user'), function ($query, $user) {
             $query->whereHas('patient.user', function (Builder $query) use ($user) {
                 $query->where('name', 'like', "%{$user}%");
             });
@@ -101,7 +99,7 @@ class AppointmentController extends Controller
 
         $appointment->treatments()->attach($treatments);
 
-        $appointment = $patient->appointments()->whit([
+        $appointment = $patient->appointments()->with([
             'treatments:id,title',
             'patient:id,firstname,lastname',
             'status:id,value,severity',

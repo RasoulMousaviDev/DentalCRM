@@ -31,16 +31,18 @@ class FollowUpController extends Controller
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
-        $followUps = $isAdmin ?
-            FollowUp::with('patient.user:name') :
-            FollowUp::whereHas('patient', function (Builder $query) use ($user) {
-                $query->where('user', $user->id);
-            });
+        $followUps = FollowUp::with([
+            'patient:id,firstname,lastname',
+            'status:id,value,severity'
+        ]);
 
-        if ($isAdmin) $followUps->when($request->input('user'), function ($query, $user) {
+        if ($isAdmin) $followUps = $followUps->with('patient.user:id,name')->when($request->input('user'), function ($query, $user) {
             $query->whereHas('patient.user', function (Builder $query) use ($user) {
                 $query->where('name', 'like', "%{$user}%");
             });
+        });
+        else $followUps = $followUps->whereHas('patient', function (Builder $query) use ($user) {
+            $query->where('user', $user->id);
         });
 
         foreach ($searchableFields as $field)
@@ -67,10 +69,7 @@ class FollowUpController extends Controller
             });
         }
 
-        $followUps = $followUps->with([
-            'patient:id,firstname,lastname',
-            'status:id,value,severity'
-        ])->latest()->paginate($rows);
+        $followUps = $followUps->latest()->paginate($rows);
 
         $response = $this->paginate($followUps);
 

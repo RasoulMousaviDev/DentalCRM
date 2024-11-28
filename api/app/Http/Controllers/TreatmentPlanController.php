@@ -33,16 +33,19 @@ class TreatmentPlanController extends Controller
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
-        $treatmentPlans = $isAdmin ?
-            TreatmentPlan::with('patient.user:name') :
-            TreatmentPlan::whereHas('patient', function (Builder $query) use ($user) {
-                $query->where('user', $user->id);
-            });
+        $treatmentPlans = TreatmentPlan::with([
+            'patient:id,firstname,lastname',
+            'status:id,value,severity'
+        ]);
 
-        if ($isAdmin) $treatmentPlans->when($request->input('user'), function ($query, $user) {
+
+        if ($isAdmin) $treatmentPlans = $treatmentPlans->with('patient.user:id,name')->when($request->input('user'), function ($query, $user) {
             $query->whereHas('patient.user', function (Builder $query) use ($user) {
                 $query->where('name', 'like', "%{$user}%");
             });
+        });
+        else $treatmentPlans = $treatmentPlans->whereHas('patient', function (Builder $query) use ($user) {
+            $query->where('user', $user->id);
         });
 
         foreach ($searchableFields as $field) {
@@ -70,10 +73,7 @@ class TreatmentPlanController extends Controller
             });
         }
 
-        $treatmentPlans = $treatmentPlans->with([
-            'patient:id,firstname,lastname',
-            'status:id,value,severity'
-        ])->latest()->paginate($rows);
+        $treatmentPlans = $treatmentPlans->latest()->paginate($rows);
 
         $response = $this->paginate($treatmentPlans);
 
