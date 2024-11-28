@@ -22,10 +22,18 @@ import { useLayout } from '@/composables/layout';
 import { computed, onBeforeMount, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter()
+const route = useRoute()
+
 const { layoutConfig, layoutState, isSidebarActive, resetMenu } = useLayout();
 
 const auth = useAuthStore()
-auth.me()
+auth.me().then(() => {
+    if(!auth.user.menu.some((opt) => opt.route == route.path)){
+        const otpion = auth.user.menu[0]
+        router.replace(otpion.route)
+    }
+})
 
 const role = useRolesStore()
 role.index()
@@ -74,14 +82,8 @@ function isOutsideClicked(event) {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
-const router = useRouter()
-const route = useRoute()
-onBeforeMount(() => {
-    if(!auth.user.menu.some((opt) => opt.route == route.path)){
-        const otpion = auth.user.menu[0]
-        router.replace(otpion.route)
-    }
-})
+
+
 </script>
 
 <style lang="scss" scoped></style>
