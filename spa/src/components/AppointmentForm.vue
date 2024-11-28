@@ -6,7 +6,7 @@
                     resetFilterOnHide autoFilterFocus filter
                     :filterFields="[({ mobiles }) => mobiles.map(m => m.number).join(' ')]"
                     :optionLabel="({ firstname, lastname }) => [firstname, lastname].join(' ')" fluid
-                    :invalid="errors.patient" :disabled="disabled"
+                    :invalid="errors.patient" :disabled="$route.name != 'Patient'"
                     panel-class="[&_.p-iconfield]:ltr [&_input:not(.p-filled)]:!text-right"
                     :filter-placeholder="$t('search-patient')" @filter="patients.search($event.value)">
                 </Select>
@@ -56,7 +56,7 @@ const { route } = inject('service')
 
 const { id } = route.params
 
-const form = reactive({ patient: id })
+const form = reactive({ patient: +id })
 const errors = ref({})
 const loading = ref(false)
 

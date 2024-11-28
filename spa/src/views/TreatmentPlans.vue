@@ -10,7 +10,7 @@
                         <hr class="grow !ml-2">
                         </hr>
                         <Button icon="pi pi-plus" :label="$t('new-plan')" severity="success" as="router-link"
-                            :to="{ name: 'TreatmentPlanCreate' }" />
+                            :to="{ name: 'TreatmentPlanCreate', query: { patient: $route.params.id } }" />
                     </div>
                     <TreatmentPlanFilters />
                 </div>

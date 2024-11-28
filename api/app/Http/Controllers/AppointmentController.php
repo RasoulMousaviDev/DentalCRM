@@ -31,9 +31,15 @@ class AppointmentController extends Controller
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
+        $appointments = Appointment::with([
+            'treatments:id,title',
+            'patient:id,firstname,lastname',
+            'status:id,value,severity'
+        ]);
+
         $appointments = $isAdmin ?
-            Appointment::with('patient.user:name') :
-            Appointment::whereHas('patient', function (Builder $query) use ($user) {
+            $appointments->with('patient.user:name') :
+            $appointments->whereHas('patient', function (Builder $query) use ($user) {
                 $query->where('user', $user->id);
             });
 
@@ -74,11 +80,7 @@ class AppointmentController extends Controller
             });
         });
 
-        $appointments = $appointments->with([
-            'treatments:id,title',
-            'patient:id,firstname,lastname',
-            'status:id,value,severity'
-        ])->latest()->paginate($rows);
+        $appointments = $appointments->latest()->paginate($rows);
 
         $response = $this->paginate($appointments);
 
@@ -99,12 +101,12 @@ class AppointmentController extends Controller
 
         $appointment->treatments()->attach($treatments);
 
-        $appointment = $patient->appointments()
-            ->with('treatments:id,title')
-            ->with('patient:id,firstname,lastname')
-            ->with('status:id,value,severity')
-            ->with('patient.user:name')
-            ->latest()->first();
+        $appointment = $patient->appointments()->whit([
+            'treatments:id,title',
+            'patient:id,firstname,lastname',
+            'status:id,value,severity',
+            'patient.user:name',
+        ])->latest()->first();
 
         $status = Status::firstWhere('name', 'appointment-set')->id;
 

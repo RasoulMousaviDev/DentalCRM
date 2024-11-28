@@ -173,7 +173,7 @@
             <ul class="flex flex-col gap-4">
                 <li v-for="(option, service) in treatment.services" :key="service">
                     <div class="flex items-center justify-between">
-                        <span>{{ getOption(key, service, option, 'title') }}</span>
+                        <span>{{ getOption(key, service, option, ' title') }}</span>
                                                     <span>{{ [new Intl.NumberFormat().format(getOption(key, service,
                                                         option,
                                                         'cost') *
@@ -263,6 +263,7 @@ const services = useTreatmentServicesStore()
 services.items = []
 
 const form = reactive({
+    patient: +patient,
     treatments_details: {},
     payment_method: 'cash',
     visit_type: 'in-person',

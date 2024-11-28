@@ -26,6 +26,8 @@ export const useAuthStore = defineStore("auth", {
                 this.user = data;
                 this.role = data.role.id;
             }
+
+            return data
         },
         refresh() {},
         logout() {},
