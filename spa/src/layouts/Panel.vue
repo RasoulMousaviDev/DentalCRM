@@ -77,7 +77,7 @@ function isOutsideClicked(event) {
 const router = useRouter()
 const route = useRoute()
 onBeforeMount(() => {
-    if(!auth.user.menu.some((opt) => opt.name == route.path)){
+    if(!auth.user.menu.some((opt) => opt.route == route.path)){
         const otpion = auth.user.menu[0]
         router.replace(otpion.route)
     }
