@@ -38,3 +38,14 @@ html{
     @apply text-sm;
 }
 
+*::-webkit-scrollbar {
+    @apply w-2 h-2;
+}
+
+*::-webkit-scrollbar-track {
+    @apply rounded-md bg-primary-100;
+}
+
+*::-webkit-scrollbar-thumb {
+    @apply rounded-md bg-primary;
+}

@@ -25,6 +25,7 @@ class MenuSeeder extends Seeder
             ['name' => 'treatments', 'title' => 'درمان ها', 'route' => '/treatments', 'icon' => 'plus',],
             ['name' => 'follow-ups', 'title' => 'وظیفه ها', 'route' => '/follow-ups', 'icon' => 'list-check',],
             ['name' => 'calls', 'title' => 'تماس ها', 'route' => '/calls', 'icon' => 'phone',],
+            ['name' => 'consultants', 'title' => 'مشاوران', 'route' => '/consultants', 'icon' => 'users',],
         ]);
     }
 }

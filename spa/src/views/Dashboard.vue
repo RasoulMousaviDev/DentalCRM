@@ -12,7 +12,7 @@
                 </InputGroup>
                 <InputGroup class="ltr !w-[19rem]">
                     <DatePicker v-model="date.to" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd"
-                        :max-date="new Date()" :min-date="date.from" />
+                        />
                     <InputGroupAddon>{{ $t('to') }}</InputGroupAddon>
                 </InputGroup>
                 <Button :label="$t('search')" :loading="store.fetching" @click="store.getCharts(form)" />

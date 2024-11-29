@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CallController;
 use App\Http\Controllers\CampainController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\ConsultantController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\LeadSourceController;
@@ -47,6 +48,10 @@ Route::middleware('auth:api')->group(function () {
 
     Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
         Route::get('charts', 'charts');
+    });
+
+    Route::controller(ConsultantController::class)->prefix('consultants')->group(function () {
+        Route::get('', 'index');
     });
 
     Route::controller(UserController::class)->prefix('users')->group(function () {

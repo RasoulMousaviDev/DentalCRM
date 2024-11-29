@@ -79,13 +79,20 @@ button:has(.p-badge){
 .p-datepicker-decade{
     @apply ltr;
 }
-
+.p-datepicker-header > button{
+    @apply rotate-180;
+}
 .p-datepicker-year-view{
     @apply ltr;
 }
-
+.p-datepicker-month-view{
+    @apply rtl flex flex-wrap;
+}
 .p-datepicker-time-picker{
     @apply ltr;
+}
+.p-datepicker-day-view{
+    @apply rtl;
 }
 
 .p-datatable-footer:not(:has(:first-child)){
