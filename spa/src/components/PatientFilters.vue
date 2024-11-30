@@ -1,6 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit()"
-        class="flex flex-wrap w-full gap-4 [&>span]:w-52">
+    <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
         <FloatLabel variant="on">
             <InputText v-model="filters.id" fluid class="ltr" v-keyfilter.int />
             <label>{{ $t('id') }}</label>
@@ -54,6 +53,11 @@
             <Select v-model="filters.lead_source" :options="leadSources.items" :loading="leadSources.fetching"
                 optionLabel="title" optionValue="id" fluid show-clear />
             <label> {{ $t('lead-source') }}</label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.insurance" :options="['has', 'not-has']" :optionLabel="(opt) => $t(opt)"
+                :optionValue="(opt) => opt == 'has'" fluid show-clear />
+            <label> {{ $t('insurance') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
             <Select v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear>

@@ -87,11 +87,19 @@
             </FloatLabel>
             <small v-if="errors.lead_source" v-text="errors.lead_source[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-1 col-span-2">
+        <div class="flex flex-col gap-1 col-span-2 row-span-2">
             <FloatLabel variant="on">
-                <Textarea v-model="form.desc" fluid rows="4" cols="30" class="min-h-10" />
+                <Textarea v-model="form.desc" fluid rows="5" cols="30" class="min-h-12" />
                 <label> {{ $t('desc') }}</label>
             </FloatLabel>
+        </div>
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <Select v-model="form.insurance" :options="['has', 'not-has']" :optionLabel="(opt) => $t(opt)"
+                    :optionValue="(opt) => opt == 'has'" fluid :invalid="errors.insurance" />
+                <label>{{ $t('insurance') }}</label>
+            </FloatLabel>
+            <small v-if="errors.insurance" v-text="errors.insurance[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">

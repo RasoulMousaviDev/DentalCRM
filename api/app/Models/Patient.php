@@ -28,12 +28,14 @@ class Patient extends Model
         'telephone',
         'lead_source',
         'status',
-        'desc'
+        'desc',
+        'insurance'
     ];
 
     protected $casts = [
         'created_at' => JDate::class,
         'updated_at' => JDate::class,
+        'insurance' => 'boolean'
     ];
 
     protected $dispatchesEvents = [

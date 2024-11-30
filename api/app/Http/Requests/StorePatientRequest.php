@@ -27,7 +27,8 @@ class StorePatientRequest extends FormRequest
             'lead_source' => 'required|exists:lead_sources,id',
             'desc' => 'nullable|string',
             'treatments' => 'nullable|array',
-            'treatments.*' => 'required|exists:treatments,id'
+            'treatments.*' => 'required|exists:treatments,id',
+            'insurance' => 'required|boolean'
         ];
     }
 

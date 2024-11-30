@@ -249,5 +249,8 @@
     "was-visit": "ویزیت شد",
     "set-deposit": "ثبت بیعانه",
     "consultant": "مشاور",
-    "periodic-visits":"ویزیت های دوره ای"
+    "periodic-visits":"ویزیت های دوره ای",
+    "not-has":"ندارد",
+    "has":"دارد",
+    "insurance":"بیمه"
 }

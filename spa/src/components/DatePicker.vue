@@ -1,198 +1,548 @@
 <template>
-    <span ref="container" :id="d_id" :class="cx('root')" :style="sx('root')" v-bind="ptmi('root')">
-        <InputText v-if="!inline" :ref="inputRef" :id="inputId" role="combobox" :class="[inputClass, cx('pcInputText')]"
-            :style="inputStyle" :value="inputFieldValue" :placeholder="placeholder" :name="name" :size="size"
-            :invalid="invalid" :variant="variant" :fluid="fluid" :unstyled="unstyled" autocomplete="off"
-            aria-autocomplete="none" aria-haspopup="dialog" :aria-expanded="overlayVisible" :aria-controls="panelId"
-            :aria-labelledby="ariaLabelledby" :aria-label="ariaLabel" inputmode="none" :disabled="disabled"
-            :readonly="!manualInput || readonly" :tabindex="0" @input="onInput" @click="onInputClick" @focus="onFocus"
-            @blur="onBlur" @keydown="onKeyDown" :pt="ptm('pcInputText')" />
-        <slot v-if="showIcon && iconDisplay === 'button' && !inline" name="dropdownbutton"
-            :toggleCallback="onButtonClick">
-            <button :class="cx('dropdown')" :disabled="disabled" @click="onButtonClick" type="button"
-                :aria-label="$primevue.config.locale.chooseDate" aria-haspopup="dialog" :aria-expanded="overlayVisible"
-                :aria-controls="panelId" v-bind="ptm('dropdown')">
+    <span
+        ref="container"
+        :id="d_id"
+        :class="cx('root')"
+        :style="sx('root')"
+        v-bind="ptmi('root')"
+    >
+        <InputText
+            v-if="!inline"
+            :ref="inputRef"
+            :id="inputId"
+            role="combobox"
+            :class="[inputClass, cx('pcInputText')]"
+            :style="inputStyle"
+            :value="inputFieldValue"
+            :placeholder="placeholder"
+            :name="name"
+            :size="size"
+            :invalid="invalid"
+            :variant="variant"
+            :fluid="fluid"
+            :unstyled="unstyled"
+            autocomplete="off"
+            aria-autocomplete="none"
+            aria-haspopup="dialog"
+            :aria-expanded="overlayVisible"
+            :aria-controls="panelId"
+            :aria-labelledby="ariaLabelledby"
+            :aria-label="ariaLabel"
+            inputmode="none"
+            :disabled="disabled"
+            :readonly="!manualInput || readonly"
+            :tabindex="0"
+            @input="onInput"
+            @click="onInputClick"
+            @focus="onFocus"
+            @blur="onBlur"
+            @keydown="onKeyDown"
+            :pt="ptm('pcInputText')"
+        />
+        <slot
+            v-if="showIcon && iconDisplay === 'button' && !inline"
+            name="dropdownbutton"
+            :toggleCallback="onButtonClick"
+        >
+            <button
+                :class="cx('dropdown')"
+                :disabled="disabled"
+                @click="onButtonClick"
+                type="button"
+                :aria-label="$primevue.config.locale.chooseDate"
+                aria-haspopup="dialog"
+                :aria-expanded="overlayVisible"
+                :aria-controls="panelId"
+                v-bind="ptm('dropdown')"
+            >
                 <slot name="dropdownicon" :class="icon">
-                    <component :is="icon ? 'span' : 'CalendarIcon'" :class="icon" v-bind="ptm('dropdownIcon')" />
+                    <component
+                        :is="icon ? 'span' : 'CalendarIcon'"
+                        :class="icon"
+                        v-bind="ptm('dropdownIcon')"
+                    />
                 </slot>
             </button>
         </slot>
         <template v-else-if="showIcon && iconDisplay === 'input' && !inline">
-            <span v-if="$slots.inputicon || showIcon" :class="cx('inputIconContainer')"
-                v-bind="ptm('inputIconContainer')">
-                <slot name="inputicon" :class="cx('inputIcon')" :clickCallback="onButtonClick">
-                    <component :is="icon ? 'i' : 'CalendarIcon'" :class="[icon, cx('inputIcon')]" @click="onButtonClick"
-                        v-bind="ptm('inputicon')" />
+            <span
+                v-if="$slots.inputicon || showIcon"
+                :class="cx('inputIconContainer')"
+                v-bind="ptm('inputIconContainer')"
+            >
+                <slot
+                    name="inputicon"
+                    :class="cx('inputIcon')"
+                    :clickCallback="onButtonClick"
+                >
+                    <component
+                        :is="icon ? 'i' : 'CalendarIcon'"
+                        :class="[icon, cx('inputIcon')]"
+                        @click="onButtonClick"
+                        v-bind="ptm('inputicon')"
+                    />
                 </slot>
             </span>
         </template>
         <Portal :appendTo="appendTo" :disabled="inline">
-            <transition name="p-connected-overlay" @enter="onOverlayEnter($event)" @after-enter="onOverlayEnterComplete"
-                @after-leave="onOverlayAfterLeave" @leave="onOverlayLeave" v-bind="ptm('transition')">
-                <div v-if="inline || overlayVisible" :ref="overlayRef" :id="panelId" :class="[cx('panel'), panelClass]"
-                    :style="panelStyle" :role="inline ? null : 'dialog'" :aria-modal="inline ? null : 'true'"
-                    :aria-label="$primevue.config.locale.chooseDate" @click="onOverlayClick" @keydown="onOverlayKeyDown"
-                    @mouseup="onOverlayMouseUp" v-bind="ptm('panel')">
+            <transition
+                name="p-connected-overlay"
+                @enter="onOverlayEnter($event)"
+                @after-enter="onOverlayEnterComplete"
+                @after-leave="onOverlayAfterLeave"
+                @leave="onOverlayLeave"
+                v-bind="ptm('transition')"
+            >
+                <div
+                    v-if="inline || overlayVisible"
+                    :ref="overlayRef"
+                    :id="panelId"
+                    :class="[cx('panel'), panelClass]"
+                    :style="panelStyle"
+                    :role="inline ? null : 'dialog'"
+                    :aria-modal="inline ? null : 'true'"
+                    :aria-label="$primevue.config.locale.chooseDate"
+                    @click="onOverlayClick"
+                    @keydown="onOverlayKeyDown"
+                    @mouseup="onOverlayMouseUp"
+                    v-bind="ptm('panel')"
+                >
                     <template v-if="!timeOnly">
-                        <div :class="cx('calendarContainer')" v-bind="ptm('calendarContainer')">
-                            <div v-for="(month, groupIndex) of months" :key="month.month + month.year"
-                                :class="cx('calendar')" v-bind="ptm('calendar')">
-                                <div :class="cx('header')" v-bind="ptm('header')">
+                        <div
+                            :class="cx('calendarContainer')"
+                            v-bind="ptm('calendarContainer')"
+                        >
+                            <div
+                                v-for="(month, groupIndex) of months"
+                                :key="month.month + month.year"
+                                :class="cx('calendar')"
+                                v-bind="ptm('calendar')"
+                            >
+                                <div
+                                    :class="cx('header')"
+                                    v-bind="ptm('header')"
+                                >
                                     <slot name="header"></slot>
-                                    <Button v-show="groupIndex === 0" :ref="previousButtonRef"
-                                        :class="cx('pcPrevButton')" :disabled="disabled"
-                                        :aria-label="currentView === 'year' ? $primevue.config.locale.prevDecade : currentView === 'month' ? $primevue.config.locale.prevYear : $primevue.config.locale.prevMonth"
-                                        :unstyled="unstyled" @click="onPrevButtonClick"
-                                        @keydown="onContainerButtonKeydown" v-bind="navigatorButtonProps"
-                                        :pt="ptm('pcPrevButton')" data-pc-group-section="navigator">
+                                    <Button
+                                        v-show="groupIndex === 0"
+                                        :ref="previousButtonRef"
+                                        :class="cx('pcPrevButton')"
+                                        :disabled="disabled"
+                                        :aria-label="
+                                            currentView === 'year'
+                                                ? $primevue.config.locale
+                                                      .prevDecade
+                                                : currentView === 'month'
+                                                  ? $primevue.config.locale
+                                                        .prevYear
+                                                  : $primevue.config.locale
+                                                        .prevMonth
+                                        "
+                                        :unstyled="unstyled"
+                                        @click="onPrevButtonClick"
+                                        @keydown="onContainerButtonKeydown"
+                                        v-bind="navigatorButtonProps"
+                                        :pt="ptm('pcPrevButton')"
+                                        data-pc-group-section="navigator"
+                                    >
                                         <template #icon="slotProps">
                                             <slot name="previcon">
-                                                <component :is="prevIcon ? 'span' : 'ChevronLeftIcon'"
-                                                    :class="[prevIcon, slotProps.class]"
-                                                    v-bind="ptm('pcPrevButton')['icon']" />
+                                                <component
+                                                    :is="
+                                                        prevIcon
+                                                            ? 'span'
+                                                            : 'ChevronLeftIcon'
+                                                    "
+                                                    :class="[
+                                                        prevIcon,
+                                                        slotProps.class,
+                                                    ]"
+                                                    v-bind="
+                                                        ptm('pcPrevButton')[
+                                                            'icon'
+                                                        ]
+                                                    "
+                                                />
                                             </slot>
                                         </template>
                                     </Button>
-                                    <div :class="cx('title')" v-bind="ptm('title')">
-                                        <template v-if="$primevue.config.locale.showMonthAfterYear">
-                                            <button v-if="currentView !== 'year'" type="button"
-                                                @click="switchToYearView" @keydown="onContainerButtonKeydown"
-                                                :class="cx('selectYear')" :disabled="switchViewButtonDisabled"
-                                                :aria-label="$primevue.config.locale.chooseYear"
-                                                v-bind="ptm('selectYear')" data-pc-group-section="view">
+                                    <div
+                                        :class="cx('title')"
+                                        v-bind="ptm('title')"
+                                    >
+                                        <template
+                                            v-if="
+                                                $primevue.config.locale
+                                                    .showMonthAfterYear
+                                            "
+                                        >
+                                            <button
+                                                v-if="currentView !== 'year'"
+                                                type="button"
+                                                @click="switchToYearView"
+                                                @keydown="
+                                                    onContainerButtonKeydown
+                                                "
+                                                :class="cx('selectYear')"
+                                                :disabled="
+                                                    switchViewButtonDisabled
+                                                "
+                                                :aria-label="
+                                                    $primevue.config.locale
+                                                        .chooseYear
+                                                "
+                                                v-bind="ptm('selectYear')"
+                                                data-pc-group-section="view"
+                                            >
                                                 {{ getYear(month) }}
                                             </button>
-                                            <button v-if="currentView === 'date'" type="button"
-                                                @click="switchToMonthView" @keydown="onContainerButtonKeydown"
-                                                :class="cx('selectMonth')" :disabled="switchViewButtonDisabled"
-                                                :aria-label="$primevue.config.locale.chooseMonth"
-                                                v-bind="ptm('selectMonth')" data-pc-group-section="view">
+                                            <button
+                                                v-if="currentView === 'date'"
+                                                type="button"
+                                                @click="switchToMonthView"
+                                                @keydown="
+                                                    onContainerButtonKeydown
+                                                "
+                                                :class="cx('selectMonth')"
+                                                :disabled="
+                                                    switchViewButtonDisabled
+                                                "
+                                                :aria-label="
+                                                    $primevue.config.locale
+                                                        .chooseMonth
+                                                "
+                                                v-bind="ptm('selectMonth')"
+                                                data-pc-group-section="view"
+                                            >
                                                 {{ getMonthName(month.month) }}
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button v-if="currentView === 'date'" type="button"
-                                                @click="switchToMonthView" @keydown="onContainerButtonKeydown"
-                                                :class="cx('selectMonth')" :disabled="switchViewButtonDisabled"
-                                                :aria-label="$primevue.config.locale.chooseMonth"
-                                                v-bind="ptm('selectMonth')" data-pc-group-section="view">
-                                                {{ (new Date(1, month.month + 1, 1)).toLocaleDateString('fa', {
-                                                    month:
-                                                        'long'
-                                                }) }}
+                                            <button
+                                                v-if="currentView === 'date'"
+                                                type="button"
+                                                @click="switchToMonthView"
+                                                @keydown="
+                                                    onContainerButtonKeydown
+                                                "
+                                                :class="cx('selectMonth')"
+                                                :disabled="
+                                                    switchViewButtonDisabled
+                                                "
+                                                :aria-label="
+                                                    $primevue.config.locale
+                                                        .chooseMonth
+                                                "
+                                                v-bind="ptm('selectMonth')"
+                                                data-pc-group-section="view"
+                                            >
+                                                {{ getMonthName(month.month) }}
                                             </button>
-                                            <button v-if="currentView !== 'year'" type="button"
-                                                @click="switchToYearView" @keydown="onContainerButtonKeydown"
-                                                :class="cx('selectYear')" :disabled="switchViewButtonDisabled"
-                                                :aria-label="$primevue.config.locale.chooseYear"
-                                                v-bind="ptm('selectYear')" data-pc-group-section="view">
-                                                {{ (new Date(getYear(month) + 1, 1, 1)).toLocaleDateString('fa',
-                                                    { year: 'numeric' }) }}
+                                            <button
+                                                v-if="currentView !== 'year'"
+                                                type="button"
+                                                @click="switchToYearView"
+                                                @keydown="
+                                                    onContainerButtonKeydown
+                                                "
+                                                :class="cx('selectYear')"
+                                                :disabled="
+                                                    switchViewButtonDisabled
+                                                "
+                                                :aria-label="
+                                                    $primevue.config.locale
+                                                        .chooseYear
+                                                "
+                                                v-bind="ptm('selectYear')"
+                                                data-pc-group-section="view"
+                                            >
+                                                {{ getYear(month) }}
                                             </button>
                                         </template>
-                                        <span v-if="currentView === 'year'" :class="cx('decade')"
-                                            v-bind="ptm('decade')">
-                                            <slot name="decade" :years="yearPickerValues">
+                                        <span
+                                            v-if="currentView === 'year'"
+                                            :class="cx('decade')"
+                                            v-bind="ptm('decade')"
+                                        >
+                                            <slot
+                                                name="decade"
+                                                :years="yearPickerValues"
+                                            >
+                                                {{ yearPickerValues[0].value }}
+                                                -
                                                 {{
-                                                    (new Date(yearPickerValues[0].value + 1, 1, 1)).toLocaleDateString('fa',
-                                                        { year: 'numeric' })
-
-                                                }} - {{
-                                                    (new Date(yearPickerValues[yearPickerValues.length - 1].value + 1, 1,
-                                                        1)).toLocaleDateString('fa', { year: 'numeric' })
+                                                    yearPickerValues[
+                                                        yearPickerValues.length -
+                                                            1
+                                                    ].value
                                                 }}
                                             </slot>
                                         </span>
                                     </div>
-                                    <Button v-show="numberOfMonths === 1 ? true : groupIndex === numberOfMonths - 1"
-                                        :ref="nextButtonRef" :class="cx('pcNextButton')" :disabled="disabled"
-                                        :aria-label="currentView === 'year' ? $primevue.config.locale.nextDecade : currentView === 'month' ? $primevue.config.locale.nextYear : $primevue.config.locale.nextMonth"
-                                        :unstyled="unstyled" @click="onNextButtonClick"
-                                        @keydown="onContainerButtonKeydown" v-bind="navigatorButtonProps"
-                                        :pt="ptm('pcNextButton')" data-pc-group-section="navigator">
+                                    <Button
+                                        v-show="
+                                            numberOfMonths === 1
+                                                ? true
+                                                : groupIndex ===
+                                                  numberOfMonths - 1
+                                        "
+                                        :ref="nextButtonRef"
+                                        :class="cx('pcNextButton')"
+                                        :disabled="disabled"
+                                        :aria-label="
+                                            currentView === 'year'
+                                                ? $primevue.config.locale
+                                                      .nextDecade
+                                                : currentView === 'month'
+                                                  ? $primevue.config.locale
+                                                        .nextYear
+                                                  : $primevue.config.locale
+                                                        .nextMonth
+                                        "
+                                        :unstyled="unstyled"
+                                        @click="onNextButtonClick"
+                                        @keydown="onContainerButtonKeydown"
+                                        v-bind="navigatorButtonProps"
+                                        :pt="ptm('pcNextButton')"
+                                        data-pc-group-section="navigator"
+                                    >
                                         <template #icon="slotProps">
                                             <slot name="nexticon">
-                                                <component :is="nextIcon ? 'span' : 'ChevronRightIcon'"
-                                                    :class="[nextIcon, slotProps.class]"
-                                                    v-bind="ptm('pcNextButton')['icon']" />
+                                                <component
+                                                    :is="
+                                                        nextIcon
+                                                            ? 'span'
+                                                            : 'ChevronRightIcon'
+                                                    "
+                                                    :class="[
+                                                        nextIcon,
+                                                        slotProps.class,
+                                                    ]"
+                                                    v-bind="
+                                                        ptm('pcNextButton')[
+                                                            'icon'
+                                                        ]
+                                                    "
+                                                />
                                             </slot>
                                         </template>
                                     </Button>
                                 </div>
-                                <table v-if="currentView === 'date'" :class="cx('dayView')" role="grid"
-                                    v-bind="ptm('dayView')">
+                                <table
+                                    v-if="currentView === 'date'"
+                                    :class="cx('dayView')"
+                                    role="grid"
+                                    v-bind="ptm('dayView')"
+                                >
                                     <thead v-bind="ptm('tableHeader')">
                                         <tr v-bind="ptm('tableHeaderRow')">
-                                            <th v-if="showWeek" scope="col" :class="cx('weekHeader')"
-                                                v-bind="ptm('weekHeader', { context: { disabled: showWeek } })"
-                                                :data-p-disabled="showWeek" data-pc-group-section="tableheadercell">
+                                            <th
+                                                v-if="showWeek"
+                                                scope="col"
+                                                :class="cx('weekHeader')"
+                                                v-bind="
+                                                    ptm('weekHeader', {
+                                                        context: {
+                                                            disabled: showWeek,
+                                                        },
+                                                    })
+                                                "
+                                                :data-p-disabled="showWeek"
+                                                data-pc-group-section="tableheadercell"
+                                            >
                                                 <slot name="weekheaderlabel">
                                                     <span
-                                                        v-bind="ptm('weekHeaderLabel', { context: { disabled: showWeek } })"
-                                                        data-pc-group-section="tableheadercelllabel">
+                                                        v-bind="
+                                                            ptm(
+                                                                'weekHeaderLabel',
+                                                                {
+                                                                    context: {
+                                                                        disabled:
+                                                                            showWeek,
+                                                                    },
+                                                                }
+                                                            )
+                                                        "
+                                                        data-pc-group-section="tableheadercelllabel"
+                                                    >
                                                         {{ weekHeaderLabel }}
                                                     </span>
                                                 </slot>
                                             </th>
-                                            <th v-for="weekDay of weekDays" :key="weekDay" scope="col" :abbr="weekDay"
-                                                v-bind="ptm('tableHeaderCell')" data-pc-group-section="tableheadercell"
-                                                :class="cx('weekDayCell')">
-                                                <span :class="cx('weekDay')" v-bind="ptm('weekDay')"
-                                                    data-pc-group-section="tableheadercelllabel">{{ weekDay }}</span>
+                                            <th
+                                                v-for="weekDay of weekDays"
+                                                :key="weekDay"
+                                                scope="col"
+                                                :abbr="weekDay"
+                                                v-bind="ptm('tableHeaderCell')"
+                                                data-pc-group-section="tableheadercell"
+                                                :class="cx('weekDayCell')"
+                                            >
+                                                <span
+                                                    :class="cx('weekDay')"
+                                                    v-bind="ptm('weekDay')"
+                                                    data-pc-group-section="tableheadercelllabel"
+                                                    >{{ weekDay }}</span
+                                                >
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody v-bind="ptm('tableBody')">
-                                        <tr v-for="(week, i) of month.dates" :key="week[0].day + '' + week[0].month"
-                                            v-bind="ptm('tableBodyRow')">
-                                            <td v-if="showWeek" :class="cx('weekNumber')" v-bind="ptm('weekNumber')"
-                                                data-pc-group-section="tablebodycell">
-                                                <span :class="cx('weekLabelContainer')"
-                                                    v-bind="ptm('weekLabelContainer', { context: { disabled: showWeek } })"
+                                        <tr
+                                            v-for="(week, i) of month.dates"
+                                            :key="
+                                                week[0].day + '' + week[0].month
+                                            "
+                                            v-bind="ptm('tableBodyRow')"
+                                        >
+                                            <td
+                                                v-if="showWeek"
+                                                :class="cx('weekNumber')"
+                                                v-bind="ptm('weekNumber')"
+                                                data-pc-group-section="tablebodycell"
+                                            >
+                                                <span
+                                                    :class="
+                                                        cx('weekLabelContainer')
+                                                    "
+                                                    v-bind="
+                                                        ptm(
+                                                            'weekLabelContainer',
+                                                            {
+                                                                context: {
+                                                                    disabled:
+                                                                        showWeek,
+                                                                },
+                                                            }
+                                                        )
+                                                    "
                                                     :data-p-disabled="showWeek"
-                                                    data-pc-group-section="tablebodycelllabel">
-                                                    <slot name="weeklabel" :weekNumber="month.weekNumbers[i]">
-                                                        <span v-if="month.weekNumbers[i] < 10"
-                                                            style="visibility: hidden"
-                                                            v-bind="ptm('weekLabel')">0</span>
-                                                        {{ month.weekNumbers[i] }}
+                                                    data-pc-group-section="tablebodycelllabel"
+                                                >
+                                                    <slot
+                                                        name="weeklabel"
+                                                        :weekNumber="
+                                                            month.weekNumbers[i]
+                                                        "
+                                                    >
+                                                        <span
+                                                            v-if="
+                                                                month
+                                                                    .weekNumbers[
+                                                                    i
+                                                                ] < 10
+                                                            "
+                                                            style="
+                                                                visibility: hidden;
+                                                            "
+                                                            v-bind="
+                                                                ptm('weekLabel')
+                                                            "
+                                                            >0</span
+                                                        >
+                                                        {{
+                                                            month.weekNumbers[i]
+                                                        }}
                                                     </slot>
                                                 </span>
                                             </td>
-                                            <td v-for="date of week" :key="date.day + '' + date.month"
-                                                :aria-label="date.day" :class="cx('dayCell', { date })" v-bind="ptm('dayCell', {
-                                                    context: {
-                                                        date,
-                                                        today: date.today,
-                                                        otherMonth: date.otherMonth,
-                                                        selected: isSelected(date),
-                                                        disabled: !date.selectable
-                                                    }
-                                                })
-                                                    " :data-p-today="date.today" :data-p-other-month="date.otherMonth"
-                                                data-pc-group-section="tablebodycell">
-                                                <span v-if="showOtherMonths || !date.otherMonth" v-ripple
-                                                    :class="cx('day', { date })" @click="onDateSelect($event, date)"
-                                                    draggable="false"
-                                                    @keydown="onDateCellKeydown($event, date, groupIndex)"
-                                                    :aria-selected="isSelected(date)" :aria-disabled="!date.selectable"
-                                                    v-bind="ptm('day', {
+                                            <td
+                                                v-for="date of week"
+                                                :key="
+                                                    date.day + '' + date.month
+                                                "
+                                                :aria-label="date.day"
+                                                :class="cx('dayCell', { date })"
+                                                v-bind="
+                                                    ptm('dayCell', {
                                                         context: {
                                                             date,
                                                             today: date.today,
-                                                            otherMonth: date.otherMonth,
-                                                            selected: isSelected(date),
-                                                            disabled: !date.selectable
-                                                        }
+                                                            otherMonth:
+                                                                date.otherMonth,
+                                                            selected:
+                                                                isSelected(
+                                                                    date
+                                                                ),
+                                                            disabled:
+                                                                !date.selectable,
+                                                        },
                                                     })
-                                                        " :data-p-disabled="!date.selectable"
-                                                    :data-p-selected="isSelected(date)"
-                                                    data-pc-group-section="tablebodycelllabel">
-                                                    <slot name="date" :date="date">{{ date.day }}</slot>
+                                                "
+                                                :data-p-today="date.today"
+                                                :data-p-other-month="
+                                                    date.otherMonth
+                                                "
+                                                data-pc-group-section="tablebodycell"
+                                            >
+                                                <span
+                                                    v-if="
+                                                        showOtherMonths ||
+                                                        !date.otherMonth
+                                                    "
+                                                    v-ripple
+                                                    :class="cx('day', { date })"
+                                                    @click="
+                                                        onDateSelect(
+                                                            $event,
+                                                            date
+                                                        )
+                                                    "
+                                                    draggable="false"
+                                                    @keydown="
+                                                        onDateCellKeydown(
+                                                            $event,
+                                                            date,
+                                                            groupIndex
+                                                        )
+                                                    "
+                                                    :aria-selected="
+                                                        isSelected(date)
+                                                    "
+                                                    :aria-disabled="
+                                                        !date.selectable
+                                                    "
+                                                    v-bind="
+                                                        ptm('day', {
+                                                            context: {
+                                                                date,
+                                                                today: date.today,
+                                                                otherMonth:
+                                                                    date.otherMonth,
+                                                                selected:
+                                                                    isSelected(
+                                                                        date
+                                                                    ),
+                                                                disabled:
+                                                                    !date.selectable,
+                                                            },
+                                                        })
+                                                    "
+                                                    :data-p-disabled="
+                                                        !date.selectable
+                                                    "
+                                                    :data-p-selected="
+                                                        isSelected(date)
+                                                    "
+                                                    data-pc-group-section="tablebodycelllabel"
+                                                >
+                                                    <slot
+                                                        name="date"
+                                                        :date="date"
+                                                        >{{ date.day }}</slot
+                                                    >
                                                 </span>
-                                                <div v-if="isSelected(date)" class="p-hidden-accessible"
-                                                    aria-live="polite" v-bind="ptm('hiddenSelectedDay')"
-                                                    :data-p-hidden-accessible="true">
+                                                <div
+                                                    v-if="isSelected(date)"
+                                                    class="p-hidden-accessible"
+                                                    aria-live="polite"
+                                                    v-bind="
+                                                        ptm('hiddenSelectedDay')
+                                                    "
+                                                    :data-p-hidden-accessible="
+                                                        true
+                                                    "
+                                                >
                                                     {{ date.day }}
                                                 </div>
                                             </td>
@@ -201,226 +551,550 @@
                                 </table>
                             </div>
                         </div>
-                        <div v-if="currentView === 'month'" :class="cx('monthView')" v-bind="ptm('monthView')">
-                            <span v-for="(m, i) of monthPickerValues" :key="m" v-ripple
-                                @click="onMonthSelect($event, { month: m, index: i })"
-                                @keydown="onMonthCellKeydown($event, { month: m, index: i })"
-                                :class="cx('month', { month: m, index: i })" v-bind="ptm('month', {
-                                    context: {
+                        <div
+                            v-if="currentView === 'month'"
+                            :class="cx('monthView')"
+                            v-bind="ptm('monthView')"
+                        >
+                            <span
+                                v-for="(m, i) of monthPickerValues"
+                                :key="m"
+                                v-ripple
+                                @click="
+                                    onMonthSelect($event, {
                                         month: m,
-                                        monthIndex: i,
-                                        selected: isMonthSelected(i),
-                                        disabled: !m.selectable
-                                    }
-                                })
-                                    " :style="`order: ${i < 2 ? i + 9 : i - 3}`" :data-p-disabled="!m.selectable"
-                                :data-p-selected="isMonthSelected(i)">
-                                {{ (new Date(1, i + 1, 1)).toLocaleDateString('fa', { month: 'long' }) }}
-                                <div v-if="isMonthSelected(i)" class="p-hidden-accessible" aria-live="polite"
-                                    v-bind="ptm('hiddenMonth')" :data-p-hidden-accessible="true">
+                                        index: i,
+                                    })
+                                "
+                                @keydown="
+                                    onMonthCellKeydown($event, {
+                                        month: m,
+                                        index: i,
+                                    })
+                                "
+                                :class="cx('month', { month: m, index: i })"
+                                v-bind="
+                                    ptm('month', {
+                                        context: {
+                                            month: m,
+                                            monthIndex: i,
+                                            selected: isMonthSelected(i),
+                                            disabled: !m.selectable,
+                                        },
+                                    })
+                                "
+                                :data-p-disabled="!m.selectable"
+                                :data-p-selected="isMonthSelected(i)"
+                            >
+                                {{ m.value }}
+                                <div
+                                    v-if="isMonthSelected(i)"
+                                    class="p-hidden-accessible"
+                                    aria-live="polite"
+                                    v-bind="ptm('hiddenMonth')"
+                                    :data-p-hidden-accessible="true"
+                                >
                                     {{ m.value }}
                                 </div>
                             </span>
                         </div>
-                        <div v-if="currentView === 'year'" :class="cx('yearView')" v-bind="ptm('yearView')">
-                            <span v-for="y of yearPickerValues" :key="y.value" v-ripple @click="onYearSelect($event, y)"
-                                @keydown="onYearCellKeydown($event, y)" :class="cx('year', { year: y })" v-bind="ptm('year', {
-                                    context: {
-                                        year: y,
-                                        selected: isYearSelected(y.value),
-                                        disabled: !y.selectable
-                                    }
-                                })
-                                    " :data-p-disabled="!y.selectable" :data-p-selected="isYearSelected(y.value)">
-                                {{ (new Date(y.value + 1, 1, 1)).toLocaleDateString('fa', { year: 'numeric' }) }}
-                                <div v-if="isYearSelected(y.value)" class="p-hidden-accessible" aria-live="polite"
-                                    v-bind="ptm('hiddenYear')" :data-p-hidden-accessible="true">
+                        <div
+                            v-if="currentView === 'year'"
+                            :class="cx('yearView')"
+                            v-bind="ptm('yearView')"
+                        >
+                            <span
+                                v-for="y of yearPickerValues"
+                                :key="y.value"
+                                v-ripple
+                                @click="onYearSelect($event, y)"
+                                @keydown="onYearCellKeydown($event, y)"
+                                :class="cx('year', { year: y })"
+                                v-bind="
+                                    ptm('year', {
+                                        context: {
+                                            year: y,
+                                            selected: isYearSelected(y.value),
+                                            disabled: !y.selectable,
+                                        },
+                                    })
+                                "
+                                :data-p-disabled="!y.selectable"
+                                :data-p-selected="isYearSelected(y.value)"
+                            >
+                                {{ y.value }}
+                                <div
+                                    v-if="isYearSelected(y.value)"
+                                    class="p-hidden-accessible"
+                                    aria-live="polite"
+                                    v-bind="ptm('hiddenYear')"
+                                    :data-p-hidden-accessible="true"
+                                >
                                     {{ y.value }}
                                 </div>
                             </span>
                         </div>
                     </template>
-                    <div v-if="(showTime || timeOnly) && currentView === 'date'" :class="cx('timePicker')"
-                        v-bind="ptm('timePicker')">
-                        <div :class="cx('hourPicker')" v-bind="ptm('hourPicker')"
-                            data-pc-group-section="timepickerContainer">
-                            <Button :class="cx('pcIncrementButton')" :aria-label="$primevue.config.locale.nextHour"
-                                :unstyled="unstyled" @mousedown="onTimePickerElementMouseDown($event, 0, 1)"
-                                @mouseup="onTimePickerElementMouseUp($event)" @keydown="onContainerButtonKeydown"
+                    <div
+                        v-if="(showTime || timeOnly) && currentView === 'date'"
+                        :class="cx('timePicker')"
+                        v-bind="ptm('timePicker')"
+                    >
+                        <div
+                            :class="cx('hourPicker')"
+                            v-bind="ptm('hourPicker')"
+                            data-pc-group-section="timepickerContainer"
+                        >
+                            <Button
+                                :class="cx('pcIncrementButton')"
+                                :aria-label="$primevue.config.locale.nextHour"
+                                :unstyled="unstyled"
+                                @mousedown="
+                                    onTimePickerElementMouseDown($event, 0, 1)
+                                "
+                                @mouseup="onTimePickerElementMouseUp($event)"
+                                @keydown="onContainerButtonKeydown"
                                 @mouseleave="onTimePickerElementMouseLeave()"
-                                @keydown.enter="onTimePickerElementMouseDown($event, 0, 1)"
-                                @keydown.space="onTimePickerElementMouseDown($event, 0, 1)"
-                                @keyup.enter="onTimePickerElementMouseUp($event)"
-                                @keyup.space="onTimePickerElementMouseUp($event)" v-bind="timepickerButtonProps"
-                                :pt="ptm('pcIncrementButton')" data-pc-group-section="timepickerbutton">
+                                @keydown.enter="
+                                    onTimePickerElementMouseDown($event, 0, 1)
+                                "
+                                @keydown.space="
+                                    onTimePickerElementMouseDown($event, 0, 1)
+                                "
+                                @keyup.enter="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                @keyup.space="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                v-bind="timepickerButtonProps"
+                                :pt="ptm('pcIncrementButton')"
+                                data-pc-group-section="timepickerbutton"
+                            >
                                 <template #icon="slotProps">
                                     <slot name="incrementicon">
-                                        <component :is="incrementIcon ? 'span' : 'ChevronUpIcon'"
-                                            :class="[incrementIcon, slotProps.class]"
-                                            v-bind="ptm('pcIncrementButton')['icon']"
-                                            data-pc-group-section="timepickerlabel" />
+                                        <component
+                                            :is="
+                                                incrementIcon
+                                                    ? 'span'
+                                                    : 'ChevronUpIcon'
+                                            "
+                                            :class="[
+                                                incrementIcon,
+                                                slotProps.class,
+                                            ]"
+                                            v-bind="
+                                                ptm('pcIncrementButton')['icon']
+                                            "
+                                            data-pc-group-section="timepickerlabel"
+                                        />
                                     </slot>
                                 </template>
                             </Button>
-                            <span v-bind="ptm('hour')" data-pc-group-section="timepickerlabel">{{ formattedCurrentHour
-                                }}</span>
-                            <Button :class="cx('pcDecrementButton')" :aria-label="$primevue.config.locale.prevHour"
-                                :unstyled="unstyled" @mousedown="onTimePickerElementMouseDown($event, 0, -1)"
-                                @mouseup="onTimePickerElementMouseUp($event)" @keydown="onContainerButtonKeydown"
+                            <span
+                                v-bind="ptm('hour')"
+                                data-pc-group-section="timepickerlabel"
+                                >{{ formattedCurrentHour }}</span
+                            >
+                            <Button
+                                :class="cx('pcDecrementButton')"
+                                :aria-label="$primevue.config.locale.prevHour"
+                                :unstyled="unstyled"
+                                @mousedown="
+                                    onTimePickerElementMouseDown($event, 0, -1)
+                                "
+                                @mouseup="onTimePickerElementMouseUp($event)"
+                                @keydown="onContainerButtonKeydown"
                                 @mouseleave="onTimePickerElementMouseLeave()"
-                                @keydown.enter="onTimePickerElementMouseDown($event, 0, -1)"
-                                @keydown.space="onTimePickerElementMouseDown($event, 0, -1)"
-                                @keyup.enter="onTimePickerElementMouseUp($event)"
-                                @keyup.space="onTimePickerElementMouseUp($event)" v-bind="timepickerButtonProps"
-                                :pt="ptm('pcDecrementButton')" data-pc-group-section="timepickerbutton">
+                                @keydown.enter="
+                                    onTimePickerElementMouseDown($event, 0, -1)
+                                "
+                                @keydown.space="
+                                    onTimePickerElementMouseDown($event, 0, -1)
+                                "
+                                @keyup.enter="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                @keyup.space="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                v-bind="timepickerButtonProps"
+                                :pt="ptm('pcDecrementButton')"
+                                data-pc-group-section="timepickerbutton"
+                            >
                                 <template #icon="slotProps">
                                     <slot name="decrementicon">
-                                        <component :is="decrementIcon ? 'span' : 'ChevronDownIcon'"
-                                            :class="[decrementIcon, slotProps.class]"
-                                            v-bind="ptm('pcDecrementButton')['icon']"
-                                            data-pc-group-section="timepickerlabel" />
+                                        <component
+                                            :is="
+                                                decrementIcon
+                                                    ? 'span'
+                                                    : 'ChevronDownIcon'
+                                            "
+                                            :class="[
+                                                decrementIcon,
+                                                slotProps.class,
+                                            ]"
+                                            v-bind="
+                                                ptm('pcDecrementButton')['icon']
+                                            "
+                                            data-pc-group-section="timepickerlabel"
+                                        />
                                     </slot>
                                 </template>
                             </Button>
                         </div>
-                        <div v-bind="ptm('separatorContainer')" data-pc-group-section="timepickerContainer">
-                            <span v-bind="ptm('separator')" data-pc-group-section="timepickerlabel">{{ timeSeparator
-                                }}</span>
+                        <div
+                            v-bind="ptm('separatorContainer')"
+                            data-pc-group-section="timepickerContainer"
+                        >
+                            <span
+                                v-bind="ptm('separator')"
+                                data-pc-group-section="timepickerlabel"
+                                >{{ timeSeparator }}</span
+                            >
                         </div>
-                        <div :class="cx('minutePicker')" v-bind="ptm('minutePicker')"
-                            data-pc-group-section="timepickerContainer">
-                            <Button :class="cx('pcIncrementButton')" :aria-label="$primevue.config.locale.nextMinute"
-                                :disabled="disabled" :unstyled="unstyled"
-                                @mousedown="onTimePickerElementMouseDown($event, 1, 1)"
-                                @mouseup="onTimePickerElementMouseUp($event)" @keydown="onContainerButtonKeydown"
+                        <div
+                            :class="cx('minutePicker')"
+                            v-bind="ptm('minutePicker')"
+                            data-pc-group-section="timepickerContainer"
+                        >
+                            <Button
+                                :class="cx('pcIncrementButton')"
+                                :aria-label="$primevue.config.locale.nextMinute"
+                                :disabled="disabled"
+                                :unstyled="unstyled"
+                                @mousedown="
+                                    onTimePickerElementMouseDown($event, 1, 1)
+                                "
+                                @mouseup="onTimePickerElementMouseUp($event)"
+                                @keydown="onContainerButtonKeydown"
                                 @mouseleave="onTimePickerElementMouseLeave()"
-                                @keydown.enter="onTimePickerElementMouseDown($event, 1, 1)"
-                                @keydown.space="onTimePickerElementMouseDown($event, 1, 1)"
-                                @keyup.enter="onTimePickerElementMouseUp($event)"
-                                @keyup.space="onTimePickerElementMouseUp($event)" v-bind="timepickerButtonProps"
-                                :pt="ptm('pcIncrementButton')" data-pc-group-section="timepickerbutton">
+                                @keydown.enter="
+                                    onTimePickerElementMouseDown($event, 1, 1)
+                                "
+                                @keydown.space="
+                                    onTimePickerElementMouseDown($event, 1, 1)
+                                "
+                                @keyup.enter="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                @keyup.space="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                v-bind="timepickerButtonProps"
+                                :pt="ptm('pcIncrementButton')"
+                                data-pc-group-section="timepickerbutton"
+                            >
                                 <template #icon="slotProps">
                                     <slot name="incrementicon">
-                                        <component :is="incrementIcon ? 'span' : 'ChevronUpIcon'"
-                                            :class="[incrementIcon, slotProps.class]"
-                                            v-bind="ptm('pcIncrementButton')['icon']"
-                                            data-pc-group-section="timepickerlabel" />
+                                        <component
+                                            :is="
+                                                incrementIcon
+                                                    ? 'span'
+                                                    : 'ChevronUpIcon'
+                                            "
+                                            :class="[
+                                                incrementIcon,
+                                                slotProps.class,
+                                            ]"
+                                            v-bind="
+                                                ptm('pcIncrementButton')['icon']
+                                            "
+                                            data-pc-group-section="timepickerlabel"
+                                        />
                                     </slot>
                                 </template>
                             </Button>
-                            <span v-bind="ptm('minute')" data-pc-group-section="timepickerlabel">{{
-                                formattedCurrentMinute }}</span>
-                            <Button :class="cx('pcDecrementButton')" :aria-label="$primevue.config.locale.prevMinute"
-                                :disabled="disabled" @mousedown="onTimePickerElementMouseDown($event, 1, -1)"
-                                @mouseup="onTimePickerElementMouseUp($event)" @keydown="onContainerButtonKeydown"
+                            <span
+                                v-bind="ptm('minute')"
+                                data-pc-group-section="timepickerlabel"
+                                >{{ formattedCurrentMinute }}</span
+                            >
+                            <Button
+                                :class="cx('pcDecrementButton')"
+                                :aria-label="$primevue.config.locale.prevMinute"
+                                :disabled="disabled"
+                                @mousedown="
+                                    onTimePickerElementMouseDown($event, 1, -1)
+                                "
+                                @mouseup="onTimePickerElementMouseUp($event)"
+                                @keydown="onContainerButtonKeydown"
                                 @mouseleave="onTimePickerElementMouseLeave()"
-                                @keydown.enter="onTimePickerElementMouseDown($event, 1, -1)"
-                                @keydown.space="onTimePickerElementMouseDown($event, 1, -1)"
-                                @keyup.enter="onTimePickerElementMouseUp($event)"
-                                @keyup.space="onTimePickerElementMouseUp($event)" v-bind="timepickerButtonProps"
-                                :pt="ptm('pcDecrementButton')" data-pc-group-section="timepickerbutton">
+                                @keydown.enter="
+                                    onTimePickerElementMouseDown($event, 1, -1)
+                                "
+                                @keydown.space="
+                                    onTimePickerElementMouseDown($event, 1, -1)
+                                "
+                                @keyup.enter="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                @keyup.space="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                v-bind="timepickerButtonProps"
+                                :pt="ptm('pcDecrementButton')"
+                                data-pc-group-section="timepickerbutton"
+                            >
                                 <template #icon="slotProps">
                                     <slot name="decrementicon">
-                                        <component :is="decrementIcon ? 'span' : 'ChevronDownIcon'"
-                                            :class="[decrementIcon, slotProps.class]"
-                                            v-bind="ptm('pcDecrementButton')['icon']"
-                                            data-pc-group-section="timepickerlabel" />
+                                        <component
+                                            :is="
+                                                decrementIcon
+                                                    ? 'span'
+                                                    : 'ChevronDownIcon'
+                                            "
+                                            :class="[
+                                                decrementIcon,
+                                                slotProps.class,
+                                            ]"
+                                            v-bind="
+                                                ptm('pcDecrementButton')['icon']
+                                            "
+                                            data-pc-group-section="timepickerlabel"
+                                        />
                                     </slot>
                                 </template>
                             </Button>
                         </div>
-                        <div v-if="showSeconds" :class="cx('separatorContainer')" v-bind="ptm('separatorContainer')"
-                            data-pc-group-section="timepickerContainer">
-                            <span v-bind="ptm('separator')" data-pc-group-section="timepickerlabel">{{ timeSeparator
-                                }}</span>
+                        <div
+                            v-if="showSeconds"
+                            :class="cx('separatorContainer')"
+                            v-bind="ptm('separatorContainer')"
+                            data-pc-group-section="timepickerContainer"
+                        >
+                            <span
+                                v-bind="ptm('separator')"
+                                data-pc-group-section="timepickerlabel"
+                                >{{ timeSeparator }}</span
+                            >
                         </div>
-                        <div v-if="showSeconds" :class="cx('secondPicker')" v-bind="ptm('secondPicker')"
-                            data-pc-group-section="timepickerContainer">
-                            <Button :class="cx('pcIncrementButton')" :aria-label="$primevue.config.locale.nextSecond"
-                                :disabled="disabled" :unstyled="unstyled"
-                                @mousedown="onTimePickerElementMouseDown($event, 2, 1)"
-                                @mouseup="onTimePickerElementMouseUp($event)" @keydown="onContainerButtonKeydown"
+                        <div
+                            v-if="showSeconds"
+                            :class="cx('secondPicker')"
+                            v-bind="ptm('secondPicker')"
+                            data-pc-group-section="timepickerContainer"
+                        >
+                            <Button
+                                :class="cx('pcIncrementButton')"
+                                :aria-label="$primevue.config.locale.nextSecond"
+                                :disabled="disabled"
+                                :unstyled="unstyled"
+                                @mousedown="
+                                    onTimePickerElementMouseDown($event, 2, 1)
+                                "
+                                @mouseup="onTimePickerElementMouseUp($event)"
+                                @keydown="onContainerButtonKeydown"
                                 @mouseleave="onTimePickerElementMouseLeave()"
-                                @keydown.enter="onTimePickerElementMouseDown($event, 2, 1)"
-                                @keydown.space="onTimePickerElementMouseDown($event, 2, 1)"
-                                @keyup.enter="onTimePickerElementMouseUp($event)"
-                                @keyup.space="onTimePickerElementMouseUp($event)" v-bind="timepickerButtonProps"
-                                :pt="ptm('pcIncrementButton')" data-pc-group-section="timepickerbutton">
+                                @keydown.enter="
+                                    onTimePickerElementMouseDown($event, 2, 1)
+                                "
+                                @keydown.space="
+                                    onTimePickerElementMouseDown($event, 2, 1)
+                                "
+                                @keyup.enter="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                @keyup.space="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                v-bind="timepickerButtonProps"
+                                :pt="ptm('pcIncrementButton')"
+                                data-pc-group-section="timepickerbutton"
+                            >
                                 <template #icon="slotProps">
                                     <slot name="incrementicon">
-                                        <component :is="incrementIcon ? 'span' : 'ChevronUpIcon'"
-                                            :class="[incrementIcon, slotProps.class]"
-                                            v-bind="ptm('pcIncrementButton')['icon']"
-                                            data-pc-group-section="timepickerlabel" />
+                                        <component
+                                            :is="
+                                                incrementIcon
+                                                    ? 'span'
+                                                    : 'ChevronUpIcon'
+                                            "
+                                            :class="[
+                                                incrementIcon,
+                                                slotProps.class,
+                                            ]"
+                                            v-bind="
+                                                ptm('pcIncrementButton')['icon']
+                                            "
+                                            data-pc-group-section="timepickerlabel"
+                                        />
                                     </slot>
                                 </template>
                             </Button>
-                            <span v-bind="ptm('second')" data-pc-group-section="timepickerlabel">{{
-                                formattedCurrentSecond }}</span>
-                            <Button :class="cx('pcDecrementButton')" :aria-label="$primevue.config.locale.prevSecond"
-                                :disabled="disabled" :unstyled="unstyled"
-                                @mousedown="onTimePickerElementMouseDown($event, 2, -1)"
-                                @mouseup="onTimePickerElementMouseUp($event)" @keydown="onContainerButtonKeydown"
+                            <span
+                                v-bind="ptm('second')"
+                                data-pc-group-section="timepickerlabel"
+                                >{{ formattedCurrentSecond }}</span
+                            >
+                            <Button
+                                :class="cx('pcDecrementButton')"
+                                :aria-label="$primevue.config.locale.prevSecond"
+                                :disabled="disabled"
+                                :unstyled="unstyled"
+                                @mousedown="
+                                    onTimePickerElementMouseDown($event, 2, -1)
+                                "
+                                @mouseup="onTimePickerElementMouseUp($event)"
+                                @keydown="onContainerButtonKeydown"
                                 @mouseleave="onTimePickerElementMouseLeave()"
-                                @keydown.enter="onTimePickerElementMouseDown($event, 2, -1)"
-                                @keydown.space="onTimePickerElementMouseDown($event, 2, -1)"
-                                @keyup.enter="onTimePickerElementMouseUp($event)"
-                                @keyup.space="onTimePickerElementMouseUp($event)" v-bind="timepickerButtonProps"
-                                :pt="ptm('pcDecrementButton')" data-pc-group-section="timepickerbutton">
+                                @keydown.enter="
+                                    onTimePickerElementMouseDown($event, 2, -1)
+                                "
+                                @keydown.space="
+                                    onTimePickerElementMouseDown($event, 2, -1)
+                                "
+                                @keyup.enter="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                @keyup.space="
+                                    onTimePickerElementMouseUp($event)
+                                "
+                                v-bind="timepickerButtonProps"
+                                :pt="ptm('pcDecrementButton')"
+                                data-pc-group-section="timepickerbutton"
+                            >
                                 <template #icon="slotProps">
                                     <slot name="decrementicon">
-                                        <component :is="decrementIcon ? 'span' : 'ChevronDownIcon'"
-                                            :class="[decrementIcon, slotProps.class]"
-                                            v-bind="ptm('pcDecrementButton')['icon']"
-                                            data-pc-group-section="timepickerlabel" />
+                                        <component
+                                            :is="
+                                                decrementIcon
+                                                    ? 'span'
+                                                    : 'ChevronDownIcon'
+                                            "
+                                            :class="[
+                                                decrementIcon,
+                                                slotProps.class,
+                                            ]"
+                                            v-bind="
+                                                ptm('pcDecrementButton')['icon']
+                                            "
+                                            data-pc-group-section="timepickerlabel"
+                                        />
                                     </slot>
                                 </template>
                             </Button>
                         </div>
-                        <div v-if="hourFormat == '12'" :class="cx('separatorContainer')"
-                            v-bind="ptm('separatorContainer')" data-pc-group-section="timepickerContainer">
-                            <span v-bind="ptm('separator')" data-pc-group-section="timepickerlabel">{{ timeSeparator
-                                }}</span>
+                        <div
+                            v-if="hourFormat == '12'"
+                            :class="cx('separatorContainer')"
+                            v-bind="ptm('separatorContainer')"
+                            data-pc-group-section="timepickerContainer"
+                        >
+                            <span
+                                v-bind="ptm('separator')"
+                                data-pc-group-section="timepickerlabel"
+                                >{{ timeSeparator }}</span
+                            >
                         </div>
-                        <div v-if="hourFormat == '12'" :class="cx('ampmPicker')" v-bind="ptm('ampmPicker')">
-                            <Button :class="cx('pcIncrementButton')" :aria-label="$primevue.config.locale.am"
-                                :disabled="disabled" :unstyled="unstyled" @click="toggleAMPM($event)"
-                                @keydown="onContainerButtonKeydown" v-bind="timepickerButtonProps"
-                                :pt="ptm('pcIncrementButton')" data-pc-group-section="timepickerbutton">
+                        <div
+                            v-if="hourFormat == '12'"
+                            :class="cx('ampmPicker')"
+                            v-bind="ptm('ampmPicker')"
+                        >
+                            <Button
+                                :class="cx('pcIncrementButton')"
+                                :aria-label="$primevue.config.locale.am"
+                                :disabled="disabled"
+                                :unstyled="unstyled"
+                                @click="toggleAMPM($event)"
+                                @keydown="onContainerButtonKeydown"
+                                v-bind="timepickerButtonProps"
+                                :pt="ptm('pcIncrementButton')"
+                                data-pc-group-section="timepickerbutton"
+                            >
                                 <template #icon="slotProps">
-                                    <slot name="incrementicon" :class="cx('incrementIcon')">
-                                        <component :is="incrementIcon ? 'span' : 'ChevronUpIcon'"
-                                            :class="[cx('incrementIcon'), slotProps.class]"
-                                            v-bind="ptm('pcIncrementButton')['icon']"
-                                            data-pc-group-section="timepickerlabel" />
+                                    <slot
+                                        name="incrementicon"
+                                        :class="cx('incrementIcon')"
+                                    >
+                                        <component
+                                            :is="
+                                                incrementIcon
+                                                    ? 'span'
+                                                    : 'ChevronUpIcon'
+                                            "
+                                            :class="[
+                                                cx('incrementIcon'),
+                                                slotProps.class,
+                                            ]"
+                                            v-bind="
+                                                ptm('pcIncrementButton')['icon']
+                                            "
+                                            data-pc-group-section="timepickerlabel"
+                                        />
                                     </slot>
                                 </template>
                             </Button>
-                            <span v-bind="ptm('ampm')" data-pc-group-section="timepickerlabel">{{ pm ?
-                                $primevue.config.locale.pm :
-                                $primevue.config.locale.am }}</span>
-                            <Button :class="cx('pcDecrementButton')" :aria-label="$primevue.config.locale.pm"
-                                :disabled="disabled" @click="toggleAMPM($event)" @keydown="onContainerButtonKeydown"
-                                v-bind="timepickerButtonProps" :pt="ptm('pcDecrementButton')"
-                                data-pc-group-section="timepickerbutton">
+                            <span
+                                v-bind="ptm('ampm')"
+                                data-pc-group-section="timepickerlabel"
+                                >{{
+                                    pm
+                                        ? $primevue.config.locale.pm
+                                        : $primevue.config.locale.am
+                                }}</span
+                            >
+                            <Button
+                                :class="cx('pcDecrementButton')"
+                                :aria-label="$primevue.config.locale.pm"
+                                :disabled="disabled"
+                                @click="toggleAMPM($event)"
+                                @keydown="onContainerButtonKeydown"
+                                v-bind="timepickerButtonProps"
+                                :pt="ptm('pcDecrementButton')"
+                                data-pc-group-section="timepickerbutton"
+                            >
                                 <template #icon="slotProps">
-                                    <slot name="decrementicon" :class="cx('decrementIcon')">
-                                        <component :is="decrementIcon ? 'span' : 'ChevronDownIcon'"
-                                            :class="[cx('decrementIcon'), slotProps.class]"
-                                            v-bind="ptm('pcDecrementButton')['icon']"
-                                            data-pc-group-section="timepickerlabel" />
+                                    <slot
+                                        name="decrementicon"
+                                        :class="cx('decrementIcon')"
+                                    >
+                                        <component
+                                            :is="
+                                                decrementIcon
+                                                    ? 'span'
+                                                    : 'ChevronDownIcon'
+                                            "
+                                            :class="[
+                                                cx('decrementIcon'),
+                                                slotProps.class,
+                                            ]"
+                                            v-bind="
+                                                ptm('pcDecrementButton')['icon']
+                                            "
+                                            data-pc-group-section="timepickerlabel"
+                                        />
                                     </slot>
                                 </template>
                             </Button>
                         </div>
                     </div>
-                    <div v-if="showButtonBar" :class="cx('buttonbar')" v-bind="ptm('buttonbar')">
-                        <Button :label="todayLabel" @click="onTodayButtonClick($event)" :class="cx('pcTodayButton')"
-                            :unstyled="unstyled" @keydown="onContainerButtonKeydown" v-bind="todayButtonProps"
-                            :pt="ptm('pcTodayButton')" data-pc-group-section="button" />
-                        <Button :label="clearLabel" @click="onClearButtonClick($event)" :class="cx('pcClearButton')"
-                            :unstyled="unstyled" @keydown="onContainerButtonKeydown" v-bind="clearButtonProps"
-                            :pt="ptm('pcClearButton')" data-pc-group-section="button" />
+                    <div
+                        v-if="showButtonBar"
+                        :class="cx('buttonbar')"
+                        v-bind="ptm('buttonbar')"
+                    >
+                        <Button
+                            :label="todayLabel"
+                            @click="onTodayButtonClick($event)"
+                            :class="cx('pcTodayButton')"
+                            :unstyled="unstyled"
+                            @keydown="onContainerButtonKeydown"
+                            v-bind="todayButtonProps"
+                            :pt="ptm('pcTodayButton')"
+                            data-pc-group-section="button"
+                        />
+                        <Button
+                            :label="clearLabel"
+                            @click="onClearButtonClick($event)"
+                            :class="cx('pcClearButton')"
+                            :unstyled="unstyled"
+                            @keydown="onContainerButtonKeydown"
+                            v-bind="clearButtonProps"
+                            :pt="ptm('pcClearButton')"
+                            data-pc-group-section="button"
+                        />
                     </div>
                     <slot name="footer"></slot>
                 </div>
@@ -430,30 +1104,137 @@
 </template>
 
 <script>
-import { absolutePosition, addStyle, find, findSingle, getAttribute, getFocusableElements, getIndex, getOuterWidth, isTouchDevice, relativePosition, setAttribute } from '@primeuix/utils/dom';
-import { localeComparator } from '@primeuix/utils/object';
-import { ZIndex } from '@primeuix/utils/zindex';
-import { ConnectedOverlayScrollHandler, UniqueComponentId } from '@primevue/core/utils';
-import CalendarIcon from '@primevue/icons/calendar';
-import ChevronDownIcon from '@primevue/icons/chevrondown';
-import ChevronLeftIcon from '@primevue/icons/chevronleft';
-import ChevronRightIcon from '@primevue/icons/chevronright';
-import ChevronUpIcon from '@primevue/icons/chevronup';
-import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
-import OverlayEventBus from 'primevue/overlayeventbus';
-import Portal from 'primevue/portal';
-import Ripple from 'primevue/ripple';
-import BaseInput from '@primevue/core/baseinput';
-import DatePickerStyle from 'primevue/datepicker/style';
+import moment from "moment-jalaali";
+import {
+    absolutePosition,
+    addStyle,
+    find,
+    findSingle,
+    getAttribute,
+    getFocusableElements,
+    getIndex,
+    getOuterWidth,
+    isTouchDevice,
+    relativePosition,
+    setAttribute,
+} from "@primeuix/utils/dom";
+import { localeComparator } from "@primeuix/utils/object";
+import { ZIndex } from "@primeuix/utils/zindex";
+import {
+    ConnectedOverlayScrollHandler,
+    UniqueComponentId,
+} from "@primevue/core/utils";
+import CalendarIcon from "@primevue/icons/calendar";
+import ChevronDownIcon from "@primevue/icons/chevrondown";
+import ChevronLeftIcon from "@primevue/icons/chevronleft";
+import ChevronRightIcon from "@primevue/icons/chevronright";
+import ChevronUpIcon from "@primevue/icons/chevronup";
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
+import OverlayEventBus from "primevue/overlayeventbus";
+import Portal from "primevue/portal";
+import Ripple from "primevue/ripple";
+import BaseInput from "@primevue/core/baseinput";
+import DatePickerStyle from "primevue/datepicker/style";
+
+class MyDate extends Date {
+    static type = "jalali";
+
+    constructor(...args) {
+        if (args.length == 3 && MyDate.type == "jalali") {
+            args[1]++;
+            const date = moment(args.join("-"), "jYYYY-jM-jDD");
+            args = date.format("YYYY-M-DD").split("-").map(Number);
+            args[1]--;    
+        }
+        super(...args);
+    }
+
+    getDate = () => {
+        if (MyDate.type == "jalali") {
+            return +moment(super.getTime()).format("jD");
+        } else return super.getDate();
+    };
+    getMonth = () => {
+        if (MyDate.type == "jalali") {
+            return +moment(super.getTime()).format("jM") - 1;
+        } else return super.getMonth();
+    };
+    getFullYear = () => {
+        if (MyDate.type == "jalali") {
+            return +moment(super.getTime()).format("jYYYY");
+        } else return super.getFullYear();
+    };
+    setDate = (date) => {
+        if (MyDate.type == "jalali") {
+            const year = this.getFullYear();
+            const month = this.getMonth();
+            date = +moment(`${year}-${month+1}-${date}`, "jYYYY-jMM-jDD").format(
+                "D"
+            );
+            super.setDate(date);
+        } else super.setDate(date);
+    };
+    setMonth = (month) => {
+        if (MyDate.type == "jalali") {
+            const year = this.getFullYear();
+            const date = this.getDate();
+            month = +moment(`${year}-${month + 1}-${date}`, "jYYYY-jM-jD").format(
+                "M"
+            );
+            super.setMonth(month - 1);
+        } else super.setMonth(month);
+    };
+    setFullYear = (year) => {
+        if (MyDate.type == "jalali") {
+            const month = this.getMonth();
+            const date = this.getDate();
+            const m = moment(`${year}-${month+1}-${date}`, "jYYYY-jM-jDD")
+            year = +m.format("YYYY");
+            
+            if(+m.format("M") < 3) year++
+            super.setFullYear(year);
+        } else super.setFullYear(year);
+    };
+    getMonthName = () => {
+        return super.toLocaleDateString(
+            MyDate.type == "jalali" ? "fa-IR" : undefined,
+            { month: "long" }
+        );
+    };
+
+    static getWeekdays = () => {
+        const date = new Date(1, 1, 1);
+        const formatter = new Intl.DateTimeFormat(
+            MyDate.type == "jalali" ? "fa-IR" : undefined,
+            { weekday: "narrow" }
+        );
+        return [...Array(7).keys()].map((i) => {
+            date.setDate(i + 1);
+            return formatter.format(date);
+        });
+    };
+}
 
 export default {
-    name: 'DatePicker',
+    name: "DatePicker",
     extends: BaseInput,
     inheritAttrs: false,
-    emits: ['show', 'hide', 'input', 'month-change', 'year-change', 'date-select', 'today-click', 'clear-click', 'focus', 'blur', 'keydown'],
+    emits: [
+        "show",
+        "hide",
+        "input",
+        "month-change",
+        "year-change",
+        "date-select",
+        "today-click",
+        "clear-click",
+        "focus",
+        "blur",
+        "keydown",
+    ],
     inject: {
-        $pcFluid: { default: null }
+        $pcFluid: { default: null },
     },
     navigationState: null,
     timePickerChange: false,
@@ -481,9 +1262,234 @@ export default {
             overlayVisible: false,
             currentView: this.view,
             query: null,
-            queryMatches: false
+            queryMatches: false,
         };
     },
+    props: {
+        type: {
+            type: String,
+            default: "jalali",
+            validator: (value) => ["gregorian", "jalali"].includes(value),
+        },
+        selectionMode: {
+            type: String,
+            default: "single",
+        },
+        dateFormat: {
+            type: String,
+            default: null,
+        },
+        inline: {
+            type: Boolean,
+            default: false,
+        },
+        showOtherMonths: {
+            type: Boolean,
+            default: true,
+        },
+        selectOtherMonths: {
+            type: Boolean,
+            default: false,
+        },
+        showIcon: {
+            type: Boolean,
+            default: false,
+        },
+        iconDisplay: {
+            type: String,
+            default: "button",
+        },
+        icon: {
+            type: String,
+            default: undefined,
+        },
+        prevIcon: {
+            type: String,
+            default: undefined,
+        },
+        nextIcon: {
+            type: String,
+            default: undefined,
+        },
+        incrementIcon: {
+            type: String,
+            default: undefined,
+        },
+        decrementIcon: {
+            type: String,
+            default: undefined,
+        },
+        numberOfMonths: {
+            type: Number,
+            default: 1,
+        },
+        responsiveOptions: Array,
+        breakpoint: {
+            type: String,
+            default: "769px",
+        },
+        view: {
+            type: String,
+            default: "date",
+        },
+        minDate: {
+            type: Date,
+            value: null,
+        },
+        maxDate: {
+            type: Date,
+            value: null,
+        },
+        disabledDates: {
+            type: Array,
+            value: null,
+        },
+        disabledDays: {
+            type: Array,
+            value: null,
+        },
+        maxDateCount: {
+            type: Number,
+            value: null,
+        },
+        showOnFocus: {
+            type: Boolean,
+            default: true,
+        },
+        autoZIndex: {
+            type: Boolean,
+            default: true,
+        },
+        baseZIndex: {
+            type: Number,
+            default: 0,
+        },
+        showButtonBar: {
+            type: Boolean,
+            default: false,
+        },
+        shortYearCutoff: {
+            type: String,
+            default: "+10",
+        },
+        showTime: {
+            type: Boolean,
+            default: false,
+        },
+        timeOnly: {
+            type: Boolean,
+            default: false,
+        },
+        hourFormat: {
+            type: String,
+            default: "24",
+        },
+        stepHour: {
+            type: Number,
+            default: 1,
+        },
+        stepMinute: {
+            type: Number,
+            default: 1,
+        },
+        stepSecond: {
+            type: Number,
+            default: 1,
+        },
+        showSeconds: {
+            type: Boolean,
+            default: false,
+        },
+        hideOnDateTimeSelect: {
+            type: Boolean,
+            default: false,
+        },
+        hideOnRangeSelection: {
+            type: Boolean,
+            default: false,
+        },
+        timeSeparator: {
+            type: String,
+            default: ":",
+        },
+        showWeek: {
+            type: Boolean,
+            default: false,
+        },
+        manualInput: {
+            type: Boolean,
+            default: true,
+        },
+        appendTo: {
+            type: [String, Object],
+            default: "body",
+        },
+        readonly: {
+            type: Boolean,
+            default: false,
+        },
+        placeholder: {
+            type: String,
+            default: null,
+        },
+        id: {
+            type: String,
+            default: null,
+        },
+        inputId: {
+            type: String,
+            default: null,
+        },
+        inputClass: {
+            type: [String, Object],
+            default: null,
+        },
+        inputStyle: {
+            type: Object,
+            default: null,
+        },
+        panelClass: {
+            type: [String, Object],
+            default: null,
+        },
+        panelStyle: {
+            type: Object,
+            default: null,
+        },
+        todayButtonProps: {
+            type: Object,
+            default() {
+                return { severity: "secondary", text: true, size: "small" };
+            },
+        },
+        clearButtonProps: {
+            type: Object,
+            default() {
+                return { severity: "secondary", text: true, size: "small" };
+            },
+        },
+        navigatorButtonProps: {
+            type: Object,
+            default() {
+                return { severity: "secondary", text: true, rounded: true };
+            },
+        },
+        timepickerButtonProps: {
+            type: Object,
+            default() {
+                return { severity: "secondary", text: true, rounded: true };
+            },
+        },
+        ariaLabelledby: {
+            type: String,
+            default: null,
+        },
+        ariaLabel: {
+            type: String,
+            default: null,
+        },
+    },
+    style: DatePickerStyle,
     watch: {
         id: function (newValue) {
             this.d_id = newValue || UniqueComponentId();
@@ -530,9 +1536,10 @@ export default {
         },
         view(newValue) {
             this.currentView = newValue;
-        }
+        },
     },
     created() {
+        MyDate.type = this.type;
         this.updateCurrentMetaData();
     },
     mounted() {
@@ -555,7 +1562,11 @@ export default {
             setTimeout(this.updateFocus, 0);
         }
 
-        if (this.input && this.selectionStart != null && this.selectionEnd != null) {
+        if (
+            this.input &&
+            this.selectionStart != null &&
+            this.selectionEnd != null
+        ) {
             this.input.selectionStart = this.selectionStart;
             this.input.selectionEnd = this.selectionEnd;
             this.selectionStart = null;
@@ -586,7 +1597,7 @@ export default {
     },
     methods: {
         isComparable() {
-            return this.d_value != null && typeof this.d_value !== 'string';
+            return this.d_value != null && typeof this.d_value !== "string";
         },
         isSelected(dateMeta) {
             if (!this.isComparable()) {
@@ -609,7 +1620,16 @@ export default {
 
                     return selected;
                 } else if (this.isRangeSelection()) {
-                    if (this.d_value[1]) return this.isDateEquals(this.d_value[0], dateMeta) || this.isDateEquals(this.d_value[1], dateMeta) || this.isDateBetween(this.d_value[0], this.d_value[1], dateMeta);
+                    if (this.d_value[1])
+                        return (
+                            this.isDateEquals(this.d_value[0], dateMeta) ||
+                            this.isDateEquals(this.d_value[1], dateMeta) ||
+                            this.isDateBetween(
+                                this.d_value[0],
+                                this.d_value[1],
+                                dateMeta
+                            )
+                        );
                     else {
                         return this.isDateEquals(this.d_value[0], dateMeta);
                     }
@@ -622,80 +1642,104 @@ export default {
             if (!this.isComparable()) return false;
 
             if (this.isMultipleSelection()) {
-                return this.d_value.some((currentValue) => currentValue.getMonth() === month && currentValue.getFullYear() === this.currentYear);
+                return this.d_value.some(
+                    (currentValue) =>
+                        currentValue.getMonth() === month &&
+                        currentValue.getFullYear() === this.currentYear
+                );
             } else if (this.isRangeSelection()) {
                 if (!this.d_value[1]) {
-                    return this.d_value[0]?.getFullYear() === this.currentYear && this.d_value[0]?.getMonth() === month;
+                    return (
+                        this.d_value[0]?.getFullYear() === this.currentYear &&
+                        this.d_value[0]?.getMonth() === month
+                    );
                 } else {
-                    const currentDate = new Date(this.currentYear, month, 1);
-                    const startDate = new Date(this.d_value[0].getFullYear(), this.d_value[0].getMonth(), 1);
-                    const endDate = new Date(this.d_value[1].getFullYear(), this.d_value[1].getMonth(), 1);
+                    const currentDate = new MyDate(this.currentYear, month, 1);
+                    const startDate = new MyDate(
+                        this.d_value[0].getFullYear(),
+                        this.d_value[0].getMonth(),
+                        1
+                    );
+                    const endDate = new MyDate(
+                        this.d_value[1].getFullYear(),
+                        this.d_value[1].getMonth(),
+                        1
+                    );
 
                     return currentDate >= startDate && currentDate <= endDate;
                 }
             } else {
-                return this.d_value.getMonth() === month && this.d_value.getFullYear() === this.currentYear;
+                return (
+                    this.d_value.getMonth() === month &&
+                    this.d_value.getFullYear() === this.currentYear
+                );
             }
         },
         isYearSelected(year) {
             if (!this.isComparable()) return false;
 
             if (this.isMultipleSelection()) {
-                return this.d_value.some((currentValue) => currentValue.getFullYear() === year);
+                return this.d_value.some(
+                    (currentValue) => currentValue.getFullYear() === year
+                );
             } else if (this.isRangeSelection()) {
-                const start = this.d_value[0] ? this.d_value[0].getFullYear() : null;
-                const end = this.d_value[1] ? this.d_value[1].getFullYear() : null;
+                const start = this.d_value[0]
+                    ? this.d_value[0].getFullYear()
+                    : null;
+                const end = this.d_value[1]
+                    ? this.d_value[1].getFullYear()
+                    : null;
 
-                return start === year || end === year || (start < year && end > year);
+                return (
+                    start === year ||
+                    end === year ||
+                    (start < year && end > year)
+                );
             } else {
                 return this.d_value.getFullYear() === year;
             }
         },
         isDateEquals(value, dateMeta) {
-            if (value) return parseInt(value.toLocaleDateString('fa-IR-u-nu-latn', { day: 'numeric' })) === dateMeta.day && value.getMonth() === dateMeta.month && value.getFullYear() === dateMeta.year;
+            if (value)
+                return (
+                    value.getDate() === dateMeta.day &&
+                    value.getMonth() === dateMeta.month &&
+                    value.getFullYear() === dateMeta.year
+                );
             else return false;
         },
         isDateBetween(start, end, dateMeta) {
             let between = false;
 
             if (start && end) {
-                let date = new Date(dateMeta.year, dateMeta.month, dateMeta.day);
+                let date = new MyDate(
+                    dateMeta.year,
+                    dateMeta.month,
+                    dateMeta.day
+                );
 
-                return start.getTime() <= date.getTime() && end.getTime() >= date.getTime();
+                return (
+                    start.getTime() <= date.getTime() &&
+                    end.getTime() >= date.getTime()
+                );
             }
 
             return between;
         },
         getFirstDayOfMonthIndex(month, year) {
-            let day = new Date();
-
-            day.setDate(1);
-            day.setMonth(month);
-            day.setFullYear(year);
-
-            while(parseInt(day.toLocaleDateString('fa-IR-u-nu-latn', { day: 'numeric' })) !== 1)
-                day.setDate(day.getDate() + 1)
-
-            let weekday = day.getDay() + 1
-
-            return weekday;
+            let day = new MyDate(year, month, 1);
+            
+            let dayIndex = day.getDay() + 1;
+            
+            return dayIndex >= 7 ? dayIndex - 7 : dayIndex;
         },
         getDaysCountInMonth(month, year) {
-            let day = new Date();
+            const date = new MyDate()
 
-            day.setDate(1);
-            day.setMonth(month);
-            day.setFullYear(year);
-            month = parseInt(day.toLocaleDateString('fa-IR-u-nu-latn', { month: 'numeric' }))
-            year = parseInt(day.toLocaleDateString('fa-IR-u-nu-latn', { year: 'numeric' }))
-
-            if (month < 6) {
-                return 31;
-            } else if (month < 11) {
-                return 30;
-            } else {
-                return [1, 5, 9, 13, 17, 22, 26, 30].includes(year % 33) ? 30 : 29;
-            }
+            return (
+                32 -
+                this.daylightSavingAdjust(new MyDate(year, month, 32)).getDate()
+            );
         },
         getDaysCountInPrevMonth(month, year) {
             let prev = this.getPreviousMonthAndYear(month, year);
@@ -738,7 +1782,11 @@ export default {
             return date;
         },
         isToday(today, day, month, year) {
-            return parseInt(today.toLocaleDateString('fa-IR-u-nu-latn', { day: 'numeric' })) === day && today.getMonth() === month && today.getFullYear() === year;
+            return (
+                today.getDate() === day &&
+                today.getMonth() === month &&
+                today.getFullYear() === year
+            );
         },
         isSelectable(day, month, year, otherMonth) {
             let validMin = true;
@@ -789,16 +1837,22 @@ export default {
             return validMin && validMax && validDate && validDay;
         },
         onOverlayEnter(el) {
-            const styles = !this.inline ? { position: 'absolute', top: '0', left: '0' } : undefined;
+            const styles = !this.inline
+                ? { position: "absolute", top: "0", left: "0" }
+                : undefined;
 
             addStyle(el, styles);
 
             if (this.autoZIndex) {
-                ZIndex.set('overlay', el, this.baseZIndex || this.$primevue.config.zIndex.overlay);
+                ZIndex.set(
+                    "overlay",
+                    el,
+                    this.baseZIndex || this.$primevue.config.zIndex.overlay
+                );
             }
 
             this.alignOverlay();
-            this.$emit('show');
+            this.$emit("show");
         },
         onOverlayEnterComplete() {
             this.bindOutsideClickListener();
@@ -815,7 +1869,7 @@ export default {
             this.unbindOutsideClickListener();
             this.unbindScrollListener();
             this.unbindResizeListener();
-            this.$emit('hide');
+            this.$emit("hide");
 
             this.overlay = null;
         },
@@ -834,10 +1888,13 @@ export default {
                 return;
             }
 
-            if (this.currentView === 'month') {
+            if (this.currentView === "month") {
                 this.decrementYear();
-                this.$emit('year-change', { month: this.currentMonth, year: this.currentYear });
-            } else if (this.currentView === 'year') {
+                this.$emit("year-change", {
+                    month: this.currentMonth,
+                    year: this.currentYear,
+                });
+            } else if (this.currentView === "year") {
                 this.decrementDecade();
             } else {
                 if (event.shiftKey) {
@@ -850,7 +1907,10 @@ export default {
                         this.currentMonth--;
                     }
 
-                    this.$emit('month-change', { month: this.currentMonth + 1, year: this.currentYear });
+                    this.$emit("month-change", {
+                        month: this.currentMonth + 1,
+                        year: this.currentYear,
+                    });
                 }
             }
         },
@@ -861,10 +1921,13 @@ export default {
                 return;
             }
 
-            if (this.currentView === 'month') {
+            if (this.currentView === "month") {
                 this.incrementYear();
-                this.$emit('year-change', { month: this.currentMonth, year: this.currentYear });
-            } else if (this.currentView === 'year') {
+                this.$emit("year-change", {
+                    month: this.currentMonth,
+                    year: this.currentYear,
+                });
+            } else if (this.currentView === "year") {
                 this.incrementDecade();
             } else {
                 if (event.shiftKey) {
@@ -877,7 +1940,10 @@ export default {
                         this.currentMonth++;
                     }
 
-                    this.$emit('month-change', { month: this.currentMonth + 1, year: this.currentYear });
+                    this.$emit("month-change", {
+                        month: this.currentMonth + 1,
+                        year: this.currentYear,
+                    });
                 }
             }
         },
@@ -894,12 +1960,12 @@ export default {
             this.currentYear = this.currentYear + 10;
         },
         switchToMonthView(event) {
-            this.currentView = 'month';
+            this.currentView = "month";
             setTimeout(this.updateFocus, 0);
             event.preventDefault();
         },
         switchToYearView(event) {
-            this.currentView = 'year';
+            this.currentView = "year";
             setTimeout(this.updateFocus, 0);
             event.preventDefault();
         },
@@ -909,15 +1975,21 @@ export default {
         updateCurrentTimeMeta(date) {
             let currentHour = date.getHours();
 
-            if (this.hourFormat === '12') {
+            if (this.hourFormat === "12") {
                 this.pm = currentHour > 11;
 
-                if (currentHour >= 12) currentHour = currentHour == 12 ? 12 : currentHour - 12;
+                if (currentHour >= 12)
+                    currentHour = currentHour == 12 ? 12 : currentHour - 12;
             }
 
-            this.currentHour = Math.floor(currentHour / this.stepHour) * this.stepHour;
-            this.currentMinute = Math.floor(date.getMinutes() / this.stepMinute) * this.stepMinute;
-            this.currentSecond = Math.floor(date.getSeconds() / this.stepSecond) * this.stepSecond;
+            this.currentHour =
+                Math.floor(currentHour / this.stepHour) * this.stepHour;
+            this.currentMinute =
+                Math.floor(date.getMinutes() / this.stepMinute) *
+                this.stepMinute;
+            this.currentSecond =
+                Math.floor(date.getSeconds() / this.stepSecond) *
+                this.stepSecond;
         },
         bindOutsideClickListener() {
             if (!this.outsideClickListener) {
@@ -927,22 +1999,31 @@ export default {
                     }
                 };
 
-                document.addEventListener('mousedown', this.outsideClickListener);
+                document.addEventListener(
+                    "mousedown",
+                    this.outsideClickListener
+                );
             }
         },
         unbindOutsideClickListener() {
             if (this.outsideClickListener) {
-                document.removeEventListener('mousedown', this.outsideClickListener);
+                document.removeEventListener(
+                    "mousedown",
+                    this.outsideClickListener
+                );
                 this.outsideClickListener = null;
             }
         },
         bindScrollListener() {
             if (!this.scrollHandler) {
-                this.scrollHandler = new ConnectedOverlayScrollHandler(this.$refs.container, () => {
-                    if (this.overlayVisible) {
-                        this.overlayVisible = false;
+                this.scrollHandler = new ConnectedOverlayScrollHandler(
+                    this.$refs.container,
+                    () => {
+                        if (this.overlayVisible) {
+                            this.overlayVisible = false;
+                        }
                     }
-                });
+                );
             }
 
             this.scrollHandler.bindScrollListener();
@@ -960,12 +2041,12 @@ export default {
                     }
                 };
 
-                window.addEventListener('resize', this.resizeListener);
+                window.addEventListener("resize", this.resizeListener);
             }
         },
         unbindResizeListener() {
             if (this.resizeListener) {
-                window.removeEventListener('resize', this.resizeListener);
+                window.removeEventListener("resize", this.resizeListener);
                 this.resizeListener = null;
             }
         },
@@ -981,31 +2062,49 @@ export default {
                     this.mobileActive = false;
                 };
 
-                this.query.addEventListener('change', this.matchMediaListener);
+                this.query.addEventListener("change", this.matchMediaListener);
             }
         },
         unbindMatchMediaListener() {
             if (this.matchMediaListener) {
-                this.query.removeEventListener('change', this.matchMediaListener);
+                this.query.removeEventListener(
+                    "change",
+                    this.matchMediaListener
+                );
                 this.matchMediaListener = null;
             }
         },
         isOutsideClicked(event) {
-            return !(this.$el.isSameNode(event.target) || this.isNavIconClicked(event) || this.$el.contains(event.target) || (this.overlay && this.overlay.contains(event.target)));
+            return !(
+                this.$el.isSameNode(event.target) ||
+                this.isNavIconClicked(event) ||
+                this.$el.contains(event.target) ||
+                (this.overlay && this.overlay.contains(event.target))
+            );
         },
         isNavIconClicked(event) {
-            return (this.previousButton && (this.previousButton.isSameNode(event.target) || this.previousButton.contains(event.target))) || (this.nextButton && (this.nextButton.isSameNode(event.target) || this.nextButton.contains(event.target)));
+            return (
+                (this.previousButton &&
+                    (this.previousButton.isSameNode(event.target) ||
+                        this.previousButton.contains(event.target))) ||
+                (this.nextButton &&
+                    (this.nextButton.isSameNode(event.target) ||
+                        this.nextButton.contains(event.target)))
+            );
         },
         alignOverlay() {
             if (this.overlay) {
-                if (this.appendTo === 'self' || this.inline) {
+                if (this.appendTo === "self" || this.inline) {
                     relativePosition(this.overlay, this.$el);
                 } else {
-                    if (this.view === 'date') {
-                        this.overlay.style.width = getOuterWidth(this.overlay) + 'px';
-                        this.overlay.style.minWidth = getOuterWidth(this.$el) + 'px';
+                    if (this.view === "date") {
+                        this.overlay.style.width =
+                            getOuterWidth(this.overlay) + "px";
+                        this.overlay.style.minWidth =
+                            getOuterWidth(this.$el) + "px";
                     } else {
-                        this.overlay.style.width = getOuterWidth(this.$el) + 'px';
+                        this.overlay.style.width =
+                            getOuterWidth(this.$el) + "px";
                     }
 
                     absolutePosition(this.overlay, this.$el);
@@ -1025,7 +2124,11 @@ export default {
         isDateDisabled(day, month, year) {
             if (this.disabledDates) {
                 for (let disabledDate of this.disabledDates) {
-                    if (disabledDate.getFullYear() === year && disabledDate.getMonth() === month && disabledDate.getDate() === day) {
+                    if (
+                        disabledDate.getFullYear() === year &&
+                        disabledDate.getMonth() === month &&
+                        disabledDate.getDate() === day
+                    ) {
                         return true;
                     }
                 }
@@ -1035,7 +2138,7 @@ export default {
         },
         isDayDisabled(day, month, year) {
             if (this.disabledDays) {
-                let weekday = new Date(year, month, day);
+                let weekday = new MyDate(year, month, day);
                 let weekdayNumber = weekday.getDay();
 
                 return this.disabledDays.indexOf(weekdayNumber) !== -1;
@@ -1045,25 +2148,36 @@ export default {
         },
         onMonthDropdownChange(value) {
             this.currentMonth = parseInt(value);
-            this.$emit('month-change', { month: this.currentMonth + 1, year: this.currentYear });
+            this.$emit("month-change", {
+                month: this.currentMonth + 1,
+                year: this.currentYear,
+            });
         },
         onYearDropdownChange(value) {
             this.currentYear = parseInt(value);
-            this.$emit('year-change', { month: this.currentMonth + 1, year: this.currentYear });
+            this.$emit("year-change", {
+                month: this.currentMonth + 1,
+                year: this.currentYear,
+            });
         },
         onDateSelect(event, dateMeta) {
             if (this.disabled || !dateMeta.selectable) {
                 return;
             }
 
-            find(this.overlay, 'table td span:not([data-p-disabled="true"])').forEach((cell) => (cell.tabIndex = -1));
+            find(
+                this.overlay,
+                'table td span:not([data-p-disabled="true"])'
+            ).forEach((cell) => (cell.tabIndex = -1));
 
             if (event) {
                 event.currentTarget.focus();
             }
 
             if (this.isMultipleSelection() && this.isSelected(dateMeta)) {
-                let newValue = this.d_value.filter((date) => !this.isDateEquals(date, dateMeta));
+                let newValue = this.d_value.filter(
+                    (date) => !this.isDateEquals(date, dateMeta)
+                );
 
                 this.updateModel(newValue);
             } else {
@@ -1078,7 +2192,10 @@ export default {
                 }
             }
 
-            if (this.isSingleSelection() && (!this.showTime || this.hideOnDateTimeSelect)) {
+            if (
+                this.isSingleSelection() &&
+                (!this.showTime || this.hideOnDateTimeSelect)
+            ) {
                 if (this.input) {
                     this.input.focus();
                 }
@@ -1089,16 +2206,12 @@ export default {
             }
         },
         selectDate(dateMeta) {
-            let x = 1
-            let date = new Date(dateMeta.year, dateMeta.month, x);
-
-            while (dateMeta.day != parseInt(date.toLocaleDateString('fa-IR-u-nu-latn', { day: 'numeric' }))) {
-                date.setDate(++x)
-                if (x > 100) break;
-            }
+            let date = new MyDate(dateMeta.year, dateMeta.month, dateMeta.day);
 
             if (this.showTime) {
-                this.hourFormat === '12' && this.currentHour !== 12 && this.pm ? date.setHours(this.currentHour + 12) : date.setHours(this.currentHour);
+                this.hourFormat === "12" && this.currentHour !== 12 && this.pm
+                    ? date.setHours(this.currentHour + 12)
+                    : date.setHours(this.currentHour);
 
                 date.setMinutes(this.currentMinute);
                 date.setSeconds(this.currentSecond);
@@ -1146,36 +2259,44 @@ export default {
                 this.updateModel(modelVal);
             }
 
-            if (this.isRangeSelection() && this.hideOnRangeSelection && modelVal[1] !== null) {
+            if (
+                this.isRangeSelection() &&
+                this.hideOnRangeSelection &&
+                modelVal[1] !== null
+            ) {
                 setTimeout(() => {
                     this.overlayVisible = false;
                 }, 150);
             }
 
-            this.$emit('date-select', date);
+            this.$emit("date-select", date);
         },
         updateModel(value) {
             this.writeValue(value);
         },
         shouldSelectDate() {
-            if (this.isMultipleSelection()) return this.maxDateCount != null ? this.maxDateCount > (this.d_value ? this.d_value.length : 0) : true;
+            if (this.isMultipleSelection())
+                return this.maxDateCount != null
+                    ? this.maxDateCount >
+                          (this.d_value ? this.d_value.length : 0)
+                    : true;
             else return true;
         },
         isSingleSelection() {
-            return this.selectionMode === 'single';
+            return this.selectionMode === "single";
         },
         isRangeSelection() {
-            return this.selectionMode === 'range';
+            return this.selectionMode === "range";
         },
         isMultipleSelection() {
-            return this.selectionMode === 'multiple';
+            return this.selectionMode === "multiple";
         },
         formatValue(value) {
-            if (typeof value === 'string') {
+            if (typeof value === "string") {
                 return value;
             }
 
-            let formattedValue = '';
+            let formattedValue = "";
 
             if (value) {
                 try {
@@ -1188,7 +2309,7 @@ export default {
                             formattedValue += dateAsString;
 
                             if (i !== value.length - 1) {
-                                formattedValue += ', ';
+                                formattedValue += ", ";
                             }
                         }
                     } else if (this.isRangeSelection()) {
@@ -1199,7 +2320,8 @@ export default {
                             formattedValue = this.formatDateTime(startDate);
 
                             if (endDate) {
-                                formattedValue += ' - ' + this.formatDateTime(endDate);
+                                formattedValue +=
+                                    " - " + this.formatDateTime(endDate);
                             }
                         }
                     }
@@ -1220,7 +2342,7 @@ export default {
                     formattedValue = this.formatDate(date, this.datePattern);
 
                     if (this.showTime) {
-                        formattedValue += ' ' + this.formatTime(date);
+                        formattedValue += " " + this.formatTime(date);
                     }
                 }
             }
@@ -1229,36 +2351,40 @@ export default {
         },
         formatDate(date, format) {
             if (!date) {
-                return '';
+                return "";
             }
 
             let iFormat;
 
             const lookAhead = (match) => {
-                const matches = iFormat + 1 < format.length && format.charAt(iFormat + 1) === match;
+                    const matches =
+                        iFormat + 1 < format.length &&
+                        format.charAt(iFormat + 1) === match;
 
-                if (matches) {
-                    iFormat++;
-                }
+                    if (matches) {
+                        iFormat++;
+                    }
 
-                return matches;
-            },
+                    return matches;
+                },
                 formatNumber = (match, value, len) => {
-                    let num = '' + value;
+                    let num = "" + value;
 
                     if (lookAhead(match)) {
                         while (num.length < len) {
-                            num = '0' + num;
+                            num = "0" + num;
                         }
                     }
 
                     return num;
                 },
                 formatName = (match, value, shortNames, longNames) => {
-                    return lookAhead(match) ? longNames[value] : shortNames[value];
+                    return lookAhead(match)
+                        ? longNames[value]
+                        : shortNames[value];
                 };
 
-            let output = '';
+            let output = "";
             let literal = false;
 
             if (date) {
@@ -1271,29 +2397,66 @@ export default {
                         }
                     } else {
                         switch (format.charAt(iFormat)) {
-                            case 'd':
-                                output += formatNumber('d', date.getDate(), 2);
+                            case "d":
+                                output += formatNumber("d", date.getDate(), 2);
                                 break;
-                            case 'D':
-                                output += formatName('D', date.getDay(), this.$primevue.config.locale.dayNamesShort, this.$primevue.config.locale.dayNames);
+                            case "D":
+                                output += formatName(
+                                    "D",
+                                    date.getDay(),
+                                    this.$primevue.config.locale.dayNamesShort,
+                                    this.$primevue.config.locale.dayNames
+                                );
                                 break;
-                            case 'o':
-                                output += formatNumber('o', Math.round((new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000), 3);
+                            case "o":
+                                output += formatNumber(
+                                    "o",
+                                    Math.round(
+                                        (new MyDate(
+                                            date.getFullYear(),
+                                            date.getMonth(),
+                                            date.getDate()
+                                        ).getTime() -
+                                            new MyDate(
+                                                date.getFullYear(),
+                                                0,
+                                                0
+                                            ).getTime()) /
+                                            86400000
+                                    ),
+                                    3
+                                );
                                 break;
-                            case 'm':
-                                output += formatNumber('m', date.getMonth() + 1, 2);
+                            case "m":
+                                output += formatNumber(
+                                    "m",
+                                    date.getMonth() + 1,
+                                    2
+                                );
                                 break;
-                            case 'M':
-                                output += formatName('M', date.getMonth(), this.$primevue.config.locale.monthNamesShort, this.$primevue.config.locale.monthNames);
+                            case "M":
+                                output += formatName(
+                                    "M",
+                                    date.getMonth(),
+                                    this.$primevue.config.locale
+                                        .monthNamesShort,
+                                    this.$primevue.config.locale.monthNames
+                                );
                                 break;
-                            case 'y':
-                                output += lookAhead('y') ? date.getFullYear() : (date.getFullYear() % 100 < 10 ? '0' : '') + (date.getFullYear() % 100);
+                            case "y":
+                                output += lookAhead("y")
+                                    ? date.getFullYear()
+                                    : (date.getFullYear() % 100 < 10
+                                          ? "0"
+                                          : "") +
+                                      (date.getFullYear() % 100);
                                 break;
-                            case '@':
+                            case "@":
                                 output += date.getTime();
                                 break;
-                            case '!':
-                                output += date.getTime() * 10000 + this.ticksTo1970;
+                            case "!":
+                                output +=
+                                    date.getTime() * 10000 + this.ticksTo1970;
                                 break;
                             case "'":
                                 if (lookAhead("'")) {
@@ -1314,57 +2477,62 @@ export default {
         },
         formatTime(date) {
             if (!date) {
-                return '';
+                return "";
             }
 
-            let output = '';
+            let output = "";
             let hours = date.getHours();
             let minutes = date.getMinutes();
             let seconds = date.getSeconds();
 
-            if (this.hourFormat === '12' && hours > 11 && hours !== 12) {
+            if (this.hourFormat === "12" && hours > 11 && hours !== 12) {
                 hours -= 12;
             }
 
-            if (this.hourFormat === '12') {
-                output += hours === 0 ? 12 : hours < 10 ? '0' + hours : hours;
+            if (this.hourFormat === "12") {
+                output += hours === 0 ? 12 : hours < 10 ? "0" + hours : hours;
             } else {
-                output += hours < 10 ? '0' + hours : hours;
+                output += hours < 10 ? "0" + hours : hours;
             }
 
-            output += ':';
-            output += minutes < 10 ? '0' + minutes : minutes;
+            output += ":";
+            output += minutes < 10 ? "0" + minutes : minutes;
 
             if (this.showSeconds) {
-                output += ':';
-                output += seconds < 10 ? '0' + seconds : seconds;
+                output += ":";
+                output += seconds < 10 ? "0" + seconds : seconds;
             }
 
-            if (this.hourFormat === '12') {
-                output += date.getHours() > 11 ? ` ${this.$primevue.config.locale.pm}` : ` ${this.$primevue.config.locale.am}`;
+            if (this.hourFormat === "12") {
+                output +=
+                    date.getHours() > 11
+                        ? ` ${this.$primevue.config.locale.pm}`
+                        : ` ${this.$primevue.config.locale.am}`;
             }
 
             return output;
         },
         onTodayButtonClick(event) {
-            let date = new Date();
+            let date = new MyDate();
             let dateMeta = {
                 day: date.getDate(),
                 month: date.getMonth(),
                 year: date.getFullYear(),
-                otherMonth: date.getMonth() !== this.currentMonth || date.getFullYear() !== this.currentYear,
+                otherMonth:
+                    date.getMonth() !== this.currentMonth ||
+                    date.getFullYear() !== this.currentYear,
                 today: true,
-                selectable: true
+                selectable: true,
             };
 
             this.onDateSelect(null, dateMeta);
-            this.$emit('today-click', date);
+            this.$emit("today-click", date);
             event.preventDefault();
         },
         onClearButtonClick(event) {
             this.updateModel(null);
             this.overlayVisible = false;
-            this.$emit('clear-click', event);
+            this.$emit("clear-click", event);
             event.preventDefault();
         },
         onTimePickerElementMouseDown(event, type, direction) {
@@ -1409,7 +2577,7 @@ export default {
             }
         },
         convertTo24Hour(hours, pm) {
-            if (this.hourFormat == '12') {
+            if (this.hourFormat == "12") {
                 if (hours === 12) {
                     return pm ? 12 : 0;
                 } else {
@@ -1433,7 +2601,11 @@ export default {
 
             const valueDateString = value ? value.toDateString() : null;
 
-            if (this.minDate && valueDateString && this.minDate.toDateString() === valueDateString) {
+            if (
+                this.minDate &&
+                valueDateString &&
+                this.minDate.toDateString() === valueDateString
+            ) {
                 if (this.minDate.getHours() > convertedHour) {
                     return false;
                 }
@@ -1451,7 +2623,11 @@ export default {
                 }
             }
 
-            if (this.maxDate && valueDateString && this.maxDate.toDateString() === valueDateString) {
+            if (
+                this.maxDate &&
+                valueDateString &&
+                this.maxDate.toDateString() === valueDateString
+            ) {
                 if (this.maxDate.getHours() < convertedHour) {
                     return false;
                 }
@@ -1476,8 +2652,9 @@ export default {
             let newHour = this.currentHour + Number(this.stepHour);
             let newPM = this.pm;
 
-            if (this.hourFormat == '24') newHour = newHour >= 24 ? newHour - 24 : newHour;
-            else if (this.hourFormat == '12') {
+            if (this.hourFormat == "24")
+                newHour = newHour >= 24 ? newHour - 24 : newHour;
+            else if (this.hourFormat == "12") {
                 // Before the AM/PM break, now after
                 if (prevHour < 12 && newHour > 11) {
                     newPM = !this.pm;
@@ -1486,7 +2663,14 @@ export default {
                 newHour = newHour >= 13 ? newHour - 12 : newHour;
             }
 
-            if (this.validateTime(newHour, this.currentMinute, this.currentSecond, newPM)) {
+            if (
+                this.validateTime(
+                    newHour,
+                    this.currentMinute,
+                    this.currentSecond,
+                    newPM
+                )
+            ) {
                 this.currentHour = newHour;
                 this.pm = newPM;
             }
@@ -1497,8 +2681,9 @@ export default {
             let newHour = this.currentHour - this.stepHour;
             let newPM = this.pm;
 
-            if (this.hourFormat == '24') newHour = newHour < 0 ? 24 + newHour : newHour;
-            else if (this.hourFormat == '12') {
+            if (this.hourFormat == "24")
+                newHour = newHour < 0 ? 24 + newHour : newHour;
+            else if (this.hourFormat == "12") {
                 // If we were at noon/midnight, then switch
                 if (this.currentHour === 12) {
                     newPM = !this.pm;
@@ -1507,7 +2692,14 @@ export default {
                 newHour = newHour <= 0 ? 12 + newHour : newHour;
             }
 
-            if (this.validateTime(newHour, this.currentMinute, this.currentSecond, newPM)) {
+            if (
+                this.validateTime(
+                    newHour,
+                    this.currentMinute,
+                    this.currentSecond,
+                    newPM
+                )
+            ) {
                 this.currentHour = newHour;
                 this.pm = newPM;
             }
@@ -1517,8 +2709,16 @@ export default {
         incrementMinute(event) {
             let newMinute = this.currentMinute + Number(this.stepMinute);
 
-            if (this.validateTime(this.currentHour, newMinute, this.currentSecond, this.pm)) {
-                this.currentMinute = newMinute > 59 ? newMinute - 60 : newMinute;
+            if (
+                this.validateTime(
+                    this.currentHour,
+                    newMinute,
+                    this.currentSecond,
+                    this.pm
+                )
+            ) {
+                this.currentMinute =
+                    newMinute > 59 ? newMinute - 60 : newMinute;
             }
 
             event.preventDefault();
@@ -1528,7 +2728,14 @@ export default {
 
             newMinute = newMinute < 0 ? 60 + newMinute : newMinute;
 
-            if (this.validateTime(this.currentHour, newMinute, this.currentSecond, this.pm)) {
+            if (
+                this.validateTime(
+                    this.currentHour,
+                    newMinute,
+                    this.currentSecond,
+                    this.pm
+                )
+            ) {
                 this.currentMinute = newMinute;
             }
 
@@ -1537,8 +2744,16 @@ export default {
         incrementSecond(event) {
             let newSecond = this.currentSecond + Number(this.stepSecond);
 
-            if (this.validateTime(this.currentHour, this.currentMinute, newSecond, this.pm)) {
-                this.currentSecond = newSecond > 59 ? newSecond - 60 : newSecond;
+            if (
+                this.validateTime(
+                    this.currentHour,
+                    this.currentMinute,
+                    newSecond,
+                    this.pm
+                )
+            ) {
+                this.currentSecond =
+                    newSecond > 59 ? newSecond - 60 : newSecond;
             }
 
             event.preventDefault();
@@ -1548,7 +2763,14 @@ export default {
 
             newSecond = newSecond < 0 ? 60 + newSecond : newSecond;
 
-            if (this.validateTime(this.currentHour, this.currentMinute, newSecond, this.pm)) {
+            if (
+                this.validateTime(
+                    this.currentHour,
+                    this.currentMinute,
+                    newSecond,
+                    this.pm
+                )
+            ) {
                 this.currentSecond = newSecond;
             }
 
@@ -1566,11 +2788,14 @@ export default {
                 value = this.d_value[this.d_value.length - 1];
             }
 
-            value = value ? new Date(value.getTime()) : new Date();
+            value = value ? new MyDate(value.getTime()) : new MyDate();
 
-            if (this.hourFormat == '12') {
+            if (this.hourFormat == "12") {
                 if (this.currentHour === 12) value.setHours(this.pm ? 12 : 0);
-                else value.setHours(this.pm ? this.currentHour + 12 : this.currentHour);
+                else
+                    value.setHours(
+                        this.pm ? this.currentHour + 12 : this.currentHour
+                    );
             } else {
                 value.setHours(this.currentHour);
             }
@@ -1588,11 +2813,16 @@ export default {
             }
 
             this.updateModel(value);
-            this.$emit('date-select', value);
+            this.$emit("date-select", value);
             setTimeout(() => (this.timePickerChange = false), 0);
         },
         toggleAMPM(event) {
-            const validHour = this.validateTime(this.currentHour, this.currentMinute, this.currentSecond, !this.pm);
+            const validHour = this.validateTime(
+                this.currentHour,
+                this.currentMinute,
+                this.currentSecond,
+                !this.pm
+            );
 
             if (!validHour && (this.maxDate || this.minDate)) return;
 
@@ -1606,23 +2836,39 @@ export default {
             }
         },
         onMonthSelect(event, { month, index }) {
-            if (this.view === 'month') {
-                this.onDateSelect(event, { year: this.currentYear, month: index, day: 1, selectable: true });
+            if (this.view === "month") {
+                this.onDateSelect(event, {
+                    year: this.currentYear,
+                    month: index,
+                    day: 1,
+                    selectable: true,
+                });
             } else {
                 this.currentMonth = index;
-                this.currentView = 'date';
-                this.$emit('month-change', { month: this.currentMonth + 1, year: this.currentYear });
+                this.currentView = "date";
+                this.$emit("month-change", {
+                    month: this.currentMonth + 1,
+                    year: this.currentYear,
+                });
             }
 
             setTimeout(this.updateFocus, 0);
         },
         onYearSelect(event, year) {
-            if (this.view === 'year') {
-                this.onDateSelect(event, { year: year.value, month: 0, day: 1, selectable: true });
+            if (this.view === "year") {
+                this.onDateSelect(event, {
+                    year: year.value,
+                    month: 0,
+                    day: 1,
+                    selectable: true,
+                });
             } else {
                 this.currentYear = year.value;
-                this.currentView = 'month';
-                this.$emit('year-change', { month: this.currentMonth + 1, year: this.currentYear });
+                this.currentView = "month";
+                this.$emit("year-change", {
+                    month: this.currentMonth + 1,
+                    year: this.currentYear,
+                });
             }
 
             setTimeout(this.updateFocus, 0);
@@ -1645,10 +2891,26 @@ export default {
             let isValid = true;
 
             if (this.isSingleSelection()) {
-                if (!this.isSelectable(value.getDate(), value.getMonth(), value.getFullYear(), false)) {
+                if (
+                    !this.isSelectable(
+                        value.getDate(),
+                        value.getMonth(),
+                        value.getFullYear(),
+                        false
+                    )
+                ) {
                     isValid = false;
                 }
-            } else if (value.every((v) => this.isSelectable(v.getDate(), v.getMonth(), v.getFullYear(), false))) {
+            } else if (
+                value.every((v) =>
+                    this.isSelectable(
+                        v.getDate(),
+                        v.getMonth(),
+                        v.getFullYear(),
+                        false
+                    )
+                )
+            ) {
                 if (this.isRangeSelection()) {
                     isValid = value.length > 1 && value[1] >= value[0];
                 }
@@ -1666,7 +2928,7 @@ export default {
             if (this.isSingleSelection()) {
                 value = this.parseDateTime(text);
             } else if (this.isMultipleSelection()) {
-                let tokens = text.split(',');
+                let tokens = text.split(",");
 
                 value = [];
 
@@ -1674,7 +2936,7 @@ export default {
                     value.push(this.parseDateTime(token.trim()));
                 }
             } else if (this.isRangeSelection()) {
-                let tokens = text.split(' - ');
+                let tokens = text.split(" - ");
 
                 value = [];
 
@@ -1687,10 +2949,10 @@ export default {
         },
         parseDateTime(text) {
             let date;
-            let parts = text.split(' ');
+            let parts = text.split(" ");
 
             if (this.timeOnly) {
-                date = new Date();
+                date = new MyDate();
                 this.populateTime(date, parts[0], parts[1]);
             } else {
                 const dateFormat = this.datePattern;
@@ -1706,11 +2968,13 @@ export default {
             return date;
         },
         populateTime(value, timeString, ampm) {
-            if (this.hourFormat == '12' && !ampm) {
-                throw 'Invalid Time';
+            if (this.hourFormat == "12" && !ampm) {
+                throw "Invalid Time";
             }
 
-            this.pm = ampm === this.$primevue.config.locale.pm || ampm === this.$primevue.config.locale.pm.toLowerCase();
+            this.pm =
+                ampm === this.$primevue.config.locale.pm ||
+                ampm === this.$primevue.config.locale.pm.toLowerCase();
             let time = this.parseTime(timeString);
 
             value.setHours(time.hour);
@@ -1718,24 +2982,36 @@ export default {
             value.setSeconds(time.second);
         },
         parseTime(value) {
-            let tokens = value.split(':');
+            let tokens = value.split(":");
             let validTokenLength = this.showSeconds ? 3 : 2;
             let regex = /^[0-9][0-9]$/;
 
-            if (tokens.length !== validTokenLength || !tokens[0].match(regex) || !tokens[1].match(regex) || (this.showSeconds && !tokens[2].match(regex))) {
-                throw 'Invalid time';
+            if (
+                tokens.length !== validTokenLength ||
+                !tokens[0].match(regex) ||
+                !tokens[1].match(regex) ||
+                (this.showSeconds && !tokens[2].match(regex))
+            ) {
+                throw "Invalid time";
             }
 
             let h = parseInt(tokens[0]);
             let m = parseInt(tokens[1]);
             let s = this.showSeconds ? parseInt(tokens[2]) : null;
 
-            if (isNaN(h) || isNaN(m) || h > 23 || m > 59 || (this.hourFormat == '12' && h > 12) || (this.showSeconds && (isNaN(s) || s > 59))) {
-                throw 'Invalid time';
+            if (
+                isNaN(h) ||
+                isNaN(m) ||
+                h > 23 ||
+                m > 59 ||
+                (this.hourFormat == "12" && h > 12) ||
+                (this.showSeconds && (isNaN(s) || s > 59))
+            ) {
+                throw "Invalid time";
             } else {
-                if (this.hourFormat == '12' && h !== 12 && this.pm) {
+                if (this.hourFormat == "12" && h !== 12 && this.pm) {
                     h += 12;
-                } else if (this.hourFormat == '12' && h == 12 && !this.pm) {
+                } else if (this.hourFormat == "12" && h == 12 && !this.pm) {
                     h = 0;
                 }
 
@@ -1744,12 +3020,12 @@ export default {
         },
         parseDate(value, format) {
             if (format == null || value == null) {
-                throw 'Invalid arguments';
+                throw "Invalid arguments";
             }
 
-            value = typeof value === 'object' ? value.toString() : value + '';
+            value = typeof value === "object" ? value.toString() : value + "";
 
-            if (value === '') {
+            if (value === "") {
                 return null;
             }
 
@@ -1757,7 +3033,11 @@ export default {
                 dim,
                 extra,
                 iValue = 0,
-                shortYearCutoff = typeof this.shortYearCutoff !== 'string' ? this.shortYearCutoff : (new Date().getFullYear() % 100) + parseInt(this.shortYearCutoff, 10),
+                shortYearCutoff =
+                    typeof this.shortYearCutoff !== "string"
+                        ? this.shortYearCutoff
+                        : (new MyDate().getFullYear() % 100) +
+                          parseInt(this.shortYearCutoff, 10),
                 year = -1,
                 month = -1,
                 day = -1,
@@ -1765,7 +3045,9 @@ export default {
                 literal = false,
                 date,
                 lookAhead = (match) => {
-                    let matches = iFormat + 1 < format.length && format.charAt(iFormat + 1) === match;
+                    let matches =
+                        iFormat + 1 < format.length &&
+                        format.charAt(iFormat + 1) === match;
 
                     if (matches) {
                         iFormat++;
@@ -1775,13 +3057,24 @@ export default {
                 },
                 getNumber = (match) => {
                     let isDoubled = lookAhead(match),
-                        size = match === '@' ? 14 : match === '!' ? 20 : match === 'y' && isDoubled ? 4 : match === 'o' ? 3 : 2,
-                        minSize = match === 'y' ? size : 1,
-                        digits = new RegExp('^\\d{' + minSize + ',' + size + '}'),
+                        size =
+                            match === "@"
+                                ? 14
+                                : match === "!"
+                                  ? 20
+                                  : match === "y" && isDoubled
+                                    ? 4
+                                    : match === "o"
+                                      ? 3
+                                      : 2,
+                        minSize = match === "y" ? size : 1,
+                        digits = new RegExp(
+                            "^\\d{" + minSize + "," + size + "}"
+                        ),
                         num = value.substring(iValue).match(digits);
 
                     if (!num) {
-                        throw 'Missing number at position ' + iValue;
+                        throw "Missing number at position " + iValue;
                     }
 
                     iValue += num[0].length;
@@ -1804,7 +3097,10 @@ export default {
                     for (let i = 0; i < names.length; i++) {
                         let name = names[i][1];
 
-                        if (value.substr(iValue, name.length).toLowerCase() === name.toLowerCase()) {
+                        if (
+                            value.substr(iValue, name.length).toLowerCase() ===
+                            name.toLowerCase()
+                        ) {
                             index = names[i][0];
                             iValue += name.length;
                             break;
@@ -1814,22 +3110,22 @@ export default {
                     if (index !== -1) {
                         return index + 1;
                     } else {
-                        throw 'Unknown name at position ' + iValue;
+                        throw "Unknown name at position " + iValue;
                     }
                 },
                 checkLiteral = () => {
                     if (value.charAt(iValue) !== format.charAt(iFormat)) {
-                        throw 'Unexpected literal at position ' + iValue;
+                        throw "Unexpected literal at position " + iValue;
                     }
 
                     iValue++;
                 };
 
-            if (this.currentView === 'month') {
+            if (this.currentView === "month") {
                 day = 1;
             }
 
-            if (this.currentView === 'year') {
+            if (this.currentView === "year") {
                 day = 1;
                 month = 1;
             }
@@ -1843,32 +3139,42 @@ export default {
                     }
                 } else {
                     switch (format.charAt(iFormat)) {
-                        case 'd':
-                            day = getNumber('d');
+                        case "d":
+                            day = getNumber("d");
                             break;
-                        case 'D':
-                            getName('D', this.$primevue.config.locale.dayNamesShort, this.$primevue.config.locale.dayNames);
+                        case "D":
+                            getName(
+                                "D",
+                                this.$primevue.config.locale.dayNamesShort,
+                                this.$primevue.config.locale.dayNames
+                            );
                             break;
-                        case 'o':
-                            doy = getNumber('o');
+                        case "o":
+                            doy = getNumber("o");
                             break;
-                        case 'm':
-                            month = getNumber('m');
+                        case "m":
+                            month = getNumber("m");
                             break;
-                        case 'M':
-                            month = getName('M', this.$primevue.config.locale.monthNamesShort, this.$primevue.config.locale.monthNames);
+                        case "M":
+                            month = getName(
+                                "M",
+                                this.$primevue.config.locale.monthNamesShort,
+                                this.$primevue.config.locale.monthNames
+                            );
                             break;
-                        case 'y':
-                            year = getNumber('y');
+                        case "y":
+                            year = getNumber("y");
                             break;
-                        case '@':
-                            date = new Date(getNumber('@'));
+                        case "@":
+                            date = new MyDate(getNumber("@"));
                             year = date.getFullYear();
                             month = date.getMonth() + 1;
                             day = date.getDate();
                             break;
-                        case '!':
-                            date = new Date((getNumber('!') - this.ticksTo1970) / 10000);
+                        case "!":
+                            date = new MyDate(
+                                (getNumber("!") - this.ticksTo1970) / 10000
+                            );
                             year = date.getFullYear();
                             month = date.getMonth() + 1;
                             day = date.getDate();
@@ -1891,14 +3197,17 @@ export default {
                 extra = value.substr(iValue);
 
                 if (!/^\s+/.test(extra)) {
-                    throw 'Extra/unparsed characters found in date: ' + extra;
+                    throw "Extra/unparsed characters found in date: " + extra;
                 }
             }
 
             if (year === -1) {
-                year = new Date().getFullYear();
+                year = new MyDate().getFullYear();
             } else if (year < 100) {
-                year += new Date().getFullYear() - (new Date().getFullYear() % 100) + (year <= shortYearCutoff ? 0 : -100);
+                year +=
+                    new MyDate().getFullYear() -
+                    (new MyDate().getFullYear() % 100) +
+                    (year <= shortYearCutoff ? 0 : -100);
             }
 
             if (doy > -1) {
@@ -1918,24 +3227,34 @@ export default {
                 } while (true);
             }
 
-            date = this.daylightSavingAdjust(new Date(year, month - 1, day));
+            date = this.daylightSavingAdjust(new MyDate(year, month - 1, day));
 
-            if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
-                throw 'Invalid date'; // E.g. 31/02/00
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() + 1 !== month ||
+                date.getDate() !== day
+            ) {
+                throw "Invalid date"; // E.g. 31/02/00
             }
 
             return date;
         },
         getWeekNumber(date) {
-            let checkDate = new Date(date.getTime());
+            let checkDate = new MyDate(date.getTime());
 
-            checkDate.setDate(checkDate.getDate() + 4 - (checkDate.getDay() || 7));
+            checkDate.setDate(
+                checkDate.getDate() + 4 - (checkDate.getDay() || 7)
+            );
             let time = checkDate.getTime();
 
             checkDate.setMonth(0);
             checkDate.setDate(1);
 
-            return Math.floor(Math.round((time - checkDate.getTime()) / 86400000) / 7) + 1;
+            return (
+                Math.floor(
+                    Math.round((time - checkDate.getTime()) / 86400000) / 7
+                ) + 1
+            );
         },
         onDateCellKeydown(event, date, groupIndex) {
             const cellContent = event.currentTarget;
@@ -1944,26 +3263,32 @@ export default {
             const cellIndex = getIndex(cell);
 
             switch (event.code) {
-                case 'ArrowDown': {
-                    cellContent.tabIndex = '-1';
+                case "ArrowDown": {
+                    cellContent.tabIndex = "-1";
 
                     let nextRow = cell.parentElement.nextElementSibling;
 
                     if (nextRow) {
                         let tableRowIndex = getIndex(cell.parentElement);
-                        const tableRows = Array.from(cell.parentElement.parentElement.children);
-                        const nextTableRows = tableRows.slice(tableRowIndex + 1);
+                        const tableRows = Array.from(
+                            cell.parentElement.parentElement.children
+                        );
+                        const nextTableRows = tableRows.slice(
+                            tableRowIndex + 1
+                        );
 
                         let hasNextFocusableDate = nextTableRows.find((el) => {
                             let focusCell = el.children[cellIndex].children[0];
 
-                            return !getAttribute(focusCell, 'data-p-disabled');
+                            return !getAttribute(focusCell, "data-p-disabled");
                         });
 
                         if (hasNextFocusableDate) {
-                            let focusCell = hasNextFocusableDate.children[cellIndex].children[0];
+                            let focusCell =
+                                hasNextFocusableDate.children[cellIndex]
+                                    .children[0];
 
-                            focusCell.tabIndex = '0';
+                            focusCell.tabIndex = "0";
                             focusCell.focus();
                         } else {
                             this.navigationState = { backward: false };
@@ -1978,8 +3303,8 @@ export default {
                     break;
                 }
 
-                case 'ArrowUp': {
-                    cellContent.tabIndex = '-1';
+                case "ArrowUp": {
+                    cellContent.tabIndex = "-1";
 
                     if (event.altKey) {
                         this.overlayVisible = false;
@@ -1989,19 +3314,31 @@ export default {
 
                         if (prevRow) {
                             let tableRowIndex = getIndex(cell.parentElement);
-                            const tableRows = Array.from(cell.parentElement.parentElement.children);
-                            const prevTableRows = tableRows.slice(0, tableRowIndex).reverse();
+                            const tableRows = Array.from(
+                                cell.parentElement.parentElement.children
+                            );
+                            const prevTableRows = tableRows
+                                .slice(0, tableRowIndex)
+                                .reverse();
 
-                            let hasNextFocusableDate = prevTableRows.find((el) => {
-                                let focusCell = el.children[cellIndex].children[0];
+                            let hasNextFocusableDate = prevTableRows.find(
+                                (el) => {
+                                    let focusCell =
+                                        el.children[cellIndex].children[0];
 
-                                return !getAttribute(focusCell, 'data-p-disabled');
-                            });
+                                    return !getAttribute(
+                                        focusCell,
+                                        "data-p-disabled"
+                                    );
+                                }
+                            );
 
                             if (hasNextFocusableDate) {
-                                let focusCell = hasNextFocusableDate.children[cellIndex].children[0];
+                                let focusCell =
+                                    hasNextFocusableDate.children[cellIndex]
+                                        .children[0];
 
-                                focusCell.tabIndex = '0';
+                                focusCell.tabIndex = "0";
                                 focusCell.focus();
                             } else {
                                 this.navigationState = { backward: true };
@@ -2017,8 +3354,8 @@ export default {
                     break;
                 }
 
-                case 'ArrowLeft': {
-                    cellContent.tabIndex = '-1';
+                case "ArrowLeft": {
+                    cellContent.tabIndex = "-1";
                     let prevCell = cell.previousElementSibling;
 
                     if (prevCell) {
@@ -2028,13 +3365,13 @@ export default {
                         let hasNextFocusableDate = prevCells.find((el) => {
                             let focusCell = el.children[0];
 
-                            return !getAttribute(focusCell, 'data-p-disabled');
+                            return !getAttribute(focusCell, "data-p-disabled");
                         });
 
                         if (hasNextFocusableDate) {
                             let focusCell = hasNextFocusableDate.children[0];
 
-                            focusCell.tabIndex = '0';
+                            focusCell.tabIndex = "0";
                             focusCell.focus();
                         } else {
                             this.navigateToMonth(event, true, groupIndex);
@@ -2047,8 +3384,8 @@ export default {
                     break;
                 }
 
-                case 'ArrowRight': {
-                    cellContent.tabIndex = '-1';
+                case "ArrowRight": {
+                    cellContent.tabIndex = "-1";
                     let nextCell = cell.nextElementSibling;
 
                     if (nextCell) {
@@ -2057,13 +3394,13 @@ export default {
                         let hasNextFocusableDate = nextCells.find((el) => {
                             let focusCell = el.children[0];
 
-                            return !getAttribute(focusCell, 'data-p-disabled');
+                            return !getAttribute(focusCell, "data-p-disabled");
                         });
 
                         if (hasNextFocusableDate) {
                             let focusCell = hasNextFocusableDate.children[0];
 
-                            focusCell.tabIndex = '0';
+                            focusCell.tabIndex = "0";
                             focusCell.focus();
                         } else {
                             this.navigateToMonth(event, false, groupIndex);
@@ -2076,22 +3413,22 @@ export default {
                     break;
                 }
 
-                case 'Enter':
-                case 'NumpadEnter':
+                case "Enter":
+                case "NumpadEnter":
 
-                case 'Space': {
+                case "Space": {
                     this.onDateSelect(event, date);
                     event.preventDefault();
                     break;
                 }
 
-                case 'Escape': {
+                case "Escape": {
                     this.overlayVisible = false;
                     event.preventDefault();
                     break;
                 }
 
-                case 'Tab': {
+                case "Tab": {
                     if (!this.inline) {
                         this.trapFocus(event);
                     }
@@ -2099,15 +3436,15 @@ export default {
                     break;
                 }
 
-                case 'Home': {
-                    cellContent.tabIndex = '-1';
+                case "Home": {
+                    cellContent.tabIndex = "-1";
                     let currentRow = cell.parentElement;
                     let focusCell = currentRow.children[0].children[0];
 
-                    if (getAttribute(focusCell, 'data-p-disabled')) {
+                    if (getAttribute(focusCell, "data-p-disabled")) {
                         this.navigateToMonth(event, true, groupIndex);
                     } else {
-                        focusCell.tabIndex = '0';
+                        focusCell.tabIndex = "0";
                         focusCell.focus();
                     }
 
@@ -2115,15 +3452,17 @@ export default {
                     break;
                 }
 
-                case 'End': {
-                    cellContent.tabIndex = '-1';
+                case "End": {
+                    cellContent.tabIndex = "-1";
                     let currentRow = cell.parentElement;
-                    let focusCell = currentRow.children[currentRow.children.length - 1].children[0];
+                    let focusCell =
+                        currentRow.children[currentRow.children.length - 1]
+                            .children[0];
 
-                    if (getAttribute(focusCell, 'data-p-disabled')) {
+                    if (getAttribute(focusCell, "data-p-disabled")) {
                         this.navigateToMonth(event, false, groupIndex);
                     } else {
-                        focusCell.tabIndex = '0';
+                        focusCell.tabIndex = "0";
                         focusCell.focus();
                     }
 
@@ -2131,8 +3470,8 @@ export default {
                     break;
                 }
 
-                case 'PageUp': {
-                    cellContent.tabIndex = '-1';
+                case "PageUp": {
+                    cellContent.tabIndex = "-1";
                     if (event.shiftKey) {
                         this.navigationState = { backward: true };
                         this.navBackward(event);
@@ -2142,8 +3481,8 @@ export default {
                     break;
                 }
 
-                case 'PageDown': {
-                    cellContent.tabIndex = '-1';
+                case "PageDown": {
+                    cellContent.tabIndex = "-1";
                     if (event.shiftKey) {
                         this.navigationState = { backward: false };
                         this.navForward(event);
@@ -2164,22 +3503,33 @@ export default {
                     this.navigationState = { backward: true };
                     this.navBackward(event);
                 } else {
-                    let prevMonthContainer = this.overlay.children[groupIndex - 1];
-                    let cells = find(prevMonthContainer, 'table td span:not([data-p-disabled="true"]):not([data-p-ink="true"])');
+                    let prevMonthContainer =
+                        this.overlay.children[groupIndex - 1];
+                    let cells = find(
+                        prevMonthContainer,
+                        'table td span:not([data-p-disabled="true"]):not([data-p-ink="true"])'
+                    );
                     let focusCell = cells[cells.length - 1];
 
-                    focusCell.tabIndex = '0';
+                    focusCell.tabIndex = "0";
                     focusCell.focus();
                 }
             } else {
-                if (this.numberOfMonths === 1 || groupIndex === this.numberOfMonths - 1) {
+                if (
+                    this.numberOfMonths === 1 ||
+                    groupIndex === this.numberOfMonths - 1
+                ) {
                     this.navigationState = { backward: false };
                     this.navForward(event);
                 } else {
-                    let nextMonthContainer = this.overlay.children[groupIndex + 1];
-                    let focusCell = findSingle(nextMonthContainer, 'table td span:not([data-p-disabled="true"]):not([data-p-ink="true"])');
+                    let nextMonthContainer =
+                        this.overlay.children[groupIndex + 1];
+                    let focusCell = findSingle(
+                        nextMonthContainer,
+                        'table td span:not([data-p-disabled="true"]):not([data-p-ink="true"])'
+                    );
 
-                    focusCell.tabIndex = '0';
+                    focusCell.tabIndex = "0";
                     focusCell.focus();
                 }
             }
@@ -2188,16 +3538,21 @@ export default {
             const cell = event.currentTarget;
 
             switch (event.code) {
-                case 'ArrowUp':
+                case "ArrowUp":
 
-                case 'ArrowDown': {
-                    cell.tabIndex = '-1';
+                case "ArrowDown": {
+                    cell.tabIndex = "-1";
                     var cells = cell.parentElement.children;
                     var cellIndex = getIndex(cell);
-                    let nextCell = cells[event.code === 'ArrowDown' ? cellIndex + 3 : cellIndex - 3];
+                    let nextCell =
+                        cells[
+                            event.code === "ArrowDown"
+                                ? cellIndex + 3
+                                : cellIndex - 3
+                        ];
 
                     if (nextCell) {
-                        nextCell.tabIndex = '0';
+                        nextCell.tabIndex = "0";
                         nextCell.focus();
                     }
 
@@ -2205,12 +3560,12 @@ export default {
                     break;
                 }
 
-                case 'ArrowLeft': {
-                    cell.tabIndex = '-1';
+                case "ArrowLeft": {
+                    cell.tabIndex = "-1";
                     let prevCell = cell.previousElementSibling;
 
                     if (prevCell) {
-                        prevCell.tabIndex = '0';
+                        prevCell.tabIndex = "0";
                         prevCell.focus();
                     } else {
                         this.navigationState = { backward: true };
@@ -2221,12 +3576,12 @@ export default {
                     break;
                 }
 
-                case 'ArrowRight': {
-                    cell.tabIndex = '-1';
+                case "ArrowRight": {
+                    cell.tabIndex = "-1";
                     let nextCell = cell.nextElementSibling;
 
                     if (nextCell) {
-                        nextCell.tabIndex = '0';
+                        nextCell.tabIndex = "0";
                         nextCell.focus();
                     } else {
                         this.navigationState = { backward: false };
@@ -2237,7 +3592,7 @@ export default {
                     break;
                 }
 
-                case 'PageUp': {
+                case "PageUp": {
                     if (event.shiftKey) return;
                     this.navigationState = { backward: true };
                     this.navBackward(event);
@@ -2245,7 +3600,7 @@ export default {
                     break;
                 }
 
-                case 'PageDown': {
+                case "PageDown": {
                     if (event.shiftKey) return;
                     this.navigationState = { backward: false };
                     this.navForward(event);
@@ -2253,22 +3608,22 @@ export default {
                     break;
                 }
 
-                case 'Enter':
-                case 'NumpadEnter':
+                case "Enter":
+                case "NumpadEnter":
 
-                case 'Space': {
+                case "Space": {
                     this.onMonthSelect(event, index);
                     event.preventDefault();
                     break;
                 }
 
-                case 'Escape': {
+                case "Escape": {
                     this.overlayVisible = false;
                     event.preventDefault();
                     break;
                 }
 
-                case 'Tab': {
+                case "Tab": {
                     this.trapFocus(event);
                     break;
                 }
@@ -2282,16 +3637,21 @@ export default {
             const cell = event.currentTarget;
 
             switch (event.code) {
-                case 'ArrowUp':
+                case "ArrowUp":
 
-                case 'ArrowDown': {
-                    cell.tabIndex = '-1';
+                case "ArrowDown": {
+                    cell.tabIndex = "-1";
                     var cells = cell.parentElement.children;
                     var cellIndex = getIndex(cell);
-                    let nextCell = cells[event.code === 'ArrowDown' ? cellIndex + 2 : cellIndex - 2];
+                    let nextCell =
+                        cells[
+                            event.code === "ArrowDown"
+                                ? cellIndex + 2
+                                : cellIndex - 2
+                        ];
 
                     if (nextCell) {
-                        nextCell.tabIndex = '0';
+                        nextCell.tabIndex = "0";
                         nextCell.focus();
                     }
 
@@ -2299,12 +3659,12 @@ export default {
                     break;
                 }
 
-                case 'ArrowLeft': {
-                    cell.tabIndex = '-1';
+                case "ArrowLeft": {
+                    cell.tabIndex = "-1";
                     let prevCell = cell.previousElementSibling;
 
                     if (prevCell) {
-                        prevCell.tabIndex = '0';
+                        prevCell.tabIndex = "0";
                         prevCell.focus();
                     } else {
                         this.navigationState = { backward: true };
@@ -2315,12 +3675,12 @@ export default {
                     break;
                 }
 
-                case 'ArrowRight': {
-                    cell.tabIndex = '-1';
+                case "ArrowRight": {
+                    cell.tabIndex = "-1";
                     let nextCell = cell.nextElementSibling;
 
                     if (nextCell) {
-                        nextCell.tabIndex = '0';
+                        nextCell.tabIndex = "0";
                         nextCell.focus();
                     } else {
                         this.navigationState = { backward: false };
@@ -2331,7 +3691,7 @@ export default {
                     break;
                 }
 
-                case 'PageUp': {
+                case "PageUp": {
                     if (event.shiftKey) return;
                     this.navigationState = { backward: true };
                     this.navBackward(event);
@@ -2339,7 +3699,7 @@ export default {
                     break;
                 }
 
-                case 'PageDown': {
+                case "PageDown": {
                     if (event.shiftKey) return;
                     this.navigationState = { backward: false };
                     this.navForward(event);
@@ -2347,22 +3707,22 @@ export default {
                     break;
                 }
 
-                case 'Enter':
-                case 'NumpadEnter':
+                case "Enter":
+                case "NumpadEnter":
 
-                case 'Space': {
+                case "Space": {
                     this.onYearSelect(event, index);
                     event.preventDefault();
                     break;
                 }
 
-                case 'Escape': {
+                case "Escape": {
                     this.overlayVisible = false;
                     event.preventDefault();
                     break;
                 }
 
-                case 'Tab': {
+                case "Tab": {
                     this.trapFocus(event);
                     break;
                 }
@@ -2379,35 +3739,54 @@ export default {
                 if (this.navigationState.button) {
                     this.initFocusableCell();
 
-                    if (this.navigationState.backward) this.previousButton.focus();
+                    if (this.navigationState.backward)
+                        this.previousButton.focus();
                     else this.nextButton.focus();
                 } else {
                     if (this.navigationState.backward) {
                         let cells;
 
-                        if (this.currentView === 'month') {
-                            cells = find(this.overlay, '[data-pc-section="monthview"] [data-pc-section="month"]:not([data-p-disabled="true"])');
-                        } else if (this.currentView === 'year') {
-                            cells = find(this.overlay, '[data-pc-section="yearview"] [data-pc-section="year"]:not([data-p-disabled="true"])');
+                        if (this.currentView === "month") {
+                            cells = find(
+                                this.overlay,
+                                '[data-pc-section="monthview"] [data-pc-section="month"]:not([data-p-disabled="true"])'
+                            );
+                        } else if (this.currentView === "year") {
+                            cells = find(
+                                this.overlay,
+                                '[data-pc-section="yearview"] [data-pc-section="year"]:not([data-p-disabled="true"])'
+                            );
                         } else {
-                            cells = find(this.overlay, 'table td span:not([data-p-disabled="true"]):not([data-p-ink="true"])');
+                            cells = find(
+                                this.overlay,
+                                'table td span:not([data-p-disabled="true"]):not([data-p-ink="true"])'
+                            );
                         }
 
                         if (cells && cells.length > 0) {
                             cell = cells[cells.length - 1];
                         }
                     } else {
-                        if (this.currentView === 'month') {
-                            cell = findSingle(this.overlay, '[data-pc-section="monthview"] [data-pc-section="month"]:not([data-p-disabled="true"])');
-                        } else if (this.currentView === 'year') {
-                            cell = findSingle(this.overlay, '[data-pc-section="yearview"] [data-pc-section="year"]:not([data-p-disabled="true"])');
+                        if (this.currentView === "month") {
+                            cell = findSingle(
+                                this.overlay,
+                                '[data-pc-section="monthview"] [data-pc-section="month"]:not([data-p-disabled="true"])'
+                            );
+                        } else if (this.currentView === "year") {
+                            cell = findSingle(
+                                this.overlay,
+                                '[data-pc-section="yearview"] [data-pc-section="year"]:not([data-p-disabled="true"])'
+                            );
                         } else {
-                            cell = findSingle(this.overlay, 'table td span:not([data-p-disabled="true"]):not([data-p-ink="true"])');
+                            cell = findSingle(
+                                this.overlay,
+                                'table td span:not([data-p-disabled="true"]):not([data-p-ink="true"])'
+                            );
                         }
                     }
 
                     if (cell) {
-                        cell.tabIndex = '0';
+                        cell.tabIndex = "0";
                         cell.focus();
                     }
                 }
@@ -2420,15 +3799,27 @@ export default {
         initFocusableCell() {
             let cell;
 
-            if (this.currentView === 'month') {
-                let cells = find(this.overlay, '[data-pc-section="monthview"] [data-pc-section="month"]');
-                let selectedCell = findSingle(this.overlay, '[data-pc-section="monthview"] [data-pc-section="month"][data-p-selected="true"]');
+            if (this.currentView === "month") {
+                let cells = find(
+                    this.overlay,
+                    '[data-pc-section="monthview"] [data-pc-section="month"]'
+                );
+                let selectedCell = findSingle(
+                    this.overlay,
+                    '[data-pc-section="monthview"] [data-pc-section="month"][data-p-selected="true"]'
+                );
 
                 cells.forEach((cell) => (cell.tabIndex = -1));
                 cell = selectedCell || cells[0];
-            } else if (this.currentView === 'year') {
-                let cells = find(this.overlay, '[data-pc-section="yearview"] [data-pc-section="year"]');
-                let selectedCell = findSingle(this.overlay, '[data-pc-section="yearview"] [data-pc-section="year"][data-p-selected="true"]');
+            } else if (this.currentView === "year") {
+                let cells = find(
+                    this.overlay,
+                    '[data-pc-section="yearview"] [data-pc-section="year"]'
+                );
+                let selectedCell = findSingle(
+                    this.overlay,
+                    '[data-pc-section="yearview"] [data-pc-section="year"][data-p-selected="true"]'
+                );
 
                 cells.forEach((cell) => (cell.tabIndex = -1));
                 cell = selectedCell || cells[0];
@@ -2436,15 +3827,22 @@ export default {
                 cell = findSingle(this.overlay, 'span[data-p-selected="true"]');
 
                 if (!cell) {
-                    let todayCell = findSingle(this.overlay, 'td[data-p-today="true"] span:not([data-p-disabled="true"]):not([data-p-ink="true"])');
+                    let todayCell = findSingle(
+                        this.overlay,
+                        'td[data-p-today="true"] span:not([data-p-disabled="true"]):not([data-p-ink="true"])'
+                    );
 
                     if (todayCell) cell = todayCell;
-                    else cell = findSingle(this.overlay, '.p-datepicker-calendar td span:not([data-p-disabled="true"]):not([data-p-ink="true"])');
+                    else
+                        cell = findSingle(
+                            this.overlay,
+                            '.p-datepicker-calendar td span:not([data-p-disabled="true"]):not([data-p-ink="true"])'
+                        );
                 }
             }
 
             if (cell) {
-                cell.tabIndex = '0';
+                cell.tabIndex = "0";
 
                 this.preventFocus = false;
             }
@@ -2457,10 +3855,15 @@ export default {
                 if (!document.activeElement) {
                     focusableElements[0].focus();
                 } else {
-                    let focusedIndex = focusableElements.indexOf(document.activeElement);
+                    let focusedIndex = focusableElements.indexOf(
+                        document.activeElement
+                    );
 
                     if (event.shiftKey) {
-                        if (focusedIndex === -1 || focusedIndex === 0) focusableElements[focusableElements.length - 1].focus();
+                        if (focusedIndex === -1 || focusedIndex === 0)
+                            focusableElements[
+                                focusableElements.length - 1
+                            ].focus();
                         else focusableElements[focusedIndex - 1].focus();
                     } else {
                         if (focusedIndex === -1) {
@@ -2469,8 +3872,14 @@ export default {
                             } else {
                                 let spanIndex = null;
 
-                                for (let i = 0; i < focusableElements.length; i++) {
-                                    if (focusableElements[i].tagName === 'SPAN') {
+                                for (
+                                    let i = 0;
+                                    i < focusableElements.length;
+                                    i++
+                                ) {
+                                    if (
+                                        focusableElements[i].tagName === "SPAN"
+                                    ) {
                                         spanIndex = i;
                                         break;
                                     }
@@ -2478,7 +3887,11 @@ export default {
 
                                 focusableElements[spanIndex].focus();
                             }
-                        } else if (focusedIndex === focusableElements.length - 1) focusableElements[0].focus();
+                        } else if (
+                            focusedIndex ===
+                            focusableElements.length - 1
+                        )
+                            focusableElements[0].focus();
                         else focusableElements[focusedIndex + 1].focus();
                     }
                 }
@@ -2486,11 +3899,11 @@ export default {
         },
         onContainerButtonKeydown(event) {
             switch (event.code) {
-                case 'Tab':
+                case "Tab":
                     this.trapFocus(event);
                     break;
 
-                case 'Escape':
+                case "Escape":
                     this.overlayVisible = false;
                     event.preventDefault();
                     break;
@@ -2500,7 +3913,7 @@ export default {
                     break;
             }
 
-            this.$emit('keydown', event);
+            this.$emit("keydown", event);
         },
         onInput(event) {
             try {
@@ -2517,7 +3930,7 @@ export default {
                 /* NoOp */
             }
 
-            this.$emit('input', event);
+            this.$emit("input", event);
         },
         onInputClick() {
             if (this.showOnFocus && this.isEnabled() && !this.overlayVisible) {
@@ -2530,35 +3943,44 @@ export default {
             }
 
             this.focused = true;
-            this.$emit('focus', event);
+            this.$emit("focus", event);
         },
         onBlur(event) {
-            this.$emit('blur', { originalEvent: event, value: event.target.value });
+            this.$emit("blur", {
+                originalEvent: event,
+                value: event.target.value,
+            });
             this.formField.onBlur?.();
 
             this.focused = false;
             event.target.value = this.formatValue(this.d_value);
         },
         onKeyDown(event) {
-            if (event.code === 'ArrowDown' && this.overlay) {
+            if (event.code === "ArrowDown" && this.overlay) {
                 this.trapFocus(event);
-            } else if (event.code === 'ArrowDown' && !this.overlay) {
+            } else if (event.code === "ArrowDown" && !this.overlay) {
                 this.overlayVisible = true;
-            } else if (event.code === 'Escape') {
+            } else if (event.code === "Escape") {
                 if (this.overlayVisible) {
                     this.overlayVisible = false;
                     event.preventDefault();
                 }
-            } else if (event.code === 'Tab') {
+            } else if (event.code === "Tab") {
                 if (this.overlay) {
-                    getFocusableElements(this.overlay).forEach((el) => (el.tabIndex = '-1'));
+                    getFocusableElements(this.overlay).forEach(
+                        (el) => (el.tabIndex = "-1")
+                    );
                 }
 
                 if (this.overlayVisible) {
                     this.overlayVisible = false;
                 }
-            } else if (event.code === 'Enter') {
-                if (this.manualInput && event.target.value !== null && event.target.value?.trim() !== '') {
+            } else if (event.code === "Enter") {
+                if (
+                    this.manualInput &&
+                    event.target.value !== null &&
+                    event.target.value?.trim() !== ""
+                ) {
                     try {
                         let value = this.parseValue(event.target.value);
 
@@ -2570,7 +3992,7 @@ export default {
                     }
                 }
 
-                this.$emit('keydown', event);
+                this.$emit("keydown", event);
             }
         },
         overlayRef(el) {
@@ -2586,24 +4008,26 @@ export default {
             this.nextButton = el ? el.$el : undefined;
         },
         getMonthName(index) {
-            return this.$primevue.config.locale.monthNames[index];
+            const date = new MyDate(1, index, 1);
+               
+            return date.getMonthName();
         },
         getYear(month) {
-            return this.currentView === 'month' ? this.currentYear : month.year;
+            return this.currentView === "month" ? this.currentYear : month.year;
         },
         onOverlayClick(event) {
             event.stopPropagation();
 
             if (!this.inline) {
-                OverlayEventBus.emit('overlay-click', {
+                OverlayEventBus.emit("overlay-click", {
                     originalEvent: event,
-                    target: this.$el
+                    target: this.$el,
                 });
             }
         },
         onOverlayKeyDown(event) {
             switch (event.code) {
-                case 'Escape':
+                case "Escape":
                     if (!this.inline) {
                         this.input.focus();
                         this.overlayVisible = false;
@@ -2619,19 +4043,33 @@ export default {
             this.onOverlayClick(event);
         },
         createResponsiveStyle() {
-            if (this.numberOfMonths > 1 && this.responsiveOptions && !this.isUnstyled) {
+            if (
+                this.numberOfMonths > 1 &&
+                this.responsiveOptions &&
+                !this.isUnstyled
+            ) {
                 if (!this.responsiveStyleElement) {
-                    this.responsiveStyleElement = document.createElement('style');
-                    this.responsiveStyleElement.type = 'text/css';
-                    setAttribute(this.responsiveStyleElement, 'nonce', this.$primevue?.config?.csp?.nonce);
+                    this.responsiveStyleElement =
+                        document.createElement("style");
+                    this.responsiveStyleElement.type = "text/css";
+                    setAttribute(
+                        this.responsiveStyleElement,
+                        "nonce",
+                        this.$primevue?.config?.csp?.nonce
+                    );
                     document.body.appendChild(this.responsiveStyleElement);
                 }
 
-                let innerHTML = '';
+                let innerHTML = "";
 
                 if (this.responsiveOptions) {
                     const comparer = localeComparator();
-                    let responsiveOptions = [...this.responsiveOptions].filter((o) => !!(o.breakpoint && o.numMonths)).sort((o1, o2) => -1 * comparer(o1.breakpoint, o2.breakpoint));
+                    let responsiveOptions = [...this.responsiveOptions]
+                        .filter((o) => !!(o.breakpoint && o.numMonths))
+                        .sort(
+                            (o1, o2) =>
+                                -1 * comparer(o1.breakpoint, o2.breakpoint)
+                        );
 
                     for (let i = 0; i < responsiveOptions.length; i++) {
                         let { breakpoint, numMonths } = responsiveOptions[i];
@@ -2665,7 +4103,7 @@ export default {
                 this.responsiveStyleElement.remove();
                 this.responsiveStyleElement = null;
             }
-        }
+        },
     },
     computed: {
         viewDate() {
@@ -2673,16 +4111,18 @@ export default {
 
             if (propValue && Array.isArray(propValue)) {
                 if (this.isRangeSelection()) {
-                    propValue = this.inline ? propValue[0] : propValue[1] || propValue[0];
+                    propValue = this.inline
+                        ? propValue[0]
+                        : propValue[1] || propValue[0];
                 } else if (this.isMultipleSelection()) {
                     propValue = propValue[propValue.length - 1];
                 }
             }
 
-            if (propValue && typeof propValue !== 'string') {
+            if (propValue && typeof propValue !== "string") {
                 return propValue;
             } else {
-                let today = new Date();
+                let today = new MyDate();
 
                 if (this.maxDate && this.maxDate < today) {
                     return this.maxDate;
@@ -2696,13 +4136,7 @@ export default {
             }
         },
         inputFieldValue() {
-            const d = new Date(this.d_value)
-
-            const m = parseInt(d.toLocaleDateString('fa-IR-u-nu-latn', { month: 'numeric' }))
-
-            if (d.getMonth() - m > 1) d.setMonth(d.getMonth() + 1)
-
-            return d.toLocaleDateString('fa-IR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            return this.formatValue(this.d_value);
         },
         months() {
             let months = [];
@@ -2710,18 +4144,21 @@ export default {
             for (let i = 0; i < this.numberOfMonths; i++) {
                 let month = this.currentMonth + i;
                 let year = this.currentYear;
-
+                
                 if (month > 11) {
                     month = (month % 11) - 1;
                     year = year + 1;
                 }
 
                 let dates = [];
-                let firstDay = this.getFirstDayOfMonthIndex(month, year);
+                let firstDay = this.getFirstDayOfMonthIndex(month, year);                
                 let daysLength = this.getDaysCountInMonth(month, year);
-                let prevMonthDaysLength = this.getDaysCountInPrevMonth(month, year);
+                let prevMonthDaysLength = this.getDaysCountInPrevMonth(
+                    month,
+                    year
+                );
                 let dayNo = 1;
-                let today = new Date();
+                let today = new MyDate();
                 let weekNumbers = [];
                 let monthRows = Math.ceil((daysLength + firstDay) / 7);
 
@@ -2729,33 +4166,97 @@ export default {
                     let week = [];
 
                     if (i == 0) {
-                        for (let j = prevMonthDaysLength - firstDay + 1; j <= prevMonthDaysLength; j++) {
-                            let prev = this.getPreviousMonthAndYear(month, year);
+                        for (
+                            let j = prevMonthDaysLength - firstDay + 1;
+                            j <= prevMonthDaysLength;
+                            j++
+                        ) {
+                            let prev = this.getPreviousMonthAndYear(
+                                month,
+                                year
+                            );
 
-                            week.push({ day: j, month: prev.month, year: prev.year, otherMonth: true, today: this.isToday(today, j, prev.month, prev.year), selectable: this.isSelectable(j, prev.month, prev.year, true) });
+                            week.push({
+                                day: j,
+                                month: prev.month,
+                                year: prev.year,
+                                otherMonth: true,
+                                today: this.isToday(
+                                    today,
+                                    j,
+                                    prev.month,
+                                    prev.year
+                                ),
+                                selectable: this.isSelectable(
+                                    j,
+                                    prev.month,
+                                    prev.year,
+                                    true
+                                ),
+                            });
                         }
 
                         let remainingDaysLength = 7 - week.length;
 
                         for (let j = 0; j < remainingDaysLength; j++) {
-                            week.push({ day: dayNo, month: month, year: year, today: this.isToday(today, dayNo, month, year), selectable: this.isSelectable(dayNo, month, year, false) });
+                            week.push({
+                                day: dayNo,
+                                month: month,
+                                year: year,
+                                today: this.isToday(today, dayNo, month, year),
+                                selectable: this.isSelectable(
+                                    dayNo,
+                                    month,
+                                    year,
+                                    false
+                                ),
+                            });
                             dayNo++;
                         }
                     } else {
                         for (let j = 0; j < 7; j++) {
                             if (dayNo > daysLength) {
-                                let next = this.getNextMonthAndYear(month, year);
+                                let next = this.getNextMonthAndYear(
+                                    month,
+                                    year
+                                );
 
                                 week.push({
                                     day: dayNo - daysLength,
                                     month: next.month,
                                     year: next.year,
                                     otherMonth: true,
-                                    today: this.isToday(today, dayNo - daysLength, next.month, next.year),
-                                    selectable: this.isSelectable(dayNo - daysLength, next.month, next.year, true)
+                                    today: this.isToday(
+                                        today,
+                                        dayNo - daysLength,
+                                        next.month,
+                                        next.year
+                                    ),
+                                    selectable: this.isSelectable(
+                                        dayNo - daysLength,
+                                        next.month,
+                                        next.year,
+                                        true
+                                    ),
                                 });
                             } else {
-                                week.push({ day: dayNo, month: month, year: year, today: this.isToday(today, dayNo, month, year), selectable: this.isSelectable(dayNo, month, year, false) });
+                                week.push({
+                                    day: dayNo,
+                                    month: month,
+                                    year: year,
+                                    today: this.isToday(
+                                        today,
+                                        dayNo,
+                                        month,
+                                        year
+                                    ),
+                                    selectable: this.isSelectable(
+                                        dayNo,
+                                        month,
+                                        year,
+                                        false
+                                    ),
+                                });
                             }
 
                             dayNo++;
@@ -2763,7 +4264,15 @@ export default {
                     }
 
                     if (this.showWeek) {
-                        weekNumbers.push(this.getWeekNumber(new Date(week[0].year, week[0].month, week[0].day)));
+                        weekNumbers.push(
+                            this.getWeekNumber(
+                                new MyDate(
+                                    week[0].year,
+                                    week[0].month,
+                                    week[0].day
+                                )
+                            )
+                        );
                     }
 
                     dates.push(week);
@@ -2773,28 +4282,34 @@ export default {
                     month: month,
                     year: year,
                     dates: dates,
-                    weekNumbers: weekNumbers
+                    weekNumbers: weekNumbers,
                 });
             }
-
+            
             return months;
         },
         weekDays() {
             let weekDays = [];
-            let dayIndex = this.$primevue.config.locale.firstDayOfWeek;
-
+            let dayIndex = this.type == "jalali" ? 1 : 0;
+            const list = MyDate.getWeekdays();
             for (let i = 0; i < 7; i++) {
-                weekDays.push(this.$primevue.config.locale.dayNamesMin[dayIndex]);
+                weekDays.push(list[dayIndex]);
                 dayIndex = dayIndex == 6 ? 0 : ++dayIndex;
             }
 
             return weekDays;
         },
         ticksTo1970() {
-            return ((1970 - 1) * 365 + Math.floor(1970 / 4) - Math.floor(1970 / 100) + Math.floor(1970 / 400)) * 24 * 60 * 60 * 10000000;
-        },
-        sundayIndex() {
-            return this.$primevue.config.locale.firstDayOfWeek > 0 ? 7 - this.$primevue.config.locale.firstDayOfWeek : 0;
+            return (
+                ((1970 - 1) * 365 +
+                    Math.floor(1970 / 4) -
+                    Math.floor(1970 / 100) +
+                    Math.floor(1970 / 400)) *
+                24 *
+                60 *
+                60 *
+                10000000
+            );
         },
         datePattern() {
             return this.dateFormat || this.$primevue.config.locale.dateFormat;
@@ -2807,7 +4322,10 @@ export default {
                     const minMonth = this.minDate.getMonth();
                     const minYear = this.minDate.getFullYear();
 
-                    if (this.currentYear < minYear || (this.currentYear === minYear && baseMonth < minMonth)) {
+                    if (
+                        this.currentYear < minYear ||
+                        (this.currentYear === minYear && baseMonth < minMonth)
+                    ) {
                         return false;
                     }
                 }
@@ -2816,7 +4334,10 @@ export default {
                     const maxMonth = this.maxDate.getMonth();
                     const maxYear = this.maxDate.getFullYear();
 
-                    if (this.currentYear > maxYear || (this.currentYear === maxYear && baseMonth > maxMonth)) {
+                    if (
+                        this.currentYear > maxYear ||
+                        (this.currentYear === maxYear && baseMonth > maxMonth)
+                    ) {
                         return false;
                     }
                 }
@@ -2824,11 +4345,17 @@ export default {
                 return true;
             };
 
+            const date = new MyDate();
+           
             for (let i = 0; i <= 11; i++) {
-                monthPickerValues.push({ value: this.$primevue.config.locale.monthNamesShort[i], selectable: isSelectableMonth(i < 2 ? 11 + i : i) });
+                date.setMonth(i);            
+                monthPickerValues.push({
+                    value: date.getMonthName(),
+                    selectable: isSelectableMonth(i),
+                });
             }
 
-            return monthPickerValues; i < 2 ? i + 9 : i - 3
+            return monthPickerValues;
         },
         yearPickerValues() {
             let yearPickerValues = [];
@@ -2847,23 +4374,32 @@ export default {
             };
 
             for (let i = 0; i < 10; i++) {
-                yearPickerValues.push({ value: base + i, selectable: isSelectableYear(base + i) });
+                yearPickerValues.push({
+                    value: base + i,
+                    selectable: isSelectableYear(base + i),
+                });
             }
 
             return yearPickerValues;
         },
         formattedCurrentHour() {
-            if (this.currentHour == 0) {
+            if (this.currentHour == 0 && this.hourFormat == "12") {
                 return this.currentHour + 12;
             }
 
-            return this.currentHour < 10 ? '0' + this.currentHour : this.currentHour;
+            return this.currentHour < 10
+                ? "0" + this.currentHour
+                : this.currentHour;
         },
         formattedCurrentMinute() {
-            return this.currentMinute < 10 ? '0' + this.currentMinute : this.currentMinute;
+            return this.currentMinute < 10
+                ? "0" + this.currentMinute
+                : this.currentMinute;
         },
         formattedCurrentSecond() {
-            return this.currentSecond < 10 ? '0' + this.currentSecond : this.currentSecond;
+            return this.currentSecond < 10
+                ? "0" + this.currentSecond
+                : this.currentSecond;
         },
         todayLabel() {
             return this.$primevue.config.locale.today;
@@ -2881,8 +4417,8 @@ export default {
             return this.numberOfMonths > 1 || this.disabled;
         },
         panelId() {
-            return this.d_id + '_panel';
-        }
+            return this.d_id + "_panel";
+        },
     },
     components: {
         InputText,
@@ -2892,236 +4428,16 @@ export default {
         ChevronLeftIcon,
         ChevronRightIcon,
         ChevronUpIcon,
-        ChevronDownIcon
+        ChevronDownIcon,
     },
     directives: {
-        ripple: Ripple
+        ripple: Ripple,
     },
-    props: {
-        selectionMode: {
-            type: String,
-            default: 'single'
-        },
-        dateFormat: {
-            type: String,
-            default: null
-        },
-        inline: {
-            type: Boolean,
-            default: false
-        },
-        showOtherMonths: {
-            type: Boolean,
-            default: true
-        },
-        selectOtherMonths: {
-            type: Boolean,
-            default: false
-        },
-        showIcon: {
-            type: Boolean,
-            default: false
-        },
-        iconDisplay: {
-            type: String,
-            default: 'button'
-        },
-        icon: {
-            type: String,
-            default: undefined
-        },
-        prevIcon: {
-            type: String,
-            default: undefined
-        },
-        nextIcon: {
-            type: String,
-            default: undefined
-        },
-        incrementIcon: {
-            type: String,
-            default: undefined
-        },
-        decrementIcon: {
-            type: String,
-            default: undefined
-        },
-        numberOfMonths: {
-            type: Number,
-            default: 1
-        },
-        responsiveOptions: Array,
-        breakpoint: {
-            type: String,
-            default: '769px'
-        },
-        view: {
-            type: String,
-            default: 'date'
-        },
-        minDate: {
-            type: Date,
-            value: null
-        },
-        maxDate: {
-            type: Date,
-            value: null
-        },
-        disabledDates: {
-            type: Array,
-            value: null
-        },
-        disabledDays: {
-            type: Array,
-            value: null
-        },
-        maxDateCount: {
-            type: Number,
-            value: null
-        },
-        showOnFocus: {
-            type: Boolean,
-            default: true
-        },
-        autoZIndex: {
-            type: Boolean,
-            default: true
-        },
-        baseZIndex: {
-            type: Number,
-            default: 0
-        },
-        showButtonBar: {
-            type: Boolean,
-            default: false
-        },
-        shortYearCutoff: {
-            type: String,
-            default: '+10'
-        },
-        showTime: {
-            type: Boolean,
-            default: false
-        },
-        timeOnly: {
-            type: Boolean,
-            default: false
-        },
-        hourFormat: {
-            type: String,
-            default: '24'
-        },
-        stepHour: {
-            type: Number,
-            default: 1
-        },
-        stepMinute: {
-            type: Number,
-            default: 1
-        },
-        stepSecond: {
-            type: Number,
-            default: 1
-        },
-        showSeconds: {
-            type: Boolean,
-            default: false
-        },
-        hideOnDateTimeSelect: {
-            type: Boolean,
-            default: false
-        },
-        hideOnRangeSelection: {
-            type: Boolean,
-            default: false
-        },
-        timeSeparator: {
-            type: String,
-            default: ':'
-        },
-        showWeek: {
-            type: Boolean,
-            default: false
-        },
-        manualInput: {
-            type: Boolean,
-            default: true
-        },
-        appendTo: {
-            type: [String, Object],
-            default: 'body'
-        },
-        readonly: {
-            type: Boolean,
-            default: false
-        },
-        placeholder: {
-            type: String,
-            default: null
-        },
-        id: {
-            type: String,
-            default: null
-        },
-        inputId: {
-            type: String,
-            default: null
-        },
-        inputClass: {
-            type: [String, Object],
-            default: null
-        },
-        inputStyle: {
-            type: Object,
-            default: null
-        },
-        panelClass: {
-            type: [String, Object],
-            default: null
-        },
-        panelStyle: {
-            type: Object,
-            default: null
-        },
-        todayButtonProps: {
-            type: Object,
-            default() {
-                return { severity: 'secondary', text: true, size: 'small' };
-            }
-        },
-        clearButtonProps: {
-            type: Object,
-            default() {
-                return { severity: 'secondary', text: true, size: 'small' };
-            }
-        },
-        navigatorButtonProps: {
-            type: Object,
-            default() {
-                return { severity: 'secondary', text: true, rounded: true };
-            }
-        },
-        timepickerButtonProps: {
-            type: Object,
-            default() {
-                return { severity: 'secondary', text: true, rounded: true };
-            }
-        },
-        ariaLabelledby: {
-            type: String,
-            default: null
-        },
-        ariaLabel: {
-            type: String,
-            default: null
-        }
-    },
-    style: DatePickerStyle,
     provide() {
         return {
             $pcDatePicker: this,
-            $parentInstance: this
+            $parentInstance: this,
         };
-    }
+    },
 };
 </script>

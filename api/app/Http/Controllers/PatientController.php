@@ -28,7 +28,8 @@ class PatientController extends Controller
             'province',
             'city',
             'lead_source',
-            'status'
+            'status',
+            'insurance'
         ];
 
         $dateFields = ['birthday', 'created_at', 'updated_at'];
@@ -101,7 +102,8 @@ class PatientController extends Controller
             'city',
             'lead_source',
             'status',
-            'desc'
+            'desc',
+            'insurance'
         ]);
 
         $patient = auth()->user()->patients()->create($form);

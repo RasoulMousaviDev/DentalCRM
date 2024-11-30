@@ -28,7 +28,8 @@ class UpdatePatientRequest extends FormRequest
             'status' => 'required|exists:statuses,id',
             'desc' => 'nullable|string',
             'treatments' => 'nullable|array',
-            'treatments.*' => 'required|exists:treatments,id'
+            'treatments.*' => 'required|exists:treatments,id',
+            'insurance' => 'required|boolean'
         ];
     }
 }
