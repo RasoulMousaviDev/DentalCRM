@@ -66,8 +66,7 @@ const store = usePatientsStore()
 
 const auth = useAuthStore()
 
-if (store.items.length === 0)
-    store.index()
+store.index()
 
 const create = async () => {
     dialog.open(PatientForm, {

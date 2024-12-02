@@ -25,7 +25,7 @@
             <label> {{ $t('telephone') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <DatePicker v-model="filters.birthday" selectionMode="range" :manualInput="false" :max-date="new Date()"
+            <DatePicker v-model="filters.birthday" selectionMode="range" :manualInput="false" :max-date="new MyDate()"
                 fluid class="ltr" dateFormat="yy/mm/dd" showButtonBar />
             <label>{{ $t('birthday') }}</label>
         </FloatLabel>
@@ -72,12 +72,12 @@
         </FloatLabel>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" class="ltr w-full"
-                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />
             <label> {{ $t('created_at') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.updated_at" selectionMode="range" :manualInput="false" class="ltr w-full"
-                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />
             <label> {{ $t('updated_at') }}</label>
         </FloatLabel>
         <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" class="w-28 shrink-0 mr-auto"
@@ -86,6 +86,7 @@
 </template>
 
 <script setup>
+import MyDate from '../utils/MyDate'
 import { useAuthStore } from '@/stores/auth';
 import { useCitiesStore } from '@/stores/cities';
 import { useGendersStore } from '@/stores/genders';

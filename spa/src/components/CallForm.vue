@@ -66,7 +66,7 @@
             <div class="flex flex-col gap-1">
                 <FloatLabel variant="on">
                     <DatePicker v-model="form.follow_up.due_date" :invalid="errors['follow_up.due_date']" class="ltr"
-                        fluid dateFormat="yy/mm/dd" show-time :min-date="new Date()" />
+                        fluid dateFormat="yy/mm/dd" show-time :min-date="new MyDate()" />
                     <label>{{ $t('follow-up-date') }}</label>
                 </FloatLabel>
                 <small v-if="errors['follow_up.due_date']" v-text="errors['follow_up.due_date'][0]"
@@ -89,6 +89,8 @@
 </template>
 
 <script setup>
+import MyDate from '../utils/MyDate'
+
 import { useCallsStore } from '@/stores/calls';
 import { useFollowUpsStore } from '@/stores/follow-ups';
 import { usePatientsStore } from '@/stores/patients';

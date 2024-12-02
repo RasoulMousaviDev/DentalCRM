@@ -9,12 +9,12 @@
                     <div class="flex gap-3">
                         <InputGroup class="ltr !w-[19rem]">
                             <DatePicker v-model="date.from" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd"
-                                :max-date="new Date()" />
+                                :max-date="new MyDate()" />
                             <InputGroupAddon>{{ $t('from') }}</InputGroupAddon>
                         </InputGroup>
                         <InputGroup class="ltr !w-[19rem]">
                             <DatePicker v-model="date.to" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd"
-                                :max-date="new Date()" :min-date="date.from" />
+                                :max-date="new MyDate()" :min-date="date.from" />
                             <InputGroupAddon>{{ $t('to') }}</InputGroupAddon>
                         </InputGroup>
                         <Button :label="$t('search')" :loading="store.fetching" @click="store.index(date)" />
@@ -49,14 +49,15 @@
 </template>
 
 <script setup>
+import MyDate from '../utils/MyDate'
 import { useConsultantsStore } from '@/stores/consultants';
 import { reactive } from 'vue';
 
-const fdate = new Date();
+const fdate = new MyDate();
 fdate.setDate(fdate.getDate() - 7)
 const date = reactive({
     from: fdate,
-    to: new Date(),
+    to: new MyDate(),
 })
 
 const store = useConsultantsStore()

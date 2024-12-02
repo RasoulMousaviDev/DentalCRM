@@ -18,7 +18,7 @@
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <DatePicker v-model="form.start_date" :invalid="errors.start_date" class="ltr" fluid
-                    dateFormat="yy/mm/dd" :min-date="new Date()" />
+                    dateFormat="yy/mm/dd" :min-date="new MyDate()" />
                 <label>{{ $t('start-date') }}</label>
             </FloatLabel>
             <small v-if="errors.start_date" v-text="errors.start_date[0]" class="text-red-500" />
@@ -26,7 +26,7 @@
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <DatePicker v-model="form.end_date" :invalid="errors.end_date" class="ltr" fluid dateFormat="yy/mm/dd"
-                    :min-date="new Date()" />
+                    :min-date="new MyDate()" />
                 <label>{{ $t('start-date') }}</label>
             </FloatLabel>
             <small v-if="errors.end_date" v-text="errors.end_date[0]" class="text-red-500" />
@@ -50,6 +50,8 @@
 </template>
 
 <script setup>
+import MyDate from '../utils/MyDate'
+
 import { useCampainsStore } from '@/stores/campains';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 

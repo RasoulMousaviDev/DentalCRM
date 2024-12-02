@@ -105,8 +105,8 @@ class TreatmentPlanController extends Controller
 
         $treatmentPlan = $patient->treatmentPlans()
             ->with('status:id,value,severity')
-            ->with('patient:id,firstname,lastname')
-            ->with('patient.user:name')
+            ->with('patient:id,firstname,lastname,user')
+            ->with('patient.user:id,name')
             ->latest()
             ->first();
 
@@ -117,8 +117,8 @@ class TreatmentPlanController extends Controller
     {
         $treatmentPlan->load([
             'status:id,value,severity',
-            'patient:id,firstname,lastname',
-            'patient.user:name'
+            'patient:id,firstname,lastname,user',
+            'patient.user:id,name'
         ]);
 
         return response()->json($treatmentPlan);
@@ -134,8 +134,8 @@ class TreatmentPlanController extends Controller
 
         $treatmentPlan->load([
             'status:id,value,severity',
-            'patient:id,firstname,lastname',
-            'patient.user:name'
+            'patient:id,firstname,lastname,user',
+            'patient.user:id,name'
         ]);
 
         return response()->json($treatmentPlan);

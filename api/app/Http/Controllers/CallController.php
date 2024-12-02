@@ -118,7 +118,7 @@ class CallController extends Controller
 
         $call = $patient->calls()
             ->with('status:id,value,severity')
-            ->with('patient:id,firstname,lastname')
+            ->with('patient:id,firstname,lastname,user')
             ->latest()->first();
 
         $response = compact('call');

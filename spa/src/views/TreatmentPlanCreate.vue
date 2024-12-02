@@ -82,7 +82,7 @@
                         </span>
                         <InputGroup class="ltr !w-[27.5rem]">
                             <DatePicker v-model="form.start_date" inputClass="ltr" panelClass="ltr"
-                                dateFormat="yy/mm/dd" :min-date="new Date()" :readonly="readonly" />
+                                dateFormat="yy/mm/dd" :min-date="new MyDate()" :readonly="readonly" />
                             <InputGroupAddon>{{ $t('treatment-start-date') }}</InputGroupAddon>
                         </InputGroup>
                     </div>
@@ -235,6 +235,8 @@
 </template>
 
 <script setup>
+import MyDate from '../utils/MyDate'
+
 import SelectTooth from '@/components/SelectTooth.vue';
 import { useTreatmentServicesStore } from '@/stores/treatment-services';
 import { useTreatmentsStore } from '@/stores/treatments';
@@ -360,7 +362,7 @@ watch(() => form.payment_method, (v) => {
         delete form.months
         delete form.checks_count
         delete form.start_date
-    } else form.start_date = new Date()
+    } else form.start_date = new MyDate()
 })
 
 const getTreatment = (t, k = null) => {
@@ -405,7 +407,7 @@ const getDivisors = (number) => {
 
 const calculateDueDates = (months, count) => {
     let dates = [];
-    const d = new Date(form.start_date);
+    const d = new MyDate(form.start_date);
     for (let i = 0; i < count; i++) {
         d.setMonth(d.getMonth() + (months / count));
         dates.push(d.toLocaleDateString('fa-IR', { year: 'numeric', month: '2-digit', day: '2-digit' }));

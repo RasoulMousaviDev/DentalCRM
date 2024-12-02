@@ -13,7 +13,6 @@
     "axios": "^1.7.4",
     "chart.js": "^4.4.6",
     "chartjs-plugin-datalabels": "^2.2.0",
-    "jalali-moment": "^3.3.11",
     "laravel-echo": "^1.16.1",
     "moment-jalaali": "^0.10.1",
     "pinia": "^2.1.7",

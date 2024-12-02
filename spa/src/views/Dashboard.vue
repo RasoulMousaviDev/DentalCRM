@@ -6,12 +6,12 @@
             </span>
             <div class="flex gap-3">
                 <InputGroup class="ltr !w-[19rem]">
-                    <DatePicker v-model="date.from" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd"
-                        :max-date="new Date()" />
+                    <DatePicker v-model="date.from" inputClass="ltr" dateFormat="yy/mm/dd" type="jalali"
+                        :max-date="new MyDate()" />
                     <InputGroupAddon>{{ $t('from') }}</InputGroupAddon>
                 </InputGroup>
                 <InputGroup class="ltr !w-[19rem]">
-                    <DatePicker v-model="date.to" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd"
+                    <DatePicker v-model="date.to" inputClass="ltr" dateFormat="yy/mm/dd" type="jalali"
                         />
                     <InputGroupAddon>{{ $t('to') }}</InputGroupAddon>
                 </InputGroup>
@@ -54,6 +54,7 @@
 
 
 <script setup>
+import MyDate from '../utils/MyDate'
 import CallStatusChart from '@/components/CallStatusChart.vue';
 import PatientGenderChart from '@/components/PatientGenderChart.vue';
 import PatientLeadSourceChart from '@/components/PatientLeadSourceChart.vue';
@@ -66,10 +67,10 @@ import { reactive, computed } from "vue";
 
 const store = useDashboardStore()
 
-const fdate = new Date();
+const fdate = new MyDate();
 fdate.setMonth(fdate.getMonth() - 1)
 
-const date = reactive({ from: fdate, to: new Date() })
+const date = reactive({ from: fdate, to: new MyDate() })
 const dateFormat = (d) => `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${('0' + d.getDate()).slice(-2)}`
 const form = reactive({
     from: computed(() => dateFormat(date.from) + ' 00:00:00'),

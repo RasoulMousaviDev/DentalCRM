@@ -101,9 +101,9 @@ class AppointmentController extends Controller
 
         $appointment = $patient->appointments()->with([
             'treatments:id,title',
-            'patient:id,firstname,lastname',
+            'patient:id,firstname,lastname,user',
             'status:id,value,severity',
-            'patient.user:name',
+            'patient.user:id,name',
         ])->latest()->first();
 
         $status = Status::firstWhere('name', 'appointment-set')->id;

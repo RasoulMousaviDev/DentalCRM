@@ -41,12 +41,12 @@
         </FloatLabel>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" fluid class="ltr"
-                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />
             <label> {{ $t('created_at') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.updated_at" selectionMode="range" :manualInput="false" fluid class="ltr"
-                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />
             <label> {{ $t('updated_at') }}</label>
         </FloatLabel>
         <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" class="w-32 mr-auto"
@@ -55,6 +55,7 @@
 </template>
 
 <script setup>
+import MyDate from '../utils/MyDate'
 import { useAppointmentsStore } from '@/stores/appointments';
 import { useAuthStore } from '@/stores/auth';
 import { useTreatmentsStore } from '@/stores/treatments';

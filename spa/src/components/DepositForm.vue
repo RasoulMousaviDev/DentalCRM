@@ -14,7 +14,7 @@
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <DatePicker v-model="form.payment_date" :invalid="errors.payment_date" class="ltr" fluid
-                    dateFormat="yy/mm/dd" show-time :min-date="new Date()" />
+                    dateFormat="yy/mm/dd" show-time :min-date="new MyDate()" />
                 <label>{{ $t('payment-date') }}</label>
             </FloatLabel>
             <small v-if="errors.payment_date" v-text="errors.payment_date[0]" class="text-red-500" />
@@ -27,6 +27,7 @@
 </template>
 
 <script setup>
+import MyDate from '../utils/MyDate'
 import { useAppointmentsStore } from '@/stores/appointments';
 import { computed, inject, reactive, ref, watch } from 'vue';
 
@@ -38,7 +39,7 @@ const { data } = dialogRef.value
 
 const form = reactive({
     amount: null,
-    payment_date: new Date(),
+    payment_date: new MyDate(),
     ...data.appointment
 })
 

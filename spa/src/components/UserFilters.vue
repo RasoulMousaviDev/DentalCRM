@@ -28,12 +28,12 @@
         </FloatLabel>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" fluid class="ltr"
-                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />
             <label> {{ $t('created_at') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.updated_at" selectionMode="range" :manualInput="false" fluid class="ltr"
-                showButtonBar dateFormat="yy/mm/dd" :max-date="new Date()" />
+                showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />
             <label> {{ $t('updated_at') }}</label>
         </FloatLabel>
         <Button icon="pi pi-search" :label="$t('search')" type="submit" severity="warn" class="w-28 mr-auto"
@@ -42,6 +42,8 @@
 </template>
 
 <script setup>
+import MyDate from '../utils/MyDate'
+
 import { useRolesStore } from '@/stores/roles';
 import { useUsersStore } from '@/stores/users';
 import { inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
