@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import MyDate from '../utils/MyDate'
+import MyDate from '../../utils/MyDate'
 import AuthLayout from '@/layouts/Auth.vue';
 import { useOTPCodeStore } from '@/stores/otp-code';
 import { usePasswordStore } from '@/stores/password';
