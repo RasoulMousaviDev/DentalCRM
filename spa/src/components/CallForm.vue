@@ -66,7 +66,8 @@
             <div class="flex flex-col gap-1">
                 <FloatLabel variant="on">
                     <DatePicker v-model="form.follow_up.due_date" :invalid="errors['follow_up.due_date']" class="ltr"
-                        fluid dateFormat="yy/mm/dd" show-time :min-date="new MyDate()" :disabledDates="holidays.items"/>
+                        fluid dateFormat="yy/mm/dd" show-time :min-date="new MyDate()" :disabledDates="holidays.items"
+                        :holidayDates="holidays.items" />
                     <label>{{ $t('follow-up-date') }}</label>
                 </FloatLabel>
                 <small v-if="errors['follow_up.due_date']" v-text="errors['follow_up.due_date'][0]"
@@ -131,7 +132,7 @@ const handleSubmit = async () => {
 
     if (statusText === 'OK') {
         dialogRef.value.close();
-        if(followUpId){
+        if (followUpId) {
             const followUp = followUps.items.find(f => f.id == followUpId)
             followUp.status = followUps.statuses.find(s => s.id == 19)
             const p = patients.items.find(p => p.id == patient.value)

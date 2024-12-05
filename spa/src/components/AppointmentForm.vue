@@ -26,7 +26,7 @@
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <DatePicker v-model="form.due_date" :invalid="errors.due_date" class="ltr" fluid dateFormat="yy/mm/dd"
-                    show-time :min-date="new MyDate()" :disabledDates="holidays.items"/>
+                    show-time :min-date="new MyDate()" :disabledDates="holidays.items" :holidayDates="holidays.items"/>
                 <label>{{ $t('appointment-date') }}</label>
             </FloatLabel>
             <small v-if="errors.due_date" v-text="errors.due_date[0]" class="text-red-500" />

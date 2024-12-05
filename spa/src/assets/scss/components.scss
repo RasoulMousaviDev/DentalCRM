@@ -29,30 +29,28 @@
     @apply w-max grow-0 !important;
 }
 
-.p-popover{
+.p-popover {
     @apply p-3 rounded-xl !important;
 }
 
-body:has(.p-popover){
+body:has(.p-popover) {
     @apply overflow-hidden;
     &::after {
-        @apply content-['_'] absolute inset-0 bg-[var(--p-mask-background)] z-[999] ;
+        @apply content-['_'] absolute inset-0 bg-[var(--p-mask-background)] z-[999];
     }
 }
 
-
-.p-select-clear-icon{
+.p-select-clear-icon {
     @apply right-auto left-10  !important;
 }
 
-.p-menu{
+.p-menu {
 }
 
-
-button:has(.p-badge){
+button:has(.p-badge) {
     @apply overflow-visible;
 }
-.p-badge{
+.p-badge {
     @apply absolute -top-2 -right-2 !bg-red-600 !text-white;
 }
 
@@ -60,45 +58,48 @@ button:has(.p-badge){
     @apply pr-4 #{!important};
 }
 
-.p-inputgroupaddon{
+.p-inputgroupaddon {
     @apply text-gray-800 dark:text-gray-100 #{!important};
 }
 
-.p-autocomplete-loader{
+.p-autocomplete-loader {
     @apply left-2 !right-auto;
 }
 
-.card{
+.card {
     @apply shadow-sm !mb-0;
 }
 
-.p-tieredmenu-item-link svg{
-    @apply ml-0 mr-auto rotate-180 #{!important};;
+.p-tieredmenu-item-link svg {
+    @apply ml-0 mr-auto rotate-180 #{!important};
 }
 
-.p-datepicker-decade{
+.p-datepicker-decade {
     @apply ltr;
 }
-.p-datepicker-header > button{
+.p-datepicker-header > button {
     // @apply rotate-180;
 }
-.p-datepicker-year-view{
+.p-datepicker-year-view {
     @apply ltr;
 }
-.p-datepicker-month-view{
+.p-datepicker-month-view {
     @apply rtl flex flex-wrap;
 }
-.p-datepicker-time-picker{
+.p-datepicker-time-picker {
     @apply ltr;
 }
-.p-datepicker-day-view{
+.p-datepicker-day-view {
     @apply rtl;
 }
 
-.p-datatable-footer:not(:has(:first-child)){
+.p-datatable-footer:not(:has(:first-child)) {
     @apply py-0 #{!important};
 }
 
 // .p-datepicker-panel{
 //     @apply -translate-x-[3.25rem]
 // }
+.p-datepicker-day-view td[data-p-holiday=true]> .p-datepicker-day {
+    @apply bg-red-50 !text-red-500;
+}
