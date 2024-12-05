@@ -18,6 +18,7 @@ import AppSidebar from './AppSidebar.vue';
 import AppFooter from './AppFooter.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRolesStore } from '@/stores/roles';
+import { useHolidaysStore } from '@/stores/holidays';
 import { useLayout } from '@/composables/layout';
 import { computed, onBeforeMount, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -37,6 +38,9 @@ auth.me().then(() => {
 
 const role = useRolesStore()
 role.index()
+
+const holidays = useHolidaysStore()
+holidays.index()
 
 const outsideClickListener = ref(null);
 

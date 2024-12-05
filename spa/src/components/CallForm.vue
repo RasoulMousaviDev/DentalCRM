@@ -66,7 +66,7 @@
             <div class="flex flex-col gap-1">
                 <FloatLabel variant="on">
                     <DatePicker v-model="form.follow_up.due_date" :invalid="errors['follow_up.due_date']" class="ltr"
-                        fluid dateFormat="yy/mm/dd" show-time :min-date="new MyDate()" />
+                        fluid dateFormat="yy/mm/dd" show-time :min-date="new MyDate()" :disabledDates="holidays.items"/>
                     <label>{{ $t('follow-up-date') }}</label>
                 </FloatLabel>
                 <small v-if="errors['follow_up.due_date']" v-text="errors['follow_up.due_date'][0]"
@@ -90,7 +90,7 @@
 
 <script setup>
 import MyDate from '../utils/MyDate'
-
+import { useHolidaysStore } from '@/stores/holidays';
 import { useCallsStore } from '@/stores/calls';
 import { useFollowUpsStore } from '@/stores/follow-ups';
 import { usePatientsStore } from '@/stores/patients';
@@ -114,6 +114,9 @@ if (store.statuses.length === 0)
     store.index()
 
 const followUps = useFollowUpsStore()
+
+const holidays = useHolidaysStore()
+holidays.index()
 
 const patients = usePatientsStore()
 if (patients.statuses.length === 0)

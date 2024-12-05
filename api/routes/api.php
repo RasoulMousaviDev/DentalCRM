@@ -9,6 +9,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\ConsultantController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FollowUpController;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\OTPCodeController;
 use App\Http\Controllers\PasswordController;
@@ -72,6 +73,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::get('alarms', [AlarmController::class, 'index']);
+    Route::get('holidays', [HolidayController::class, 'index']);
     Route::get('provinces', [ProvinceController::class, 'index']);
     Route::get('cities', [CityController::class, 'index']);
     Route::get('lead-sources', [LeadSourceController::class, 'index']);

@@ -26,7 +26,7 @@
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <DatePicker v-model="form.due_date" :invalid="errors.due_date" class="ltr" fluid dateFormat="yy/mm/dd"
-                    show-time :min-date="new MyDate()" />
+                    show-time :min-date="new MyDate()" :disabledDates="holidays.items"/>
                 <label>{{ $t('appointment-date') }}</label>
             </FloatLabel>
             <small v-if="errors.due_date" v-text="errors.due_date[0]" class="text-red-500" />
@@ -49,6 +49,7 @@ import MyDate from '../utils/MyDate'
 import { useAppointmentsStore } from '@/stores/appointments';
 import { usePatientsStore } from '@/stores/patients';
 import { useTreatmentsStore } from '@/stores/treatments';
+import { useHolidaysStore } from '@/stores/holidays';
 import { computed, inject, reactive, ref, watch } from 'vue';
 
 const dialogRef = inject('dialogRef')
@@ -64,6 +65,9 @@ const loading = ref(false)
 const patients = usePatientsStore()
 const treatments = useTreatmentsStore()
 treatments.index()
+
+const holidays = useHolidaysStore()
+holidays.index()
 
 const appointment = useAppointmentsStore()
 
