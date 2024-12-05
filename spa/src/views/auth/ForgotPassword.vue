@@ -72,7 +72,6 @@
 </template>
 
 <script setup>
-import MyDate from '../../utils/MyDate'
 import AuthLayout from '@/layouts/Auth.vue';
 import { useOTPCodeStore } from '@/stores/otp-code';
 import { usePasswordStore } from '@/stores/password';
@@ -134,9 +133,9 @@ const countdown = reactive({ label: t('recieve-code') })
 
 function startCountdown(expiryTime) {
     countdown.active = true
-    const expiryDate = new MyDate(expiryTime);
+    const expiryDate = new Date(expiryTime);
     countdown.id = setInterval(() => {
-        const now = new MyDate();
+        const now = new Date();
         const timeDifference = expiryDate - now;
 
         const minutes = '0' + Math.floor(timeDifference / (1000 * 60));
