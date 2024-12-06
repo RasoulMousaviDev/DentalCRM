@@ -24,7 +24,7 @@ class TreatmentServiceController extends Controller
      */
     public function store(StoreTreatmentServiceRequest $request, Treatment $treatment)
     {
-        $form = $request->only(['title', 'status']);
+        $form = $request->only(['title', 'manually', 'status']);
 
         $treatment->services()->create($form)->save();
 

@@ -90,7 +90,6 @@ class TreatmentPlanController extends Controller
         $form = $request->only([
             'payment_method',
             'months_count',
-            'checks_count',
             'deposit_amount',
             'total_amount',
             'discount_amount',

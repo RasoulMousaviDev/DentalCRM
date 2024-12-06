@@ -103,3 +103,23 @@ button:has(.p-badge) {
 .p-datepicker-day-view td[data-p-holiday=true]> .p-datepicker-day {
     @apply bg-red-50 !text-red-500;
 }
+
+body>div>div:not(.layout-main-container){
+    @apply print:hidden
+}
+
+.card:not(.printable){
+    @apply print:hidden;
+}
+
+.printable{
+    @apply print:w-screen print:shadow-none print:min-h-[96vh];
+}
+
+.layout-main-container{
+    @apply print:!p-0 print:!m-0 #{!important};
+}
+
+body{
+    @apply print:!bg-white;
+}

@@ -26,6 +26,7 @@ class MenuSeeder extends Seeder
             ['name' => 'follow-ups', 'title' => 'وظیفه ها', 'route' => '/follow-ups', 'icon' => 'list-check',],
             ['name' => 'calls', 'title' => 'تماس ها', 'route' => '/calls', 'icon' => 'phone',],
             ['name' => 'consultants', 'title' => 'مشاوران', 'route' => '/consultants', 'icon' => 'users',],
+            ['name' => 'installment-plans', 'title' => 'ظرحهای اقساط', 'route' => '/installment-plans', 'icon' => 'credit-card',],
         ]);
     }
 }

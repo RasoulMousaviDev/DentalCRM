@@ -7,6 +7,10 @@
             </FloatLabel>
             <small v-if="errors.title" v-text="errors.title[0]" class="text-red-500" />
         </div>
+        <div class="flex justify-between items-center pr-2 pl-4">
+            <label> {{ $t('count-can-be-selected') }}</label>
+            <ToggleSwitch v-model="form.manually"/>
+        </div>
         <div class="flex justify-between items-center pr-2">
             <label> {{ $t('status') }}</label>
             <ToggleButton v-model="form.status" class="w-20" :onLabel="$t('active')" :offLabel="$t('deactive')" />
@@ -28,7 +32,7 @@ const { toast, confirm, t } = inject('service')
 const dialogRef = inject('dialogRef')
 const { service } = dialogRef.value.data || {}
 
-const form = reactive({ title: '', status: true })
+const form = reactive({ title: '', manually: false ,status: true })
 const errors = ref({})
 const loading = ref(false)
 

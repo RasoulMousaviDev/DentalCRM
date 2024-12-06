@@ -249,8 +249,15 @@
     "was-visit": "ویزیت شد",
     "set-deposit": "ثبت بیعانه",
     "consultant": "مشاور",
-    "periodic-visits":"ویزیت های دوره ای",
-    "not-has":"ندارد",
-    "has":"دارد",
-    "insurance":"بیمه"
+    "periodic-visits": "ویزیت های دوره ای",
+    "not-has": "ندارد",
+    "has": "دارد",
+    "insurance": "بیمه",
+    "count-can-be-selected": "تعداد قابل انتخاب",
+    "installment-plans": "طرحهای اقساط",
+    "months-count": "ماه (تعداد)",
+    "deposit-percent": "پیش پرداخت (درصد)",
+    "interest-percent": "بهره (درصد)",
+    "createNewInstallmentPlan": "ایجاد طرح اقساط جدید",
+    "editInstallmentPlan": "ویرایش طرح اقساط"
 }

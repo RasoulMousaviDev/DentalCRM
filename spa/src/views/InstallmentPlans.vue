@@ -4,12 +4,11 @@
             <template #header>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold ml-auto">
-                        {{ $t('treatments') }}
+                        {{ $t('installment-plans') }}
                     </span>
                     <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
-                    <hr class="grow !ml-2">
-                    </hr>
-                    <Button icon="pi pi-plus" :label="$t('new-treatment')" severity="success" @click="create()" />
+                        <hr class="grow !ml-2"></hr>
+                    <Button icon="pi pi-plus" :label="$t('new-plan')" severity="success" @click="create()" />
                 </div>
             </template>
             <template #empty>
@@ -17,13 +16,14 @@
                     {{ store.fetching ? $t('loading') : $t('not-found') }}
                 </p>
             </template>
-            <Column rowReorder headerStyle="width: 3rem" />
             <Column :header="$t('row')" class="w-20">
                 <template #body="{ index }">
                     {{ index + 1 }}
                 </template>
             </Column>
-            <Column field="title" :header="$t('title')" />
+            <Column field="months_count" :header="$t('months-count')" />
+            <Column field="deposit_percent" :header="$t('deposit-percent')" />
+            <Column field="interest_percent" :header="$t('interest-percent')" />
             <Column field="status" :header="$t('status')" class="w-24">
                 <template #body="{ data: { status } }">
                     <Tag v-if="status" severity="success" :value="$t('active')" />
@@ -35,8 +35,6 @@
             <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-20">
                 <template #body="{ data }">
                     <div class="flex justify-end">
-                        <Button icon="pi pi-sitemap !text-xl" rounded text severity="secondary"
-                            @click="showServicess(data)" />
                         <Button icon="pi pi-pencil" rounded text severity="secondary" @click="edit(data)" />
                         <Button icon="pi pi-trash" rounded text severity="danger" :loading="data.loading"
                             @click="destroy(data)" />
@@ -48,34 +46,33 @@
 </template>
 
 <script setup>
-import TreatmentForm from '@/components/TreatmentForm.vue';
-import TreatmentServices from '@/components/TreatmentServices.vue';
-import { useTreatmentsStore } from '@/stores/treatments';
+import InstallmentPlanForm from '@/components/InstallmentPlanForm.vue';
+import { useInstallmentPlansStore } from '@/stores/installment-plans';
 import { inject } from 'vue';
 
 const { dialog, confirm, toast, t } = inject('service')
 
-const store = useTreatmentsStore()
+const store = useInstallmentPlansStore()
 store.index()
 
 const create = async () => {
-    dialog.open(TreatmentForm, {
+    dialog.open(InstallmentPlanForm, {
         props: {
-            header: t('createNewTreatment'), modal: true
+            header: t('createNewInstallmentPlan'), modal: true
         },
     })
 }
 
 const edit = async (data) => {
-    const treatment = Object.assign({}, data)
+    const plan = Object.assign({}, data)
 
-    dialog.open(TreatmentForm, {
-        props: { header: t('editTreatment'), modal: true },
-        data: { treatment }
+    dialog.open(InstallmentPlanForm, {
+        props: { header: t('editInstallmentPlan'), modal: true },
+        data: { plan }
     })
 }
 
-const destroy = (template) => {
+const destroy = (plan) => {
     confirm.require({
         message: t('delete-confirm-question'),
         header: t('danger-zone'),
@@ -91,11 +88,11 @@ const destroy = (template) => {
             severity: 'danger',
         },
         accept: async () => {
-            template.loading = true
+            plan.loading = true
 
-            const { statusText, data } = await store.destroy(template.id);
+            const { statusText, data } = await store.destroy(plan.id);
 
-            template.loading = false
+            plan.loading = false
 
             if (statusText == 'OK')
                 toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 3000 });
@@ -106,20 +103,6 @@ const destroy = (template) => {
     });
 }
 
-const showServicess = (treatment) => {
-    dialog.open(TreatmentServices, {
-        props: { header: t('sub-categires-of', treatment), modal: true },
-        data: { treatment }
-    })
-}
-
-const reorder = async ({ value }) => {
-    const orders = value.map(({ id }, i) => ({ id, order: i + 1 }))
-
-    await store.reorder(orders)
-
-    toast.add({ summary: t('success'), detail: t('update-successfully'), severity: 'success', life: 3000 })
-}
 </script>
 
 <style lang="scss"></style>

@@ -2,10 +2,26 @@
     <form @submit.prevent="handleSubmit()" class="flex flex-col gap-8 [&_small]:-mb-6 w-full md:w-[30rem] pt-2">
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <InputText v-model="form.title" fluid :invalid="errors.title" />
-                <label>{{ $t('title') }}</label>
+                <InputNumber v-model="form.months_count" class="ltr" fluid :invalid="errors.months" />
+                <label>{{ $t('months-count') }}</label>
             </FloatLabel>
-            <small v-if="errors.title" v-text="errors.title[0]" class="text-red-500" />
+            <small v-if="errors.months" v-text="errors.months[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <InputNumber v-model="form.deposit_percent" class="ltr" fluid :invalid="errors.deposit_percent" :min="0"
+                    :max="100" />
+                <label>{{ $t('deposit-percent') }}</label>
+            </FloatLabel>
+            <small v-if="errors.deposit_percent" v-text="errors.deposit_percent[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <InputNumber v-model="form.interest_percent" class="ltr" fluid :invalid="errors.interest_percent" :min="0"
+                    :max="100" />
+                <label>{{ $t('interest-percent') }}</label>
+            </FloatLabel>
+            <small v-if="errors.interest_percent" v-text="errors.interest_percent[0]" class="text-red-500" />
         </div>
         <div class="flex justify-between items-center pr-2">
             <label> {{ $t('status') }}</label>
@@ -19,17 +35,17 @@
 </template>
 
 <script setup>
-import { useTreatmentsStore } from '@/stores/treatments';
+import { useInstallmentPlansStore } from '@/stores/installment-plans';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
 const { toast } = inject('service')
 
-const store = useTreatmentsStore()
+const store = useInstallmentPlansStore()
 
 const dialogRef = inject('dialogRef')
-const { treatment } = dialogRef.value.data || {}
+const { plan } = dialogRef.value.data || {}
 
-const form = reactive({ title: '', order: store.items.length + 1, status: true })
+const form = reactive({ months_count: null, deposit_percent: null, interest_percent: null, status: true })
 const errors = ref({})
 const loading = ref(false)
 
@@ -38,8 +54,8 @@ const handleSubmit = async () => {
     loading.value = true
 
     let result;
-    if (treatment)
-        result = await store.update(treatment.id, form)
+    if (plan)
+        result = await store.update(plan.id, form)
     else
         result = await store.store(form)
 
@@ -64,8 +80,8 @@ watch(computed(() => Object.assign({}, form)), (value, old) => {
 })
 
 onMounted(() => {
-    if (treatment)
-        Object.keys(form).forEach((key) => form[key] = treatment[key])
+    if (plan)
+        Object.keys(form).forEach((key) => form[key] = plan[key])
 })
 </script>
 

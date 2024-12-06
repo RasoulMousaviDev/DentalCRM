@@ -12,7 +12,7 @@ class TreatmentService extends Model
 {
     use HasFactory;
 
-    public $fillable = ['title', 'status'];
+    public $fillable = ['title', 'manually', 'status'];
 
     protected $casts = [
         'status' => 'boolean',

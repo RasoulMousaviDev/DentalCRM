@@ -95,6 +95,11 @@ const router = createRouter({
                     path: "/consultants",
                     component: () => import("@/views/Consultants.vue"),
                 },
+                 {
+                    name: "InstallmentPlans",
+                    path: "/installment-plans",
+                    component: () => import("@/views/InstallmentPlans.vue"),
+                },
             ],
         },
     ],

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->enum('payment_method', ['cash', 'installments']);
             $table->enum('visit_type', ['in-person', 'online']);
             $table->integer('months_count')->default(0);
-            $table->integer('checks_count')->default(0);
             $table->integer('deposit_amount')->default(0);
             $table->integer('total_amount')->default(0);
             $table->integer('discount_amount')->default(0);

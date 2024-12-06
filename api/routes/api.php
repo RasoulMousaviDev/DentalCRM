@@ -10,6 +10,7 @@ use App\Http\Controllers\ConsultantController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\HolidayController;
+use App\Http\Controllers\InstallmentPlanController;
 use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\OTPCodeController;
 use App\Http\Controllers\PasswordController;
@@ -171,5 +172,12 @@ Route::middleware('auth:api')->group(function () {
                 });
             });
         });
+    });
+
+    Route::controller(InstallmentPlanController::class)->prefix('installment-plans')->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::patch('/{installmentPlan}', 'update');
+        Route::delete('/{installmentPlan}', 'destroy');
     });
 });

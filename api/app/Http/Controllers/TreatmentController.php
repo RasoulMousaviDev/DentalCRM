@@ -13,7 +13,7 @@ class TreatmentController extends Controller
 {
     public function index()
     {
-        $treatments = Treatment::orderBy('order')->get();
+        $treatments = Treatment::orderBy('order')->with('services.options')->get();
 
         return response()->json(['items' => $treatments]);
     }

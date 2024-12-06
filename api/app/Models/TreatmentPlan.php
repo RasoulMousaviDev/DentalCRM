@@ -18,7 +18,6 @@ class TreatmentPlan extends Model
     protected $fillable = [
         'payment_method',
         'months_count',
-        'checks_count',
         'deposit_amount',
         'total_amount',
         'discount_amount',
