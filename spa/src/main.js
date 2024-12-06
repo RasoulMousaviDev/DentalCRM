@@ -67,8 +67,8 @@ pinia.use(({ store }) => {
     store.axios = axios;
 });
 
-const baseURL = "http://127.0.0.1:8000/api";
-//  const baseURL = "https://clinic-crm.chbk.app/api";
+// const baseURL = "http://127.0.0.1:8000/api";
+ const baseURL = "https://clinic-crm.chbk.app/api";
 
 const axios = Axios.create({ baseURL });
 
@@ -79,49 +79,6 @@ app.use(PrimeVue, {
         preset: Aura,
         options: { darkModeSelector: ".app-dark" },
     },
-    locale: {
-        firstDayOfWeek: 6,
-        dayNames: [
-            "یک‌شنبه",
-            "دوشنبه",
-            "سه‌شنبه",
-            "چهارشنبه",
-            "پنج‌شنبه",
-            "جمعه",
-            "شنبه",
-        ],
-        dayNamesShort: ["ی", "د", "س", "چ", "پ", "ج", "ش"],
-        dayNamesMin: ["ی", "د", "س", "چ", "پ", "ج", "ش"],
-        // monthNames: [
-        //     "فروردین",
-        //     "اردیبهشت",
-        //     "خرداد",
-        //     "تیر",
-        //     "مرداد",
-        //     "شهریور",
-        //     "مهر",
-        //     "آبان",
-        //     "آذر",
-        //     "دی",
-        //     "بهمن",
-        //     "اسفند",
-        // ],
-        // monthNamesShort: [
-        //     "فروردین",
-        //     "اردیبهشت",
-        //     "خرداد",
-        //     "تیر",
-        //     "مرداد",
-        //     "شهریور",
-        //     "مهر",
-        //     "آبان",
-        //     "آذر",
-        //     "دی",
-        //     "بهمن",
-        //     "اسفند",
-        // ],
-    },
-    // inputVariant: "filled",
 });
 app.use(pinia);
 app.use(router);
