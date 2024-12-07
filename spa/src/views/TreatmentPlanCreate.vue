@@ -215,7 +215,7 @@
                                     v-model="treatment.count[service]" mode="decimal" showButtons :min="1" :max="10"
                                     input-class="w-14 print:w-8"
                                     class="ltr -my-1 h-8 [&>span>button]:w-6 [&>span>button]:print:hidden"
-                                    :default-value="1" />
+                                    :default-value="1" :disabled="readonly"/>
                                 <span class="min-w-28 text-left mr-auto">{{
                                     [
                                         new Intl.NumberFormat().format(
