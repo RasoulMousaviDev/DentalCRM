@@ -35,12 +35,12 @@ const { toast } = inject('service')
 
 const dialogRef = inject('dialogRef')
 
-const { data } = dialogRef.value
+const { appointment } = dialogRef.value.data
 
 const form = reactive({
     amount: null,
     payment_date: new MyDate(),
-    ...data.appointment
+    status: 15
 })
 
 const errors = ref({})
@@ -51,9 +51,7 @@ const appointments = useAppointmentsStore()
 const handleSubmit = async () => {
     loading.value = true
 
-
-
-    const { status, statusText, data } = await appointments.update(data.appointment.id, form)
+    const { status, statusText, data } = await appointments.update(appointment.id, form)
 
     loading.value = false
 

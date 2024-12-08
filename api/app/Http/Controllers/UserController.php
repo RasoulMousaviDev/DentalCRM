@@ -47,16 +47,16 @@ class UserController extends Controller
             $query->whereAny($columns, 'like', "%{$value}%");
         });
 
-        $dates = ['created_at', 'updated_at'];
+        $dateFields = ['created_at', 'updated_at'];
 
-        foreach ($dates as $date) {
-            $users->when($request->input($date), function ($query, $value) use ($date) {
-                $date = collect($date)->map(fn($d, $i) => Carbon::parse($d)
+        foreach ($dateFields as $field) {
+            $users->when($request->input($field), function ($query, $value) use ($field) {
+                $value = collect($value)->map(fn($d, $i) => Carbon::parse($d)
                     ->setTimezone('Asia/Tehran')
                     ->{$i ? 'endOfDay' : 'startOfDay'}()
                     ->format('Y-m-d H:i:s'));
 
-                $query->whereBetween($date, $value);
+                $query->whereBetween($field, $value);
             });
         }
 

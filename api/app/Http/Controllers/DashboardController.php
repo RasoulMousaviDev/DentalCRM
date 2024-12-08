@@ -126,6 +126,7 @@ class DashboardController extends Controller
             'callStatuses',
             'callCount',
             'statuses',
+            'isAdmin'
         ));
     }
 }

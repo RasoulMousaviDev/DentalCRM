@@ -9,7 +9,7 @@
                         <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
                         <hr class="grow !ml-2">
                         </hr>
-                        <Button icon="pi pi-plus" :label="$t('new-plan')" severity="success" as="router-link"
+                        <Button v-if="auth.user?.role?.name != 'phone-consultant'" icon="pi pi-plus" :label="$t('new-plan')" severity="success" as="router-link"
                             :to="{ name: 'TreatmentPlanCreate', query: { patient: $route.params.id } }" />
                     </div>
                     <TreatmentPlanFilters />

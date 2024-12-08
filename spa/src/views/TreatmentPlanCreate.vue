@@ -331,6 +331,7 @@ const readonly = ref(!!id);
 const store = useTreatmentPlansStore();
 
 const patients = usePatientsStore();
+patients.index()
 
 const treatments = useTreatmentsStore();
 treatments.index();

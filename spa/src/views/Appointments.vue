@@ -166,6 +166,7 @@ const getMenu = (appointment) => ([
 ]);
 
 const deposit = (appointment) => {
+    
     dialog.open(DepositForm, {
         props: {
             header: t('createNewDeposit'), modal: true

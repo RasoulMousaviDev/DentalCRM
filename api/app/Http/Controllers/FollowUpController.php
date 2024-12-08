@@ -60,7 +60,7 @@ class FollowUpController extends Controller
 
         foreach ($dateFields as $field) {
             $followUps->when($request->input($field), function ($query, $value) use ($field) {
-                $field = collect($field)->map(fn($d, $i) => Carbon::parse($d)
+                $value = collect($value)->map(fn($d, $i) => Carbon::parse($d)
                     ->setTimezone('Asia/Tehran')
                     ->{$i ? 'endOfDay' : 'startOfDay'}()
                     ->format('Y-m-d H:i:s'));

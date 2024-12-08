@@ -6,12 +6,12 @@
             </span>
             <div class="flex gap-3">
                 <InputGroup class="ltr !w-[19rem]">
-                    <DatePicker v-model="date.from" inputClass="ltr" dateFormat="yy/mm/dd" type="jalali"
+                    <DatePicker v-model="form.from" inputClass="ltr" dateFormat="yy/mm/dd" type="jalali"
                         :max-date="new MyDate()" />
                     <InputGroupAddon>{{ $t('from') }}</InputGroupAddon>
                 </InputGroup>
                 <InputGroup class="ltr !w-[19rem]">
-                    <DatePicker v-model="date.to" inputClass="ltr" dateFormat="yy/mm/dd" type="jalali"
+                    <DatePicker v-model="form.to" inputClass="ltr" dateFormat="yy/mm/dd" type="jalali"
                         />
                     <InputGroupAddon>{{ $t('to') }}</InputGroupAddon>
                 </InputGroup>
@@ -70,12 +70,7 @@ const store = useDashboardStore()
 const fdate = new MyDate();
 fdate.setMonth(fdate.getMonth() - 1)
 
-const date = reactive({ from: fdate, to: new MyDate() })
-const dateFormat = (d) => `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${('0' + d.getDate()).slice(-2)}`
-const form = reactive({
-    from: computed(() => dateFormat(date.from) + ' 00:00:00'),
-    to: computed(() => dateFormat(date.to) + ' 23:59:59'),
-})
+const form = reactive({ from: fdate, to: new MyDate() })
 
 store.getCharts(form)
 

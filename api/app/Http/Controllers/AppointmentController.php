@@ -63,7 +63,7 @@ class AppointmentController extends Controller
 
         foreach ($dateFields as $field) {
             $appointments->when($request->input($field), function ($query, $value) use ($field) {
-                $field = collect($field)->map(fn($d, $i) => Carbon::parse($d)
+                $value = collect($value)->map(fn($d, $i) => Carbon::parse($d)
                     ->setTimezone('Asia/Tehran')
                     ->{$i ? 'endOfDay' : 'startOfDay'}()
                     ->format('Y-m-d H:i:s'));
@@ -115,18 +115,18 @@ class AppointmentController extends Controller
 
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        $form = $request->only('status');
+        $status = $request->get('status');
 
-        $appointment->update($form);
+        $appointment->update(compact('status'));
 
         $appointment->refresh();
 
-        if (in_array($form['status'], [4, 5, 6]))
-            $appointment->patient()->update($form);
+        if (in_array($status, [4, 5, 6]))
+            $appointment->patient()->update(compact('status'));
 
-        if ($form['status'] == 15) {
-            $form['refund_date'] = Carbon::now()->toIso8601String();
-            $appointment->deposits()->update($form);
+        if ($status == 15) {
+            $refund_date = Carbon::now()->toIso8601String();
+            $appointment->deposits()->update(compact('status', 'refund_date'));
         }
 
         $appointment->load('status');
