@@ -38,9 +38,8 @@ const dialogRef = inject('dialogRef')
 const { appointment } = dialogRef.value.data
 
 const form = reactive({
-    amount: null,
-    payment_date: new MyDate(),
-    status: 15
+    deposit: null,
+    status: 6
 })
 
 const errors = ref({})

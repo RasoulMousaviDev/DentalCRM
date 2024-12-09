@@ -16,7 +16,8 @@ class UpdateAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|exists:statuses,id'
+            'status' => 'required|exists:statuses,id',
+            'deposit' => 'nullable|number'
         ];
     }
 }

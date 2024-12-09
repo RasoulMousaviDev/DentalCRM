@@ -115,19 +115,17 @@ class AppointmentController extends Controller
 
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        $status = $request->get('status');
+        $form = $request->only(['status', 'deposit']);
 
-        $appointment->update(compact('status'));
+        $appointment->update($form);
 
         $appointment->refresh();
+
+        $status = $form['status'];
 
         if (in_array($status, [4, 5, 6]))
             $appointment->patient()->update(compact('status'));
 
-        if ($status == 15) {
-            $refund_date = Carbon::now()->toIso8601String();
-            $appointment->deposits()->update(compact('status', 'refund_date'));
-        }
 
         $appointment->load('status');
 
