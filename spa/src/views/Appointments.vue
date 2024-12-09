@@ -36,7 +36,7 @@
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" />
             <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
-            <Column :field="({ deposit = 0 }) => [new Intl.NumberFormat().format(deposit), $t('toman')].join(' ')"
+            <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit || 0), $t('toman')].join(' ')"
                 :header="$t('deposit')" class="w-36" />
             <Column field="status" :header="$t('status')">
                 <template #body="{ data: { status } }">
