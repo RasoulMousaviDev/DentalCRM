@@ -17,7 +17,7 @@ class UpdateAppointmentRequest extends FormRequest
     {
         return [
             'status' => 'required|exists:statuses,id',
-            'deposit' => 'nullable|number'
+            'deposit' => 'nullable|numeric'
         ];
     }
 }
