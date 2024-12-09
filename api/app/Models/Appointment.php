@@ -16,7 +16,7 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    public $fillable = ['due_date', 'desc', 'status'];
+    public $fillable = ['due_date', 'desc', 'status', 'deposit'];
 
     protected $casts = [
         'due_date' => JDate::class,
