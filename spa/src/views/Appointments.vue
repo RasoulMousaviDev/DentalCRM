@@ -48,7 +48,11 @@
             <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44" body-class="!pl-0">
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
-                        <SplitButton v-if="data.status.id == 13" :label="$t('was-visit')" size="small"
+                        <Button
+                            v-if="auth.user?.role?.name == 'phone-consultant' && data.status.name == 'appointment-set'"
+                            :label="$t('appointment-cancel')" ize="small" outlined icon="pi pi-credit-card"
+                            severity="danger" class="w-32" :loading="data.loading" @click="cancel(data)" />
+                        <!-- <SplitButton v-if="data.status.id == 13" :label="$t('was-visit')" size="small"
                             class="w-32 first:*:grow" :model="getMenu(data)" :loading="data.loading"
                             @click="visit(data)" />
                         <Button v-else-if="[4, 5].includes(data.status.id)" :label="$t('set-deposit')" ize="small"
@@ -56,7 +60,7 @@
                             @click="deposit(data)" />
                         <Button v-else-if="data.status.id == 6" :label="$t('refund')" ize="small" outlined
                             icon="pi pi-credit-card" severity="danger" class="w-32" :loading="data.loading"
-                            @click="refund(data)" />
+                            @click="refund(data)" /> -->
                     </div>
                 </template>
             </Column>
@@ -137,8 +141,8 @@ const cancel = (appointment) => {
         },
         accept: async () => {
             appointment.loading = true
-
-            const { statusText, data } = await store.update(appointment.id, { status: 17 });
+            const status = store.statuses.find(s => s.name === 'canceled').id
+            const { statusText, data } = await store.update(appointment.id, { status });
 
             appointment.loading = false
 
@@ -166,7 +170,7 @@ const getMenu = (appointment) => ([
 ]);
 
 const deposit = (appointment) => {
-    
+
     dialog.open(DepositForm, {
         props: {
             header: t('createNewDeposit'), modal: true

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('role_menu', function (Blueprint $table) {
-            $table->foreignId('menu_id')->constrained('menu');
             $table->foreignId('role_id')->constrained('roles');
+            $table->foreignId('menu_id')->constrained('menu');
         });
     }
 

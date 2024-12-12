@@ -23,6 +23,9 @@
                 <span v-else-if="key == 'insurance'">
                     {{ $t(data.insurance ? 'has' : 'not-has') }}
                 </span>
+                 <span v-else-if="key == 'birthday'">
+                    {{ new Date(Date.parse(data.birthday)).toLocaleDateString('fa') }}
+                </span>
                 <span v-else class="font-medium" :class="{ 'ltr': (i + 1) % 5 === 0 }">
                     {{
                         key === 'gender' ? $t(data[key]) : (data[key]?.title || data[key])

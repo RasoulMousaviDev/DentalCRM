@@ -16,17 +16,18 @@ class MenuSeeder extends Seeder
         Menu::insert([
             ['name' => 'dashboard', 'title' => 'داشبورد', 'route' => '/', 'icon' => 'table',],
             ['name' => 'users', 'title' => 'کاربران', 'route' => '/users', 'icon' => 'users',],
-            ['name' => 'patients', 'title' => 'بیماران', 'route' => '/patients', 'icon' => 'users',],
-            ['name' => 'appointments', 'title' => 'نوبت ها', 'route' => '/appointments', 'icon' => 'calendar-times',],
-            ['name' => 'campains', 'title' => 'کمپین ها', 'route' => '/campains', 'icon' => 'megaphone',],
-            ['name' => 'survays', 'title' => 'نظرسنجی ها', 'route' => '/survays', 'icon' => 'question',],
-            ['name' => 'sms-templates', 'title' => 'قالب‌های پیامکی', 'route' => '/sms-templates', 'icon' => 'folder-open',],
-            ['name' => 'treatment-palns', 'title' => 'طرحهای درمان', 'route' => '/treatment-plans', 'icon' => 'briefcase',],
-            ['name' => 'treatments', 'title' => 'درمان ها', 'route' => '/treatments', 'icon' => 'plus',],
-            ['name' => 'follow-ups', 'title' => 'وظیفه ها', 'route' => '/follow-ups', 'icon' => 'list-check',],
-            ['name' => 'calls', 'title' => 'تماس ها', 'route' => '/calls', 'icon' => 'phone',],
             ['name' => 'consultants', 'title' => 'مشاوران', 'route' => '/consultants', 'icon' => 'users',],
-            ['name' => 'installment-plans', 'title' => 'ظرحهای اقساط', 'route' => '/installment-plans', 'icon' => 'credit-card',],
+            ['name' => 'patients', 'title' => 'بیماران', 'route' => '/patients', 'icon' => 'users',],
+            ['name' => 'calls', 'title' => 'تماس‌ها', 'route' => '/calls', 'icon' => 'phone',],
+            ['name' => 'follow-ups', 'title' => 'وظیفه‌ها', 'route' => '/follow-ups', 'icon' => 'list-check',],
+            ['name' => 'appointments', 'title' => 'نوبت‌ها', 'route' => '/appointments', 'icon' => 'calendar-times',],
+            ['name' => 'treatment-palns', 'title' => 'طرح‌های درمان', 'route' => '/treatment-plans', 'icon' => 'briefcase',],
+            ['name' => 'campains', 'title' => 'کمپین‌ها', 'route' => '/campains', 'icon' => 'megaphone',],
+            ['name' => 'treatments', 'title' => 'درمان‌ها', 'route' => '/treatments', 'icon' => 'plus',],
+            ['name' => 'sms-templates', 'title' => 'قالب‌های پیامکی', 'route' => '/sms-templates', 'icon' => 'folder-open',],
+            ['name' => 'installment-plans', 'title' => 'طرح‌های اقساط', 'route' => '/installment-plans', 'icon' => 'credit-card',],
+            ['name' => 'survays', 'title' => 'نظرسنجی‌ها', 'route' => '/survays', 'icon' => 'question',],
+            ['name' => 'survay-result', 'title' => 'نتایج نظرسنجی', 'route' => '/survay-result', 'icon' => 'question-circle',],
         ]);
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('patient')->constrained('patients');
             $table->date('due_date');
             $table->string('desc');
-            $table->foreignId('status')->default(13)->constrained('statuses');
+            $table->foreignId('status')->constrained('statuses');
             $table->timestamps();
         });
     }

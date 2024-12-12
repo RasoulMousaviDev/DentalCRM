@@ -103,7 +103,8 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <Select v-model="form.status" :options="store.statuses" optionValue="id" fluid :invalid="errors.status">
+                <Select v-model="form.status" :options="statuses" optionValue="id" fluid :invalid="errors.status"
+                    :disabled="store.statuses.filter(s => ['in-person-visit', 'online-visit'].includes(s.name)).map(s => s.id).includes(patient?.status)">
                     <template #value="{ value }">
                         <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
                     </template>
@@ -123,6 +124,7 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/auth';
 import { useCitiesStore } from '@/stores/cities';
 import { useGendersStore } from '@/stores/genders';
 import { useLeadSourcesStore } from '@/stores/lead-sources';
@@ -130,6 +132,8 @@ import { usePatientsStore } from '@/stores/patients';
 import { useProvincesStore } from '@/stores/provinces';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
+
+const auth = useAuthStore()
 
 const { toast } = inject('service')
 
@@ -156,6 +160,7 @@ const errors = ref({})
 const loading = ref(false)
 
 const store = usePatientsStore()
+const statuses = computed(() => store.statuses.filter(s => ['no-status', 'in-progress', 'not-needed'].includes(s.name)))
 const provinces = useProvincesStore()
 const cities = useCitiesStore()
 const leadSources = useLeadSourcesStore()

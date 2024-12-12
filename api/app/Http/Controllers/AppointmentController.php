@@ -34,7 +34,7 @@ class AppointmentController extends Controller
         $appointments = Appointment::with([
             'treatments:id,title',
             'patient:id,firstname,lastname',
-            'status:id,value,severity',
+            'status:id,name,value,severity',
         ]);
 
         if ($isAdmin) $appointments = $appointments->with('patient.user:id,name')->when($request->input('user'), function ($query, $user) {
@@ -91,6 +91,8 @@ class AppointmentController extends Controller
     {
         $form = $request->only(['due_date', 'desc']);
 
+        $form['status'] = Status::firstWhere('name', 'appointment-set')->id;
+
         $patient = Patient::find($request->get('patient'));
 
         $appointment = $patient->appointments()->create($form);
@@ -102,7 +104,7 @@ class AppointmentController extends Controller
         $appointment = $patient->appointments()->with([
             'treatments:id,title',
             'patient:id,firstname,lastname,user',
-            'status:id,value,severity',
+            'status:id,name,value,severity',
             'patient.user:id,name',
         ])->latest()->first();
 

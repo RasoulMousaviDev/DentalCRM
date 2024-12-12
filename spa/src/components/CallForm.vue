@@ -26,8 +26,9 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <Select v-model="form.patient.status" :options="patients.statuses" optionValue="id" fluid
-                    :invalid="errors['patient.status']">
+                <Select v-model="form.patient.status" :options="patientStatuses" optionValue="id" fluid
+                    :invalid="errors['patient.status']"
+                    :disabled="patients.statuses.filter(s => ['in-person-visit', 'online-visit'].includes(s.name)).map(s => s.id).includes(form.patient.status)">
                     <template #value="{ value }">
                         <Tag v-if="value" class="text-xs" v-bind="patients.statuses.find(({ id }) => value == id)" />
                     </template>
@@ -111,8 +112,7 @@ const loading = ref(false)
 const disabled = ref(false)
 
 const store = useCallsStore()
-if (store.statuses.length === 0)
-    store.index()
+store.index()
 
 const followUps = useFollowUpsStore()
 
@@ -120,8 +120,9 @@ const holidays = useHolidaysStore()
 holidays.index()
 
 const patients = usePatientsStore()
-if (patients.statuses.length === 0)
-    patients.index()
+patients.index()
+const patientStatuses = computed(() => patients.statuses.filter(s => ['no-status', 'in-progress', 'not-needed'].includes(s.name)))
+
 
 const handleSubmit = async () => {
     loading.value = true
@@ -134,7 +135,7 @@ const handleSubmit = async () => {
         dialogRef.value.close();
         if (followUpId) {
             const followUp = followUps.items.find(f => f.id == followUpId)
-            followUp.status = followUps.statuses.find(s => s.id == 19)
+            followUp.status = followUps.statuses.find(s => s.name === 'done')
             const p = patients.items.find(p => p.id == patient.value)
             p.status = patients.statuses.find(s => s.id == form.patient.status)
         }
@@ -173,8 +174,9 @@ watch(patient, async (v) => {
 })
 
 watch(() => form.patient.status, (v) => {
-    if (v == 9) delete form.follow_up
-    else form.follow_up = {}
+    const status = patients.statuses.find(s => s.name === 'in-progress')
+    if (status?.id === v) form.follow_up = {}
+    else delete form.follow_up
 })
 
 watch(computed(() => Object.assign({}, form)), (value, old) => {

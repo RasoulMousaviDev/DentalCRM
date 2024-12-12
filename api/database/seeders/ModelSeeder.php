@@ -6,7 +6,6 @@ use App\Models\Appointment;
 use App\Models\Call;
 use App\Models\Campain;
 use App\Models\City;
-use App\Models\Deposit;
 use App\Models\FollowUp;
 use App\Models\LeadSource;
 use App\Models\Menu;
@@ -42,7 +41,6 @@ class ModelSeeder extends Seeder
             ['name' => Call::class],
             ['name' => Campain::class],
             ['name' => City::class],
-            ['name' => Deposit::class],
             ['name' => FollowUp::class],
             ['name' => LeadSource::class],
             ['name' => Menu::class],

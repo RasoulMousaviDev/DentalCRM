@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,6 +15,8 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $roles = Role::pluck('id')->toArray();
+
         User::create([
             'name' => 'Rasoul Mousavi',
             'mobile' => '09102836220',
@@ -21,6 +24,6 @@ class UserSeeder extends Seeder
             'password' => '123456789',
             'role_id' => 1,
             'status' => true
-        ])->roles()->attach([1]);
+        ])->roles()->attach($roles);
     }
 }

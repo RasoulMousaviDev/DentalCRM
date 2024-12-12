@@ -17,7 +17,7 @@ return new class extends Migration
             $table->timestamp('due_date');
             $table->string('desc')->nullable();
             $table->integer('deposit')->default(0);
-            $table->foreignId('status')->default(13)->constrained('statuses');
+            $table->foreignId('status')->constrained('statuses');
             $table->timestamps();
         });
     }

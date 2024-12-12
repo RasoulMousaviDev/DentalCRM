@@ -8,6 +8,7 @@ use App\Models\Call;
 use App\Models\FollowUp;
 use App\Models\Patient;
 use App\Models\Role;
+use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -113,12 +114,13 @@ class CallController extends Controller
 
         $patient->calls()->create($form->toArray())->save();
 
-        if ($request->has('follow_up_id'))
-            FollowUp::find($request->get('follow_up_id'))->update(['status' => 18]);
+        if ($request->has('follow_up_id')) {
+            $status = Status::firstWhere('name', 'done');
+            FollowUp::find($request->get('follow_up_id'))->update(['status' => $status->id]);
+        }
 
         $call = $patient->calls()
-            ->with('status:id,value,severity')
-            ->with('patient:id,firstname,lastname,user')
+            ->with(['status:id,value,severity', 'patient:id,firstname,lastname,user'])
             ->latest()->first();
 
         $response = compact('call');
@@ -127,6 +129,7 @@ class CallController extends Controller
 
         if ($request->has('follow_up')) {
             $form = $request->undot()->get('follow_up');
+            $form['status'] = Status::firstWhere('name', 'pending')->id;
             $patient->followUps()->create($form);
             $response['follow_up'] = $patient->followUps()->latest()->first();
         }

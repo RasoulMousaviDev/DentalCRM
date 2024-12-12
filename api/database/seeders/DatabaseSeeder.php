@@ -15,16 +15,16 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            RoleSeeder::class,
-            MenuSeeder::class,
-            RoleMenuSeeder::class,
+            HolidaySeeder::class,
+            LeadSourceSeeder::class,
             ModelSeeder::class,
             StatusSeeder::class,
             ModelStatusSeeder::class,
             ProvinceSeeder::class,
+            MenuSeeder::class,
+            RoleSeeder::class,
+            RoleMenuSeeder::class,
             UserSeeder::class,
-            LeadSourceSeeder::class,
-            HolidaySeeder::class
         ]);
     }
 }
