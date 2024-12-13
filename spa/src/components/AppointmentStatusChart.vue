@@ -35,7 +35,9 @@ const chartData = computed(() => ({
         {
             label: ['', ''],
             backgroundColor: backgroundColor.map(b => b + 'cc'),
-            data: appointments.statuses.map(s => props.data[s.id] || 0)
+            data: appointments.statuses.filter(s => auth.user?.role?.name != 'on-site-consultant' || [
+                'online-visit', 'in-person-visit', 'deposit-paid', 'treatment-completed'
+            ].includes(s.name)).map(s => props.data[s.id] || 0)
         },
 
     ]
