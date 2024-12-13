@@ -27,79 +27,80 @@ class DashboardController extends Controller
 
         $user = auth()->user();
 
-        $roles = Role::whereIn('name', ['super-admin', 'admin'])->pluck('id');
+        $roles = Role::whereIn('name', ['super-admin', 'admin', 'on-site-consultant'])->pluck('id');
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
-        $patientCount = Patient::whereBetween('created_at', $period)->when(!$isAdmin, function ($query) use ($user) {
-            $query->where('user', $user->id);
-        })->count();
-
-        $callCount = Call::whereBetween('created_at', $period)
-            ->when(!$isAdmin, function ($query) use ($user) {
-                $query->whereHas('patient', function (Builder $query) use ($user) {
-                    $query->where('user', $user->id);
-                });
+        if ($user->role->name != 'on-site-consultant') {
+            $patientCount = Patient::whereBetween('created_at', $period)->when(!$isAdmin, function ($query) use ($user) {
+                $query->where('user', $user->id);
             })->count();
 
-        $appointmentCount = Appointment::whereBetween('created_at', $period)
-            ->when(!$isAdmin, function ($query) use ($user) {
-                $query->whereHas('patient', function (Builder $query) use ($user) {
+            $callCount = Call::whereBetween('created_at', $period)
+                ->when(!$isAdmin, function ($query) use ($user) {
+                    $query->whereHas('patient', function (Builder $query) use ($user) {
+                        $query->where('user', $user->id);
+                    });
+                })->count();
+
+            $appointmentCount = Appointment::whereBetween('created_at', $period)
+                ->when(!$isAdmin, function ($query) use ($user) {
+                    $query->whereHas('patient', function (Builder $query) use ($user) {
+                        $query->where('user', $user->id);
+                    });
+                })->count();
+
+            $followUpCount = FollowUp::whereBetween('created_at', $period)
+                ->when(!$isAdmin, function ($query) use ($user) {
+                    $query->whereHas('patient', function (Builder $query) use ($user) {
+                        $query->where('user', $user->id);
+                    });
+                })->count();
+
+            $patientStatuses = Patient::select('status', DB::raw('COUNT(*) as count'))
+                ->when(!$isAdmin, function ($query) use ($user) {
                     $query->where('user', $user->id);
-                });
-            })->count();
+                })
+                ->whereBetween('created_at',  $period)
+                ->groupBy('status')
+                ->pluck('count', 'status');
 
-        $followUpCount = FollowUp::whereBetween('created_at', $period)
-            ->when(!$isAdmin, function ($query) use ($user) {
-                $query->whereHas('patient', function (Builder $query) use ($user) {
+            $callStatuses = Call::select('status', DB::raw('COUNT(*) as count'))
+                ->when(!$isAdmin, function ($query) use ($user) {
+                    $query->whereHas('patient', function (Builder $query) use ($user) {
+                        $query->where('user', $user->id);
+                    });
+                })
+                ->whereBetween('created_at',  $period)
+                ->groupBy('status')
+                ->pluck('count', 'status');
+
+            $patientGenders = Patient::select('gender', DB::raw('COUNT(*) as count'))
+                ->when(!$isAdmin, function ($query) use ($user) {
                     $query->where('user', $user->id);
-                });
-            })->count();
+                })
+                ->whereBetween('created_at',  $period)
+                ->groupBy('gender')
+                ->pluck('count', 'gender');
 
-        $patientStatuses = Patient::select('status', DB::raw('COUNT(*) as count'))
-            ->when(!$isAdmin, function ($query) use ($user) {
-                $query->where('user', $user->id);
-            })
-            ->whereBetween('created_at',  $period)
-            ->groupBy('status')
-            ->pluck('count', 'status');
-
-        $callStatuses = Call::select('status', DB::raw('COUNT(*) as count'))
-            ->when(!$isAdmin, function ($query) use ($user) {
-                $query->whereHas('patient', function (Builder $query) use ($user) {
+            $patientLeadSources = Patient::select('lead_source', DB::raw('COUNT(*) as count'))
+                ->when(!$isAdmin, function ($query) use ($user) {
                     $query->where('user', $user->id);
-                });
-            })
-            ->whereBetween('created_at',  $period)
-            ->groupBy('status')
-            ->pluck('count', 'status');
+                })
+                ->whereBetween('created_at',  $period)
+                ->groupBy('lead_source')
+                ->pluck('count', 'lead_source');
 
-        $patientGenders = Patient::select('gender', DB::raw('COUNT(*) as count'))
-            ->when(!$isAdmin, function ($query) use ($user) {
-                $query->where('user', $user->id);
-            })
-            ->whereBetween('created_at',  $period)
-            ->groupBy('gender')
-            ->pluck('count', 'gender');
-
-        $patientLeadSources = Patient::select('lead_source', DB::raw('COUNT(*) as count'))
-            ->when(!$isAdmin, function ($query) use ($user) {
-                $query->where('user', $user->id);
-            })
-            ->whereBetween('created_at',  $period)
-            ->groupBy('lead_source')
-            ->pluck('count', 'lead_source');
-
-        $patientTreatments = DB::table('patient_treatments')
-            ->join('patients', 'patient_treatments.patient_id', '=', 'patients.id')
-            ->when(!$isAdmin, function ($query) use ($user) {
-                $query->where('patients.user', $user->id);
-            })
-            ->whereBetween('patients.created_at', $period)
-            ->groupBy('patient_treatments.treatment_id')
-            ->select('patient_treatments.treatment_id', DB::raw('COUNT(patient_treatments.patient_id) as patient_count'))
-            ->pluck('patient_count', 'treatment_id');
-
+            $patientTreatments = DB::table('patient_treatments')
+                ->join('patients', 'patient_treatments.patient_id', '=', 'patients.id')
+                ->when(!$isAdmin, function ($query) use ($user) {
+                    $query->where('patients.user', $user->id);
+                })
+                ->whereBetween('patients.created_at', $period)
+                ->groupBy('patient_treatments.treatment_id')
+                ->select('patient_treatments.treatment_id', DB::raw('COUNT(patient_treatments.patient_id) as patient_count'))
+                ->pluck('patient_count', 'treatment_id');
+        }
         $appointmentsStatusCount = Appointment::select('status', DB::raw('COUNT(*) as count'))
             ->when(!$isAdmin, function ($query) use ($user) {
                 $query->whereHas('patient', function (Builder $query) use ($user) {

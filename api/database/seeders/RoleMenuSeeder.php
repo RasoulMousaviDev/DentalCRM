@@ -38,6 +38,7 @@ class RoleMenuSeeder extends Seeder
         $onSiteConsultant = Role::firstWhere('name', 'on-site-consultant');
 
         $onSiteConsultantMenu = Menu::whereIn('name', [
+            'dashboard',
             'appointments',
             'treatment-palns',
         ])->get();

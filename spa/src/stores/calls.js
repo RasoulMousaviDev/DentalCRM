@@ -34,15 +34,7 @@ export const useCallsStore = defineStore("calls", {
 
                 if (res.data.follow_up) {
                     const followUps = useFollowUpsStore();
-                    followUps.items.unshift(res.data.followup);
-                }
-
-                if (form.followup_id) {
-                    const followUps = useFollowUpsStore();
-                    const item = followUps.items.find(
-                        (item) => item.id == form.followup_id
-                    );
-                    item.status = "done";
+                    followUps.items.unshift(res.data.follow_up);
                 }
             }
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="card flex flex-col gap-8 justify-center w-[74%]">
+    <div class="card flex flex-col gap-8 justify-center w-[74%] [&:nth-child(2)]:w-full">
         <span class="text-xl font-medium">
             {{ $t('reception-report') }}
         </span>
@@ -10,9 +10,12 @@
 
 <script setup>
 import { useAppointmentsStore } from '@/stores/appointments';
+import { useAuthStore } from '@/stores/auth';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { ref, onMounted, inject, computed, reactive } from "vue";
+import { ref, onMounted, computed, reactive } from "vue";
 const props = defineProps({ data: { type: Array, default: ({}) } })
+
+const auth = useAuthStore()
 
 const appointments = useAppointmentsStore()
 
@@ -25,7 +28,9 @@ const backgroundColor = [
 ]
 
 const chartData = computed(() => ({
-    labels: appointments.statuses.map(i => i.value),
+    labels: appointments.statuses.filter(s => auth.user?.role?.name != 'on-site-consultant' || [
+        'online-visit', 'in-person-visit', 'deposit-paid', 'treatment-completed'
+    ].includes(s.name)).map(i => i.value),
     datasets: [
         {
             label: ['', ''],

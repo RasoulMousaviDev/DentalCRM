@@ -77,7 +77,7 @@
             <div class="flex flex-col gap-1 col-span-2">
                 <FloatLabel variant="on">
                     <Textarea v-model="form.follow_up.desc" fluid rows="5" cols="30"
-                        :invalid="errors['follow_up.due_date']" />
+                        :invalid="errors['follow_up.desc']" />
                     <label> {{ $t('follow-up-desc') }}</label>
                 </FloatLabel>
                 <small v-if="errors['follow_up.desc']" v-text="errors['follow_up.desc'][0]" class="text-red-500" />
@@ -136,7 +136,7 @@ const handleSubmit = async () => {
         if (followUpId) {
             const followUp = followUps.items.find(f => f.id == followUpId)
             followUp.status = followUps.statuses.find(s => s.name == 'done')
-            const p = patients.items.find(p => p.id == patient.value)
+            const p = patients.items.find(p => p.id == form.patient.id)
             p.status = patients.statuses.find(s => s.id == form.patient.status)
         }
         dialogRef.value.close();

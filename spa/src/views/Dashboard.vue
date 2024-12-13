@@ -11,44 +11,46 @@
                     <InputGroupAddon>{{ $t('from') }}</InputGroupAddon>
                 </InputGroup>
                 <InputGroup class="ltr !w-[19rem]">
-                    <DatePicker v-model="form.to" inputClass="ltr" dateFormat="yy/mm/dd" type="jalali"
-                        />
+                    <DatePicker v-model="form.to" inputClass="ltr" dateFormat="yy/mm/dd" type="jalali" />
                     <InputGroupAddon>{{ $t('to') }}</InputGroupAddon>
                 </InputGroup>
                 <Button :label="$t('search')" :loading="store.fetching" @click="store.getCharts(form)" />
             </div>
         </div>
-        <ul class="w-full flex gap-8">
-            <li v-for="(card, i) in cards" :key="i" class="flex-1 grow">
-                <div class="card mb-0 flex flex-col gap-4 h-full">
-                    <div class="flex justify-between">
-                        <div class="flex flex-col gap-4">
-                            <span class="text-lg text-muted-color font-medium">
-                                {{ $t(card.title) }}
-                            </span>
-                            <div class="text-surface-600 font-medium text-xl">
-                                {{ card.count }}
+        <template v-if="['super-admin', 'admin', 'phone-consultant'].includes(auth.user?.role?.name)">
+            <ul class="w-full flex gap-8">
+                <li v-for="(card, i) in cards" :key="i" class="flex-1 grow">
+                    <div class="card mb-0 flex flex-col gap-4 h-full">
+                        <div class="flex justify-between">
+                            <div class="flex flex-col gap-4">
+                                <span class="text-lg text-muted-color font-medium">
+                                    {{ $t(card.title) }}
+                                </span>
+                                <div class="text-surface-600 font-medium text-xl">
+                                    {{ card.count }}
+                                </div>
+                            </div>
+                            <div class="w-14 h-14 flex rounded-border" :class="card.class">
+                                <i :class="card.icon" class="pi !text-3xl m-auto"></i>
                             </div>
                         </div>
-                        <div class="w-14 h-14 flex rounded-border" :class="card.class">
-                            <i :class="card.icon" class="pi !text-3xl m-auto"></i>
-                        </div>
+                        <template v-if="card.details">
+                            <span class="text-surface-600 font-medium">{{ }}</span>
+                            <span class="text-muted-color">{{ }}</span>
+                        </template>
                     </div>
-                    <template v-if="card.details">
-                        <span class="text-surface-600 font-medium">{{ }}</span>
-                        <span class="text-muted-color">{{ }}</span>
-                    </template>
-                </div>
-            </li>
-        </ul>
-        <div class="flex flex-wrap gap-8">
-            <PatientGenderChart :data="store.charts.patientGenders" />
-            <PatientLeadSourceChart :data="store.charts.patientLeadSources" />
-            <PatientTreatmentChart :data="store.charts.patientTreatments" />
-            <PatientStatusChart :data="store.charts.patientStatuses" />
-            <CallStatusChart :data="store.charts.callStatuses" />
-            <AppointmentStatusChart :data="store.charts.appointmentsStatusCount" />
-        </div>
+                </li>
+            </ul>
+            <div class="flex flex-wrap gap-8">
+                <PatientGenderChart :data="store.charts.patientGenders" />
+                <PatientLeadSourceChart :data="store.charts.patientLeadSources" />
+                <PatientTreatmentChart :data="store.charts.patientTreatments" />
+                <PatientStatusChart :data="store.charts.patientStatuses" />
+                <CallStatusChart :data="store.charts.callStatuses" />
+                <AppointmentStatusChart :data="store.charts.appointmentsStatusCount" />
+            </div>
+        </template>
+        <AppointmentStatusChart v-else :data="store.charts.appointmentsStatusCount" />
     </div>
 </template>
 
@@ -64,6 +66,9 @@ import AppointmentStatusChart from '@/components/AppointmentStatusChart.vue';
 import { useDashboardStore } from '@/stores/dashboard';
 
 import { reactive, computed } from "vue";
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore()
 
 const store = useDashboardStore()
 
