@@ -24,14 +24,17 @@
 <script setup>
 import PatientInfo from '@/components/PatientInfo.vue';
 import { usePatientsStore } from '@/stores/patients';
-import { inject, reactive, ref } from 'vue';
+import { inject, reactive, ref, watch } from 'vue';
 import Calls from './Calls.vue';
 import FollowUps from './FollowUps.vue';
 import Appointments from './Appointments.vue';
 import TreatmentPlans from './TreatmentPlans.vue';
 import PatientPhotos from '@/components/PatientPhotos.vue';
+import { useAuthStore } from '@/stores/auth';
 
 const tabs = reactive(['calls', 'follow-ups', 'appointments', 'treatment-plans', 'documents'])
+
+const auth = useAuthStore()
 
 const { route } = inject('service')
 
@@ -41,6 +44,11 @@ const store = usePatientsStore()
 
 store.show(id)
 
+
+watch(() => auth.user, (v) => {
+    if (v.role && v.role.name == 'on-site-consultant')
+        tabs.splice(0, 3)
+}, { immediate: false })
 </script>
 
 <style lang="scss" scoped></style>
