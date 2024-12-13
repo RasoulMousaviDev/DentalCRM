@@ -129,14 +129,19 @@ class AppointmentController extends Controller
 
         $status = Status::find($status);
 
-        if($status->name === 'periodic-visit'){
+        if ($status->name === 'periodic-visit') {
             $form['status'] = Status::firstWhere('name', 'pending')->id;
             $form['due_date'] = Carbon::now()->addMonth(3)->toString();
             $form['desc'] = $status->value;
             Patient::find($appointment->patient)->followUps()->create($form);
         }
 
-        $appointment->load('status');
+        $appointment->load([
+            'treatments:id,title',
+            'patient:id,firstname,lastname,user',
+            'status:id,name,value,severity',
+            'patient.user:id,name',
+        ]);
 
         return response()->json($appointment);
     }
