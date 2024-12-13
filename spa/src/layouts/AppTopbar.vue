@@ -120,7 +120,7 @@ const handleClick = (name) => {
 
 const alarms = useAlarmsStore()
 alarms.index()
-onMounted(() => setInterval(() => alarms.index(), 1000))
+onMounted(() => setInterval(() => alarms.index(), 3000))
 </script>
 
 <template>
