@@ -35,6 +35,7 @@
             </template>
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" />
+            <Column field="desc" :header="$t('desc')" body-class="truncate" />
             <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
             <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit || 0), $t('toman')].join(' ')"
                 :header="$t('deposit')" class="w-36" />
@@ -69,11 +70,11 @@
                                 icon="pi pi-wave-pulse" severity="info" :loading="data.loading" outlined
                                 @click="startTreatment(data)" />
                             <Button v-else-if="data.status.name == 'under-treatment'" :label="$t('end-treatment')"
-                                ize="small" icon="pi pi-check-square" severity="success"
-                                :loading="data.loading" outlined @click="endTreatment(data)" />
+                                ize="small" icon="pi pi-check-square" severity="success" :loading="data.loading"
+                                outlined @click="endTreatment(data)" />
                             <Button v-else-if="data.status.name == 'treatment-completed'" :label="$t('periodic-visit')"
-                                ize="small" icon="pi pi-sync" severity="warn" :loading="data.loading"
-                                outlined @click="periodicVisit(data)" />
+                                ize="small" icon="pi pi-sync" severity="warn" :loading="data.loading" outlined
+                                @click="periodicVisit(data)" />
                         </template>
                     </div>
                 </template>

@@ -120,8 +120,7 @@ const handleClick = (name) => {
 
 const alarms = useAlarmsStore()
 alarms.index()
-onMounted(() => setTimeout(() => alarms.index(), 3000))
-
+onMounted(() => setInterval(() => alarms.index(), 1000))
 </script>
 
 <template>
@@ -146,19 +145,19 @@ onMounted(() => setTimeout(() => alarms.index(), 3000))
 
             <div class="flex gap-4 [&_.p-button-label]:hidden">
                 <Button v-if="['reception', 'phone-consultant'].includes(auth.user?.role?.name)" icon="pi pi-calendar"
-                    rounded outlined :badge="`${alarms.items.appointments || 0}`" badgeSeverity="success"
+                    rounded outlined :badge="`${alarms.items?.appointments || 0}`" badgeSeverity="success"
                     v-tooltip.bottom="$t('appointments')" @click="handleClick('appointments')" />
                 <Button v-if="['reception', 'on-site-consultant'].includes(auth.user?.role?.name)" icon="pi pi-book"
-                    rounded outlined :badge="`${alarms.items.visits || 0}`" badgeSeverity="success"
+                    rounded outlined :badge="`${alarms.items?.visits || 0}`" badgeSeverity="success"
                     v-tooltip.bottom="$t('visits')" @click="handleClick('appointments')" />
                 <template v-if="auth.user?.role?.name == 'phone-consultant'">
-                    <Button icon="pi pi-calendar-times" rounded outlined :badge="`${alarms.items.periodic_visits || 0}`"
-                        badgeSeverity="success" v-tooltip.bottom="$t('periodic-visits')"
-                        @click="handleClick('periodic-visits')" />
-                    <Button icon="pi pi-list-check" rounded outlined :badge="`${alarms.items.follow_ups || 0}`"
+                    <Button icon="pi pi-calendar-times" rounded outlined
+                        :badge="`${alarms.items?.periodic_visits || 0}`" badgeSeverity="success"
+                        v-tooltip.bottom="$t('periodic-visits')" @click="handleClick('periodic-visits')" />
+                    <Button icon="pi pi-list-check" rounded outlined :badge="`${alarms.items?.follow_ups || 0}`"
                         badgeSeverity="success" v-tooltip.bottom="$t('follow-ups')"
                         @click="handleClick('follow-ups')" />
-                    <Button icon="pi pi-book" rounded outlined :badge="`${alarms.items.follow_up_backlogs || 0}`"
+                    <Button icon="pi pi-book" rounded outlined :badge="`${alarms.items?.follow_up_backlogs || 0}`"
                         badgeSeverity="success" v-tooltip.bottom="$t('follow-up-blacklogs')"
                         @click="handleClick('follow-up-blacklogs')" />
                 </template>

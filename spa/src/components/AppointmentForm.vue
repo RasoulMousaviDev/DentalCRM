@@ -78,8 +78,10 @@ const handleSubmit = async () => {
 
     loading.value = false
 
-    if (statusText === 'OK')
+    if (statusText === 'OK'){
+        if (id) patients.show(id)
         dialogRef.value.close();
+    }
     else if (status === 422)
         errors.value = data.errors
     else

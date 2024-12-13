@@ -139,6 +139,7 @@ const handleSubmit = async () => {
             const p = patients.items.find(p => p.id == form.patient.id)
             p.status = patients.statuses.find(s => s.id == form.patient.status)
         }
+        if (id) patients.show(id)
         dialogRef.value.close();
     }
     else if (status === 422)

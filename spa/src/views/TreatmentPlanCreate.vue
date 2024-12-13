@@ -107,7 +107,7 @@
                                 dateFormat="yy/mm/dd" :min-date="new MyDate()" :readonly="readonly" />
                             <InputGroupAddon>{{
                                 $t("treatment-start-date")
-                            }}</InputGroupAddon>
+                                }}</InputGroupAddon>
                         </InputGroup>
                     </div>
                     <DataTable :value="checks" class="[&_th]:!bg-[var(--surface-ground)]">
@@ -173,7 +173,7 @@
                                 <div class="flex justify-between items-center font-bold">
                                     <span>{{
                                         getTreatment(key, "title")
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <ul class="flex flex-col">
                                     <li v-for="(tooths, i) in getToothsPostion(
@@ -265,7 +265,7 @@
                     <li v-for="(row, i) in rows.slice(0, 3)" class="flex justify-between items-center">
                         <span class="text-sm opacity-80">{{
                             row.title
-                        }}</span>
+                            }}</span>
                         <span>{{ row[form.months_count] }}</span>
                     </li>
                 </ul>
@@ -273,7 +273,7 @@
                     <InputGroup class="ltr">
                         <InputGroupAddon class="!px-4">{{
                             $t("toman")
-                        }}</InputGroupAddon>
+                            }}</InputGroupAddon>
                         <FloatLabel variant="on" class="rtl">
                             <InputNumber v-model="form.discount_amount" fluid class="ltr" :readonly="readonly" />
                             <label>{{ $t("discount") }}</label>
@@ -563,7 +563,11 @@ const handleSubmit = async () => {
 
     loading.value = false;
 
-    if (statusText === "OK") router.replace({ name: "TreatmentPlans" });
+    if (statusText === "OK") {
+        if (patient)
+            router.replace({ name: "Patient", params: { id: patient } });
+        else router.replace({ name: "TreatmentPlans" });
+    }
     else if (status === 422) errors.value = data.errors;
     else
         toast.add({
