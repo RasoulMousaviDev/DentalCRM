@@ -25,7 +25,7 @@ const chartData = computed(() => ({
     datasets: [
         {
             data: store.items.map(i => props.data[i] || 0),
-            backgroundColor: ['#FF6384', '#36A2EB'],
+            backgroundColor: ['#36A2EB', '#FF6384'],
         }
     ]
 }));
@@ -50,7 +50,7 @@ const setChartOptions = () => {
 
                 rtl: true
             },
-          
+
             datalabels: {
                 color: '#fff',
                 font: {

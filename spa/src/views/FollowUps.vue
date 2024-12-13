@@ -64,6 +64,7 @@ const { route, dialog, t } = inject('service')
 const store = useFollowUpsStore()
 if (route.name == 'Patient')
     store.filters.patient = route.params.id
+
 store.index()
 
 const auth = useAuthStore()

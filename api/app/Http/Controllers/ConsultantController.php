@@ -31,7 +31,7 @@ class ConsultantController extends Controller
         $days = [];
         $period = CarbonPeriod::create(...$period);
         foreach ($period as $date) {
-            $days[$date->format('Y-m-d')] = $date->format('l');
+            $days[jdate($date)->format('Y/m/d')] = jdate($date)->format('l');
         }
 
         $items = $consultants->map(function ($consultant) use ($days) {
@@ -49,8 +49,8 @@ class ConsultantController extends Controller
 
             foreach ($consultant->patients as $patient) {
                 foreach ($patient->appointments as $appointment) {
-                    $appointmentDate = Carbon::parse($appointment->due_date)
-                        ->setTimezone('Asia/Tehran')->format('Y-m-d');
+                    $appointmentDate = jdate(Carbon::parse($appointment->getRawOriginal('due_date'))
+                        ->setTimezone('Asia/Tehran'))->format('Y/m/d');
 
                     $data[$appointmentDate]['total']++;
 

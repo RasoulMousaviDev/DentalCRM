@@ -25,7 +25,7 @@ const backgroundColor = [
 ]
 
 const chartData = computed(() => ({
-    labels: appointments.statuses.map(i => i.value.replace('در انتظار', 'نوبت').replace('پرداخت شده', 'بیعانه')),
+    labels: appointments.statuses.map(i => i.value),
     datasets: [
         {
             label: ['', ''],

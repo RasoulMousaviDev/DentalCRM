@@ -112,7 +112,8 @@ const loading = ref(false)
 const disabled = ref(false)
 
 const store = useCallsStore()
-store.index()
+if (store.items.length === 0)
+    store.index()
 
 const followUps = useFollowUpsStore()
 
@@ -132,13 +133,13 @@ const handleSubmit = async () => {
     loading.value = false
 
     if (statusText === 'OK') {
-        dialogRef.value.close();
         if (followUpId) {
             const followUp = followUps.items.find(f => f.id == followUpId)
-            followUp.status = followUps.statuses.find(s => s.name === 'done')
+            followUp.status = followUps.statuses.find(s => s.name == 'done')
             const p = patients.items.find(p => p.id == patient.value)
             p.status = patients.statuses.find(s => s.id == form.patient.status)
         }
+        dialogRef.value.close();
     }
     else if (status === 422)
         errors.value = data.errors

@@ -9,6 +9,7 @@ use App\Models\Deposit;
 use App\Models\FollowUp;
 use App\Models\Patient;
 use App\Models\Role;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,10 @@ class DashboardController extends Controller
     {
         $date = $request->only('from', 'to');
 
-        $period = collect($date)->values();
+        $period = collect($date)->values()->map(fn($d, $i) => Carbon::parse($d)
+            ->setTimezone('Asia/Tehran')
+            ->{$i ? 'endOfDay' : 'startOfDay'}()
+            ->format('Y-m-d H:i:s'));
 
         $user = auth()->user();
 
@@ -124,7 +128,6 @@ class DashboardController extends Controller
             'callStatuses',
             'callCount',
             'statuses',
-            'isAdmin'
         ));
     }
 }

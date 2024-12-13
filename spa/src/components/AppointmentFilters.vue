@@ -79,6 +79,11 @@ const handleSubmit = async () => {
     store.index()
 }
 
+watch(() => auth.user.role, (v) => {
+    if (v?.name == 'appointment')
+        filters.status = 6
+}, { immediate: true })
+
 watch(filters, () => {
     Object.entries(filters).forEach(([key, value]) => {
         if (value === null || value.length === 0) delete filters[key]

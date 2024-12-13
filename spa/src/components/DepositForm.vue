@@ -55,6 +55,7 @@ const handleSubmit = async () => {
     loading.value = false
 
     if (statusText === 'OK') {
+        appointment.deposit = form.deposit
         dialogRef.value.close();
     }
     else if (status === 422)

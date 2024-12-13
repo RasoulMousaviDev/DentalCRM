@@ -19,7 +19,7 @@ store.index().then(() => {
     Object.entries(props.data).forEach(([id, count]) => {
         const item = store.items.find(i => i.id == id)
         item.count = count
-    })
+    })    
 })
 const chartOptions = ref(null);
 const backgroundColor = [
@@ -32,7 +32,7 @@ const chartData = computed(() => ({
     labels: store.items.map(i => i.title),
     datasets: [
         {
-            data: store.items.map(i => i.count),
+            data: store.items.map(i => i.count || 0),
             backgroundColor,
         }
     ]

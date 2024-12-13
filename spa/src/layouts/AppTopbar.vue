@@ -112,7 +112,9 @@ const handleClick = (name) => {
     else if (name == 'appointments')
         router.push('/appointments')
     else if (name == 'follow-ups')
-        router.push('/follow-ups')
+        router.push('/follow-ups?status=pending')
+    else if (name == 'follow-up-blacklogs')
+        router.push('/follow-ups?status=lost')
 
 }
 
@@ -151,6 +153,8 @@ onMounted(() => setTimeout(() => alarms.index(), 3000))
                     @click="handleClick('appointments')" />
                 <Button icon="pi pi-list-check" rounded outlined :badge="`${alarms.items.follow_ups || 0}`"
                     badgeSeverity="success" v-tooltip.bottom="$t('follow-ups')" @click="handleClick('follow-ups')" />
+                <Button icon="pi pi-book" rounded outlined :badge="`${alarms.items.follow_ups || 0}`"
+                    badgeSeverity="success" v-tooltip.bottom="$t('follow-up-blacklogs')" @click="handleClick('follow-up-blacklogs')" />
             </div>
             <span class="w-px h-6 my-auto bg-current"></span>
             <div class="layout-config-menu">

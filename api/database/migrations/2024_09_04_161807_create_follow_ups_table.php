@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('follow_ups', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient')->constrained('patients');
-            $table->date('due_date');
+            $table->timestamp('due_date');
             $table->string('desc');
             $table->foreignId('status')->constrained('statuses');
             $table->timestamps();

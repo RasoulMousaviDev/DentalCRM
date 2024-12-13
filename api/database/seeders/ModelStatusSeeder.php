@@ -91,8 +91,8 @@ class ModelStatusSeeder extends Seeder
         $followUp = Model::firstWhere('name', FollowUp::class);
 
         $followUpStatuses = Status::whereIn('name', [
-            'pendig',
-            'completed',
+            'pending',
+            'done',
             'lost',
         ])->get();
 

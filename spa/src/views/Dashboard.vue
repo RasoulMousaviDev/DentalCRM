@@ -47,7 +47,7 @@
             <PatientTreatmentChart :data="store.charts.patientTreatments" />
             <PatientStatusChart :data="store.charts.patientStatuses" />
             <CallStatusChart :data="store.charts.callStatuses" />
-            <ReceptionChart :data="store.charts.receptionReport" />
+            <AppointmentStatusChart :data="store.charts.appointmentsStatusCount" />
         </div>
     </div>
 </template>
@@ -60,7 +60,7 @@ import PatientGenderChart from '@/components/PatientGenderChart.vue';
 import PatientLeadSourceChart from '@/components/PatientLeadSourceChart.vue';
 import PatientStatusChart from '@/components/PatientStatusChart.vue';
 import PatientTreatmentChart from '@/components/PatientTreatmentChart.vue';
-import ReceptionChart from '@/components/AppointmentStatusChart.vue';
+import AppointmentStatusChart from '@/components/AppointmentStatusChart.vue';
 import { useDashboardStore } from '@/stores/dashboard';
 
 import { reactive, computed } from "vue";

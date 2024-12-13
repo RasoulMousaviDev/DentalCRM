@@ -27,7 +27,7 @@ class AppointmentController extends Controller
 
         $user = auth()->user();
 
-        $roles = Role::whereIn('name', ['super-admin', 'admin', 'reception', 'on-site-consultant'])->pluck('id');
+        $roles = Role::whereIn('name', ['super-admin', 'admin', 'on-site-consultant', 'reception', 'appointment'])->pluck('id');
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
@@ -126,6 +126,15 @@ class AppointmentController extends Controller
         $status = $form['status'];
 
         $appointment->patient()->update(compact('status'));
+
+        $status = Status::find($status);
+
+        if($status->name === 'periodic-visit'){
+            $form['status'] = Status::firstWhere('name', 'pending')->id;
+            $form['due_date'] = Carbon::now()->addMonth(3)->toString();
+            $form['desc'] = $status->value;
+            Patient::find($appointment->patient)->followUps()->create($form);
+        }
 
         $appointment->load('status');
 

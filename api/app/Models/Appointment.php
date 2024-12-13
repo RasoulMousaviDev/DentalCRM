@@ -38,7 +38,6 @@ class Appointment extends Model
     {
         return Attribute::make(
             set: fn($value) => Carbon::parse($value)->setTimezone('Asia/Tehran')->format('Y-m-d H:i:s'),
-            get: fn($value) => Carbon::parse($value)->toIso8601String()
         );
     }
 

@@ -259,5 +259,15 @@
     "deposit-percent": "پیش پرداخت (درصد)",
     "interest-percent": "بهره (درصد)",
     "createNewInstallmentPlan": "ایجاد طرح اقساط جدید",
-    "editInstallmentPlan": "ویرایش طرح اقساط"
+    "editInstallmentPlan": "ویرایش طرح اقساط",
+    "start-treatment": "شروع درمان",
+    "end-treatment": "پایان درمان",
+    "start-treatment-confirm-question": "آیا واقعا میخواهید درمان بیمار را شروع کنید؟",
+    "be-start": "شروع شود",
+    "end-treatment-confirm-question": "آیا واقعا میخواهید درمان بیمار را به پایان برسانید؟",
+    "be-ended": "پایان داده شود",
+    "periodic-visit": "ویزیت دوره ای",
+    "periodic-visit-confirm-question":"آیا واقعا میخواهید وضعیت بیمار را به ویزیت دوره ای تغییر دهید؟",
+    "be-periodic-visit":"ویزیت دوره ای شود",
+    "follow-up-blacklogs": "وظایف عقب افتاده"
 }

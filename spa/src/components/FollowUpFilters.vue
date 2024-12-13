@@ -28,8 +28,8 @@
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
                 </template>
-                <template #option="{ option: { value, severity } }">
-                    <Tag :value="$t(value)" :severity="severity" class="text-xs" />
+                <template #option="{ option }">
+                    <Tag v-bind="option" class="text-xs" />
                 </template>
             </Select>
             <label> {{ $t('status') }}</label>
@@ -55,7 +55,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useFollowUpsStore } from '@/stores/follow-ups';
 import { inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
 
-const auth  = useAuthStore()
+const auth = useAuthStore()
 
 const { route } = inject('service')
 
@@ -69,6 +69,15 @@ const handleSubmit = async () => {
     store.filters = filters
     store.index()
 }
+
+watch(() => store.items && route.query.status, () => {
+    const item = store.statuses.find(s => s.name == route.query.status)
+    if (item && filters.status != item.id) {
+        filters.status = item.id
+        handleSubmit()
+    }
+}, { immediate: true })
+
 
 watch(filters, () => {
     Object.entries(filters).forEach(([key, value]) => {
