@@ -31,6 +31,8 @@ class DashboardController extends Controller
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
+        $response = [];
+
         if ($user->role->name != 'on-site-consultant') {
             $patientCount = Patient::whereBetween('created_at', $period)->when(!$isAdmin, function ($query) use ($user) {
                 $query->where('user', $user->id);
@@ -100,6 +102,18 @@ class DashboardController extends Controller
                 ->groupBy('patient_treatments.treatment_id')
                 ->select('patient_treatments.treatment_id', DB::raw('COUNT(patient_treatments.patient_id) as patient_count'))
                 ->pluck('patient_count', 'treatment_id');
+
+            $response = compact(
+                'patientLeadSources',
+                'patientTreatments',
+                'appointmentCount',
+                'patientStatuses',
+                'patientGenders',
+                'followUpCount',
+                'patientCount',
+                'callStatuses',
+                'callCount',
+            );
         }
         $appointmentsStatusCount = Appointment::select('status', DB::raw('COUNT(*) as count'))
             ->when(!$isAdmin, function ($query) use ($user) {
@@ -117,18 +131,9 @@ class DashboardController extends Controller
             'call' => Call::model()->statuses,
         ];
 
-        return response()->json(compact(
-            'patientLeadSources',
-            'patientTreatments',
-            'appointmentsStatusCount',
-            'appointmentCount',
-            'patientStatuses',
-            'patientGenders',
-            'followUpCount',
-            'patientCount',
-            'callStatuses',
-            'callCount',
-            'statuses',
-        ));
+        $response['appointmentsStatusCount'] = $appointmentsStatusCount;
+        $response['statuses'] = $statuses;
+
+        return response()->json($response);
     }
 }
