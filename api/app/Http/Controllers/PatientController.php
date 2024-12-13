@@ -36,7 +36,7 @@ class PatientController extends Controller
 
         $user = auth()->user();
 
-        $roles = Role::whereIn('name', ['super-admin', 'admin'])->pluck('id');
+        $roles = Role::whereIn('name', ['super-admin', 'admin', 'on-site-consultant'])->pluck('id');
 
         $isAdmin = collect($roles)->contains($user->role->id);
 

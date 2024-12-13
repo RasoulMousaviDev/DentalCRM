@@ -97,7 +97,7 @@
                 </div>
 
                 <div v-if="form.months_count" class="card flex flex-col gap-6 border border-transparent"
-                    :class="{ '!border-red-500': errors.checks_count }">
+                    :class="{ '!border-red-500': errors.months_count }">
                     <div class="flex items-center gap-2">
                         <span class="text-lg font-bold ml-auto">
                             {{ $t("calculation-head-check") }}
@@ -107,7 +107,7 @@
                                 dateFormat="yy/mm/dd" :min-date="new MyDate()" :readonly="readonly" />
                             <InputGroupAddon>{{
                                 $t("treatment-start-date")
-                                }}</InputGroupAddon>
+                            }}</InputGroupAddon>
                         </InputGroup>
                     </div>
                     <DataTable :value="checks" class="[&_th]:!bg-[var(--surface-ground)]">
@@ -146,7 +146,7 @@
                                         mobiles.map((m) => m.number).join(' '),
                                 ]" :optionLabel="({ firstname, lastname }) =>
                                     [firstname, lastname].join(' ')
-                                    " fluid :invalid="errors.patient" :disabled="disabled"
+                                    " fluid :invalid="errors.patient" :disabled="readonly"
                                 panel-class="[&_.p-iconfield]:ltr [&_input:not(.p-filled)]:!text-right"
                                 :filter-placeholder="$t('search-patient')" @filter="patients.search($event.value)">
                             </Select>
@@ -173,7 +173,7 @@
                                 <div class="flex justify-between items-center font-bold">
                                     <span>{{
                                         getTreatment(key, "title")
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <ul class="flex flex-col">
                                     <li v-for="(tooths, i) in getToothsPostion(
@@ -215,7 +215,7 @@
                                     v-model="treatment.count[service]" mode="decimal" showButtons :min="1" :max="10"
                                     input-class="w-14 print:w-8"
                                     class="ltr -my-1 h-8 [&>span>button]:w-6 [&>span>button]:print:hidden"
-                                    :default-value="1" :disabled="readonly"/>
+                                    :default-value="1" :disabled="readonly" />
                                 <span class="min-w-28 text-left mr-auto">{{
                                     [
                                         new Intl.NumberFormat().format(
@@ -265,7 +265,7 @@
                     <li v-for="(row, i) in rows.slice(0, 3)" class="flex justify-between items-center">
                         <span class="text-sm opacity-80">{{
                             row.title
-                            }}</span>
+                        }}</span>
                         <span>{{ row[form.months_count] }}</span>
                     </li>
                 </ul>
@@ -273,7 +273,7 @@
                     <InputGroup class="ltr">
                         <InputGroupAddon class="!px-4">{{
                             $t("toman")
-                            }}</InputGroupAddon>
+                        }}</InputGroupAddon>
                         <FloatLabel variant="on" class="rtl">
                             <InputNumber v-model="form.discount_amount" fluid class="ltr" :readonly="readonly" />
                             <label>{{ $t("discount") }}</label>
@@ -601,7 +601,8 @@ watch(
 onMounted(async () => {
     if (readonly.value) {
         const { data } = await store.show(id);
-        await patients.show(data.patient.id);
+        if (data.patient.id)
+            await patients.show(data.patient.id);
         Object.assign(form, data);
         currentTab.value = Object.keys(data.treatments_details)[0];
     } else if (patient) {

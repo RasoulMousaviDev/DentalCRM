@@ -29,7 +29,7 @@ class TreatmentPlanController extends Controller
 
         $user = auth()->user();
 
-        $roles = Role::whereIn('name', ['super-admin', 'admin'])->pluck('id');
+        $roles = Role::whereIn('name', ['super-admin', 'admin','on-site-consultant'])->pluck('id');
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
@@ -116,8 +116,8 @@ class TreatmentPlanController extends Controller
     {
         $treatmentPlan->load([
             'status:id,value,severity',
-            'patient:id,firstname,lastname,user',
-            'patient.user:id,name'
+            // 'patient:id,firstname,lastname,user',
+            // 'patient.user:id,name'
         ]);
 
         return response()->json($treatmentPlan);

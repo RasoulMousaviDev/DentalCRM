@@ -54,9 +54,7 @@ class DashboardController extends Controller
 
         $patientStatuses = Patient::select('status', DB::raw('COUNT(*) as count'))
             ->when(!$isAdmin, function ($query) use ($user) {
-                $query->whereHas('patient', function (Builder $query) use ($user) {
-                    $query->where('user', $user->id);
-                });
+                $query->where('user', $user->id);
             })
             ->whereBetween('created_at',  $period)
             ->groupBy('status')

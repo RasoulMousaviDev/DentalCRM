@@ -48,10 +48,9 @@
             <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44" body-class="!pl-0">
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
-                        <Button
-                            v-if="auth.user?.role?.name == 'phone-consultant' && data.status.name == 'appointment-set'"
-                            :label="$t('appointment-cancel')" ize="small" outlined icon="pi pi-credit-card"
-                            severity="danger" class="w-32" :loading="data.loading" @click="cancel(data)" />
+                        <Button v-if="data.status.name == 'appointment-set'" :label="$t('appointment-cancel')"
+                            ize="small" outlined icon="pi pi-credit-card" severity="danger" class="w-32"
+                            :loading="data.loading" @click="cancel(data)" />
                         <!-- <SplitButton v-if="data.status.id == 13" :label="$t('was-visit')" size="small"
                             class="w-32 first:*:grow" :model="getMenu(data)" :loading="data.loading"
                             @click="visit(data)" />

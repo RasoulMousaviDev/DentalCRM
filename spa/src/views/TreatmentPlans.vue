@@ -1,7 +1,7 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" row-hover editMode="cell"
-            class="[&_tbody>tr]:cursor-pointer" @cell-edit-complete="onCellEditComplete" @row-click="onRowClick">
+        <DataTable :value="store.items" tableStyle="min-width: 50rem" editMode="cell"
+            @cellEditComplete="onCellEditComplete">
             <template #header>
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center gap-2">
@@ -9,7 +9,8 @@
                         <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
                         <hr class="grow !ml-2">
                         </hr>
-                        <Button v-if="auth.user?.role?.name != 'phone-consultant'" icon="pi pi-plus" :label="$t('new-plan')" severity="success" as="router-link"
+                        <Button v-if="auth.user?.role?.name != 'phone-consultant'" icon="pi pi-plus"
+                            :label="$t('new-plan')" severity="success" as="router-link"
                             :to="{ name: 'TreatmentPlanCreate', query: { patient: $route.params.id } }" />
                     </div>
                     <TreatmentPlanFilters />
@@ -26,8 +27,13 @@
                 </template>
             </Column>
             <template v-if="$route.name != 'Patient'">
-                <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
-                    :header="$t('patient-name')" />
+                <Column :header="$t('patient-name')">
+                    <template #body="{ data: { id, patient: { firstname, lastname } } }">
+                        <span class="cursor-pointer" @click="router.push({ name: 'Patient', params: { id } })">
+                            {{ [firstname, lastname].join(' ') }}
+                        </span>
+                    </template>
+                </Column>
                 <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="patient.user.name"
                     :header="$t('consultant')" />
             </template>
@@ -47,20 +53,26 @@
                     <Tag v-bind="status" />
                 </template>
                 <template #editor="{ data, field }">
-                    <Select v-model="data[field]" option-value="value" focusOnHover
-                        :options="Object.entries(severities).map(([value, severity]) => ({ value, severity }))" fluid
+                    <Select v-model="data[field]" focusOnHover :options="store.statuses" fluid
                         :placeholder="$t('choose')" class="-my-2">
                         <template #value="{ value }">
-                            <Tag :value="$t(value)" :severity="severities[value]" />
+                            <Tag v-bind="value" />
                         </template>
                         <template #option="{ option }">
-                            <Tag :value="$t(option.value)" :severity="option.severity" />
+                            <Tag v-bind="option" />
                         </template>
                     </Select>
                 </template>
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
+            <Column :header="$t('actions')" bodyClass="ltr" class="w-20">
+                <template #body="{ data: { id } }">
+                    <Button icon="pi pi-eye" rounded text
+                        @click=" router.push({ name: 'TreatmentPlan', params: { id } })" />
+                </template>
+            </Column>
+
         </DataTable>
     </div>
 </template>
@@ -70,8 +82,6 @@ import TreatmentPlanFilters from '@/components/TreatmentPlanFilters.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useTreatmentPlansStore } from '@/stores/treatment-plans';
 import { reactive, inject } from 'vue';
-
-const severities = reactive({ valid: "info", invalid: "warn", done: "success" })
 
 const { toast, router, route } = inject('service')
 
@@ -84,11 +94,12 @@ const auth = useAuthStore()
 
 const onCellEditComplete = async (event) => {
     let { data: { id }, newValue, index, value } = event;
+    console.log(event);
 
-    if (newValue != value) {
+    if (newValue.id != value.id) {
         store.items[index].status = newValue;
 
-        const { statusText, data } = await store.update(id, { status: newValue });
+        const { statusText, data } = await store.update(id, { status: newValue.id });
 
         if (statusText == 'OK')
             toast.add({ severity: 'success', summary: 'Success', detail: 'Status updated', life: 3000 });
@@ -99,11 +110,7 @@ const onCellEditComplete = async (event) => {
     }
 };
 
-const onRowClick = (e) => {
-    if (e.originalEvent.target.className != 'p-tag-label') {
-        router.push({ name: 'TreatmentPlan', params: { id: e.data.id } })
-    }
-}
+
 </script>
 
 <style lang="scss" scoped></style>

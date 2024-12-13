@@ -27,7 +27,7 @@ class AppointmentController extends Controller
 
         $user = auth()->user();
 
-        $roles = Role::whereIn('name', ['super-admin', 'admin', 'reception'])->pluck('id');
+        $roles = Role::whereIn('name', ['super-admin', 'admin', 'reception', 'on-site-consultant'])->pluck('id');
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
@@ -125,9 +125,7 @@ class AppointmentController extends Controller
 
         $status = $form['status'];
 
-        if (in_array($status, [4, 5, 6]))
-            $appointment->patient()->update(compact('status'));
-
+        $appointment->patient()->update(compact('status'));
 
         $appointment->load('status');
 
