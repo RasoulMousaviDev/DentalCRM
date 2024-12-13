@@ -48,7 +48,7 @@ store.show(id)
 watch(() => auth.user, (v) => {
     if (v.role && v.role.name == 'on-site-consultant')
         tabs.splice(0, 3)
-}, { immediate: false })
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped></style>
