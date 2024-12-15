@@ -35,6 +35,7 @@ class TreatmentPlanController extends Controller
 
         $treatmentPlans = TreatmentPlan::with([
             'patient:id,firstname,lastname',
+            'user:id,name',
             'status:id,value,severity'
         ]);
 
@@ -100,12 +101,15 @@ class TreatmentPlanController extends Controller
 
         $patient = Patient::find($request->get('patient'));
 
+        $form['user'] = auth()->id();
+
         $patient->treatmentPlans()->create($form)->save();
 
         $treatmentPlan = $patient->treatmentPlans()
             ->with('status:id,value,severity')
             ->with('patient:id,firstname,lastname,user')
             ->with('patient.user:id,name')
+            ->with('user:id,name')
             ->latest()
             ->first();
 
@@ -134,7 +138,9 @@ class TreatmentPlanController extends Controller
         $treatmentPlan->load([
             'status:id,value,severity',
             'patient:id,firstname,lastname,user',
-            'patient.user:id,name'
+            'patient.user:id,name',
+            'user:id,name',
+            
         ]);
 
         return response()->json($treatmentPlan);

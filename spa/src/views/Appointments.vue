@@ -28,10 +28,21 @@
                 </template>
             </Column>
             <template v-if="$route.name != 'Patient'">
-                <Column :field="({ patient: { firstname, lastname } }) => [firstname, lastname].join(' ')"
-                    :header="$t('patient-name')" />
+                <Column :header="$t('patient-name')">
+                    <template #body="{ data: { patient: { id, firstname, lastname } } }">
+                        <span v-if="auth.user?.role?.name == 'on-site-consultant'" class="cursor-pointer"
+                            @click="router.push({ name: 'Patient', params: { id } })">
+                            {{ [firstname, lastname].join(' ') }}
+                        </span>
+                        <span v-else>
+                            {{ [firstname, lastname].join(' ') }}
+                        </span>
+                    </template>
+                </Column>
                 <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="patient.user.name"
-                    :header="$t('consultant')" />
+                    :header="$t('phone-consultant')" />
+                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)"
+                    field="patient.treatment_plans.0.user.name" :header="$t('on-site-consultant')" />
             </template>
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" />
@@ -91,7 +102,7 @@ import { useAppointmentsStore } from '@/stores/appointments';
 import { useAuthStore } from '@/stores/auth';
 import { inject, watch } from 'vue';
 
-const { route, dialog, confirm, toast, t } = inject('service')
+const { router, route, dialog, confirm, toast, t } = inject('service')
 
 const auth = useAuthStore()
 

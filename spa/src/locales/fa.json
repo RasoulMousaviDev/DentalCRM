@@ -267,8 +267,10 @@
     "end-treatment-confirm-question": "آیا واقعا میخواهید درمان بیمار را به پایان برسانید؟",
     "be-ended": "پایان داده شود",
     "periodic-visit": "ویزیت دوره ای",
-    "periodic-visit-confirm-question":"آیا واقعا میخواهید وضعیت بیمار را به ویزیت دوره ای تغییر دهید؟",
-    "be-periodic-visit":"ویزیت دوره ای شود",
+    "periodic-visit-confirm-question": "آیا واقعا میخواهید وضعیت بیمار را به ویزیت دوره ای تغییر دهید؟",
+    "be-periodic-visit": "ویزیت دوره ای شود",
     "follow-up-blacklogs": "وظایف عقب افتاده",
-    "visits": "ویزیت ها"
+    "visits": "ویزیت ها",
+    "phone-consultant": "مشاوره تلفنی",
+    "on-site-consultant": "مشاوره حضوری"
 }

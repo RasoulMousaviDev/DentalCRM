@@ -23,7 +23,10 @@
                 <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
             </template>
             <Column field="id" :header="$t('id')" />
-            <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="user.name" :header="$t('consultant')" />
+            <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="user.name"
+                :header="$t('phone-consultant')" />
+            <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)"
+                field="patient.treatment_plans.0.user.name" :header="$t('on-site-consultant')" />
             <Column :field="({ firstname, lastname }) => [firstname, lastname].join(' ')"
                 :header="$t('name-and-family')" />
             <Column :field="({ mobiles }) => mobiles.map(({ number }) => number).join(' | ')" :header="$t('mobile')"

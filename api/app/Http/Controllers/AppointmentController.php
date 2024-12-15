@@ -34,6 +34,7 @@ class AppointmentController extends Controller
         $appointments = Appointment::with([
             'treatments:id,title',
             'patient:id,firstname,lastname',
+            'patient.treatmentPlans.user:id,name',
             'status:id,name,value,severity',
         ]);
 
@@ -104,6 +105,7 @@ class AppointmentController extends Controller
         $appointment = $patient->appointments()->with([
             'treatments:id,title',
             'patient:id,firstname,lastname,user',
+            'patient.treatmentPlans.user:id,name',
             'status:id,name,value,severity',
             'patient.user:id,name',
         ])->latest()->first();
@@ -139,6 +141,7 @@ class AppointmentController extends Controller
         $appointment->load([
             'treatments:id,title',
             'patient:id,firstname,lastname,user',
+            'patient.treatmentPlans.user:id,name',
             'status:id,name,value,severity',
             'patient.user:id,name',
         ]);

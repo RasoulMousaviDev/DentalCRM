@@ -16,6 +16,7 @@ class TreatmentPlan extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user',
         'payment_method',
         'months_count',
         'deposit_amount',
@@ -34,6 +35,11 @@ class TreatmentPlan extends Model
         'start_date' => 'timestamp',
         'treatments_details' => 'object'
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user');
+    }
 
     protected function startDate(): Attribute
     {

@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
         Role::insert([
             ["name" => "super-admin", "title" => "مدیر کل"],
             ["name" => "admin", "title" => "مدیر"],
-            ["name" => "phone-consultant", "title" => "مشاور نلفنی"],
+            ["name" => "phone-consultant", "title" => "مشاور تلفنی"],
             ["name" => "on-site-consultant", "title" => "مشاور حضوری"],
             ["name" => "reception", "title" => "پذیرش"],
             ["name" => "appointment", "title" => "نوبت دهی"],

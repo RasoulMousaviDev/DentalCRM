@@ -28,14 +28,20 @@
             </Column>
             <template v-if="$route.name != 'Patient'">
                 <Column :header="$t('patient-name')">
-                    <template #body="{ data: { id, patient: { firstname, lastname } } }">
-                        <span class="cursor-pointer" @click="router.push({ name: 'Patient', params: { id } })">
+                    <template #body="{ data: { patient: { id, firstname, lastname } } }">
+                        <span v-if="auth.user?.role?.name == 'on-site-consultant'" class="cursor-pointer"
+                            @click="router.push({ name: 'Patient', params: { id } })">
+                            {{ [firstname, lastname].join(' ') }}
+                        </span>
+                        <span v-else>
                             {{ [firstname, lastname].join(' ') }}
                         </span>
                     </template>
                 </Column>
                 <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="patient.user.name"
-                    :header="$t('consultant')" />
+                    :header="$t('phone-consultant')" />
+                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="user.name"
+                    :header="$t('on-site-consultant')" />
             </template>
             <Column :field="({ visit_type }) => $t(visit_type)" :header="$t('visit-type')" class="w-28" />
             <Column field="desc" :header="$t('desc')" body-class="truncate" />

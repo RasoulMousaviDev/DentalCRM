@@ -20,7 +20,7 @@ class StatusSeeder extends Seeder
             ['name' => 'appointment-set', 'value' => 'نوبت داده شد', 'severity' => 'warn'],
             ['name' => 'in-person-visit', 'value' => 'ویزیت حضوری شد', 'severity' => 'info'],
             ['name' => 'online-visit', 'value' => 'ویزیت آنلاین شد', 'severity' => 'info'],
-            ['name' => 'deposit-paid', 'value' => 'بیعانه داده شد', 'severity' => 'secondary'],
+            ['name' => 'deposit-paid', 'value' => 'بیعانه داده شد', 'severity' => 'success'],
             ['name' => 'refunded', 'value' => 'عودت داده شد', 'severity' => 'danger'],
             ['name' => 'under-treatment', 'value' => 'درحال درمان', 'severity' => 'warn'],
             ['name' => 'treatment-completed', 'value' => 'پایان درمان', 'severity' => 'success'],

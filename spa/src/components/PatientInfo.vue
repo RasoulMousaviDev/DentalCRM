@@ -1,7 +1,7 @@
 <template>
     <div class="card flex flex-col">
         <div class="flex gap-2 items-center">
-            <Button icon="pi pi-arrow-right" text rounded as="router-link" :to="{ 'name': 'Patients' }" />
+            <Button icon="pi pi-arrow-right" text rounded @click="$router.back()" />
             <span class="text-2xl font-bold ml-auto">
                 {{ $t('patient-info') }}
             </span>
@@ -9,8 +9,7 @@
             <Button icon="pi pi-trash" outlined severity="danger" :loading="loading" @click="destroy(data.id)" />
         </div>
         <ul v-if="data" class="grid grid-cols-5 border-t translate-y-4">
-            <li v-for="(key, i) in keys" :key="key"
-                class="flex items-center justify-between gap-2 px-4 py-3"
+            <li v-for="(key, i) in keys" :key="key" class="flex items-center justify-between gap-2 px-4 py-3"
                 :class="{ 'border-b': i < 13, 'col-span-2': i == 10 || i == 11, 'col-span-4 !justify-start': i == 13, 'border-l': ![4, 9, 12, 14].includes(i) }">
                 <span class="opacity-70">{{ $t(key.replace('_', '-')) }}:</span>
                 <div v-if="key == 'mobiles'" class="flex gap-2">
@@ -23,7 +22,7 @@
                 <span v-else-if="key == 'insurance'">
                     {{ $t(data.insurance ? 'has' : 'not-has') }}
                 </span>
-                 <span v-else-if="key == 'birthday'">
+                <span v-else-if="key == 'birthday'">
                     {{ new Date(Date.parse(data.birthday)).toLocaleDateString('fa') }}
                 </span>
                 <span v-else class="font-medium" :class="{ 'ltr': (i + 1) % 5 === 0 }">

@@ -80,7 +80,9 @@ class PatientController extends Controller
         $patients = $patients->with([
             'mobiles',
             'treatments:id,title',
-            'status:id,value,severity'
+            'status:id,value,severity',
+            'treatmentPlans.user:id,name',
+
         ])->latest()->paginate($rows);
 
         $response = $this->paginate($patients);
@@ -121,6 +123,7 @@ class PatientController extends Controller
             'mobiles',
             'user:id,name',
             'treatments:id,title',
+            'treatmentPlans.user:id,name',
             'status:id,value,severity'
         ])->latest()->first();
 
@@ -136,6 +139,7 @@ class PatientController extends Controller
             'leadSource:id,title',
             'treatments:id,title',
             'user:name',
+            'treatmentPlans.user:id,name',
             'status'
         ]);
         return response()->json($patient);
@@ -166,7 +170,8 @@ class PatientController extends Controller
             'mobiles',
             'user:id,name',
             'treatments:id,title',
-            'status:id,value,severity'
+            'status:id,value,severity',
+            'treatmentPlans.user:id,name',
         ]);
 
         return response()->json($patient);

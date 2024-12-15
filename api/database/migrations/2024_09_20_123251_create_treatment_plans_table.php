@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('treatment_plans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user')->constrained('users');
             $table->foreignId('patient')->constrained('patients');
             $table->enum('payment_method', ['cash', 'installments']);
             $table->enum('visit_type', ['in-person', 'online']);
