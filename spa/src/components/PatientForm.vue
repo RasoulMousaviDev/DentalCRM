@@ -124,7 +124,6 @@
 </template>
 
 <script setup>
-import { useAuthStore } from '@/stores/auth';
 import { useCitiesStore } from '@/stores/cities';
 import { useGendersStore } from '@/stores/genders';
 import { useLeadSourcesStore } from '@/stores/lead-sources';
@@ -132,8 +131,6 @@ import { usePatientsStore } from '@/stores/patients';
 import { useProvincesStore } from '@/stores/provinces';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
-
-const auth = useAuthStore()
 
 const { toast } = inject('service')
 

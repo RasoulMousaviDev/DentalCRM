@@ -107,7 +107,7 @@
                                 dateFormat="yy/mm/dd" :min-date="new MyDate()" :readonly="readonly" />
                             <InputGroupAddon>{{
                                 $t("treatment-start-date")
-                                }}</InputGroupAddon>
+                            }}</InputGroupAddon>
                         </InputGroup>
                     </div>
                     <DataTable :value="checks" class="[&_th]:!bg-[var(--surface-ground)]">
@@ -149,6 +149,13 @@
                                     " fluid :invalid="errors.patient" :disabled="readonly"
                                 panel-class="[&_.p-iconfield]:ltr [&_input:not(.p-filled)]:!text-right"
                                 :filter-placeholder="$t('search-patient')" @filter="patients.search($event.value)">
+                                <template #empty>
+                                    <i></i>
+                                </template>
+                                <template #emptyfilter>
+                                    <span v-if="!patients.fetching">{{ $t('not-found') }}</span>
+                                    <span v-else>{{ $t('searching') }}</span>
+                                </template>
                             </Select>
                             <label> {{ $t("patient") }}</label>
                         </FloatLabel>
@@ -173,7 +180,7 @@
                                 <div class="flex justify-between items-center font-bold">
                                     <span>{{
                                         getTreatment(key, "title")
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <ul class="flex flex-col">
                                     <li v-for="(tooths, i) in getToothsPostion(
@@ -265,7 +272,7 @@
                     <li v-for="(row, i) in rows.slice(0, 3)" class="flex justify-between items-center">
                         <span class="text-sm opacity-80">{{
                             row.title
-                            }}</span>
+                        }}</span>
                         <span>{{ row[form.months_count] }}</span>
                     </li>
                 </ul>
@@ -273,7 +280,7 @@
                     <InputGroup class="ltr">
                         <InputGroupAddon class="!px-4">{{
                             $t("toman")
-                            }}</InputGroupAddon>
+                        }}</InputGroupAddon>
                         <FloatLabel variant="on" class="rtl">
                             <InputNumber v-model="form.discount_amount" fluid class="ltr" :readonly="readonly" />
                             <label>{{ $t("discount") }}</label>

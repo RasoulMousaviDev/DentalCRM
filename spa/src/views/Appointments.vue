@@ -61,14 +61,16 @@
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
                         <template v-if="data.status.name == 'appointment-set'">
-                            <SplitButton v-if="auth.user?.role?.name == 'reception'" :label="$t('was-visit')"
-                                size="small" class="w-32 first:*:grow" :model="getMenu(data)" :loading="data.loading"
+                            <SplitButton v-if="['super-admin', 'admin', 'reception'].includes(auth.user?.role?.name)"
+                                :label="$t('was-visit')" size="small" class="w-32 first:*:grow" :model="getMenu(data)"
+                                :loading="data.loading"
                                 @click="visit(data, store.statuses.find(s => s.name == 'in-person-visit'))" />
-                            <Button v-else-if="auth.user?.role?.name == 'phone-consultant'"
+                            <Button
+                                v-else-if="['super-admin', 'admin', 'phone-consultant'].includes(auth.user?.role?.name)"
                                 :label="$t('appointment-cancel')" ize="small" outlined icon="pi pi-times-circle"
                                 severity="danger" class="w-32" :loading="data.loading" @click="cancel(data)" />
                         </template>
-                        <template v-if="auth.user?.role?.name == 'reception'">
+                        <template v-if="['super-admin', 'admin', 'reception'].includes(auth.user?.role?.name)">
                             <Button v-if="['in-person-visit', 'online-visit'].includes(data.status.name)"
                                 :label="$t('set-deposit')" ize="small" icon="pi pi-credit-card" severity="secondary"
                                 class="w-32" :loading="data.loading" @click="deposit(data)" />
@@ -76,7 +78,7 @@
                                 outlined icon="pi pi-credit-card" severity="danger" class="w-32" :loading="data.loading"
                                 @click="refund(data)" />
                         </template>
-                        <template v-if="auth.user?.role?.name == 'appointment'">
+                        <template v-if="['super-admin', 'admin', 'appointment'].includes(auth.user?.role?.name)">
                             <Button v-if="data.status.name == 'deposit-paid'" :label="$t('start-treatment')" ize="small"
                                 icon="pi pi-wave-pulse" severity="info" :loading="data.loading" outlined
                                 @click="startTreatment(data)" />

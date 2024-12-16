@@ -10,6 +10,13 @@
                     :invalid="errors['patient.id']" :disabled="disabled"
                     panel-class="[&_.p-iconfield]:ltr [&_input:not(.p-filled)]:!text-right"
                     :filter-placeholder="$t('search-patient')" @filter="patients.search($event.value)">
+                    <template #empty>
+                        <i></i>
+                    </template>
+                    <template #emptyfilter>
+                        <span v-if="!patients.fetching">{{ $t('not-found') }}</span>
+                        <span v-else>{{ $t('searching') }}</span>
+                    </template>
                 </Select>
                 <label> {{ $t('patient') }}</label>
             </FloatLabel>

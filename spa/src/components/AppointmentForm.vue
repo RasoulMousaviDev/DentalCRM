@@ -9,6 +9,17 @@
                     :invalid="errors.patient" :disabled="$route.name == 'Patient'"
                     panel-class="[&_.p-iconfield]:ltr [&_input:not(.p-filled)]:!text-right"
                     :filter-placeholder="$t('search-patient')" @filter="patients.search($event.value)">
+                    <template #empty>
+                        <i></i>
+                    </template>
+                    <template #emptyfilter>
+                        <div v-if="!patients.fetching" class="flex items-center justify-between">
+                            <span>{{ $t('not-found') }}</span>
+                            <Button v-if="auth.user?.role?.name == 'reception'" icon="pi pi-plus"
+                                :label="$t('new-patient')" severity="success" @click="create()" />
+                        </div>
+                        <span v-else>{{ $t('searching') }}</span>
+                    </template>
                 </Select>
                 <label> {{ $t('patient') }}</label>
             </FloatLabel>
@@ -26,7 +37,7 @@
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <DatePicker v-model="form.due_date" :invalid="errors.due_date" class="ltr" fluid dateFormat="yy/mm/dd"
-                    show-time :min-date="new MyDate()" :disabledDates="holidays.items" :holidayDates="holidays.items"/>
+                    show-time :min-date="new MyDate()" :disabledDates="holidays.items" :holidayDates="holidays.items" />
                 <label>{{ $t('appointment-date') }}</label>
             </FloatLabel>
             <small v-if="errors.due_date" v-text="errors.due_date[0]" class="text-red-500" />
@@ -51,6 +62,12 @@ import { usePatientsStore } from '@/stores/patients';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { useHolidaysStore } from '@/stores/holidays';
 import { computed, inject, reactive, ref, watch } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import PatientForm from './PatientForm.vue';
+
+const { dialog, t } = inject('service')
+
+const auth = useAuthStore()
 
 const dialogRef = inject('dialogRef')
 
@@ -78,7 +95,7 @@ const handleSubmit = async () => {
 
     loading.value = false
 
-    if (statusText === 'OK'){
+    if (statusText === 'OK') {
         if (id) patients.show(id)
         dialogRef.value.close();
     }
@@ -88,6 +105,13 @@ const handleSubmit = async () => {
         toast.add({ severity: 'error', summary: 'Error', detail: data.message, life: 5000 });
 }
 
+const create = async () => {
+    dialog.open(PatientForm, {
+        props: {
+            header: t('createNewPatient'), modal: true
+        },
+    })
+}
 
 watch(computed(() => Object.assign({}, form)), (value, old) => {
     Object.keys(form).forEach((key) => {
