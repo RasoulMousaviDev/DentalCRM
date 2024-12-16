@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" striped-rows>
+        <DataTable :value="store.items" tableStyle="min-width: 50rem" striped-rows class="whitespace-nowrap">
             <template #header>
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center gap-2">
@@ -34,8 +34,8 @@
                     :header="$t('consultant')" />
             </template>
             <Column field="mobile" :header="$t('mobile')" />
-            <Column field="desc" :header="$t('desc')" />
-            <Column field="log" :header="$t('log')" />
+            <Column field="desc" :header="$t('desc')"  body-class="whitespace-normal"/>
+            <Column field="log" :header="$t('log')" body-class="whitespace-normal" />
             <Column field="status" :header="$t('call-status')">
                 <template #body="{ data: { status } }">
                     <Tag v-bind="status" />

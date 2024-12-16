@@ -1,14 +1,14 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items">
+        <DataTable :value="store.items" class="whitespace-nowrap" scrollable>
             <template #header>
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center gap-2">
                         <span class="text-2xl font-bold">{{ $t('users') }}</span>
                         <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
-                        <hr class="grow !ml-2"></hr>
-                        <Button icon="pi pi-plus" :label="$t('new-user')" severity="success"
-                            @click="create()" />
+                        <hr class="grow !ml-2">
+                        </hr>
+                        <Button icon="pi pi-plus" :label="$t('new-user')" severity="success" @click="create()" />
                     </div>
                     <UserFilters />
                 </div>
@@ -22,10 +22,11 @@
                 <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
             </template>
             <Column field="id" :header="$t('id')" />
-            <Column field="name" :header="$t('name')" />
+            <Column field="name" :header="$t('name')" frozen />
             <Column field="mobile" :header="$t('mobile')" />
             <Column field="email" :header="$t('email')" />
-            <Column :field="({ roles }) => roles.map(({ title }) => title).join(' | ')" :header="$t('roles')" />
+            <Column :field="({ roles }) => roles.map(({ title }) => title).join(' | ')" :header="$t('roles')"
+                bodyClass="whitespace-normal max-w-80 min-w-60" />
             <Column field="status" :header="$t('status')">
                 <template #body="{ data: { status } }">
                     <Tag v-if="status" severity="success" :value="$t('active')" />
@@ -34,7 +35,8 @@
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" />
-            <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-28">
+            <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-28" frozen
+                alignFrozen="right">
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
                         <Button icon="pi pi-pencil" rounded text severity="secondary" @click="edit(data)" />

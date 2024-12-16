@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" removable-sort>
+        <DataTable :value="store.items" tableStyle="min-width: 50rem" scrollable class="whitespace-nowrap">
             <template #header>
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center gap-2">
@@ -28,7 +28,7 @@
                 </template>
             </Column>
             <template v-if="$route.name != 'Patient'">
-                <Column :header="$t('patient-name')">
+                <Column :header="$t('patient-name')" frozen>
                     <template #body="{ data: { patient: { id, firstname, lastname } } }">
                         <span v-if="auth.user?.role?.name == 'on-site-consultant'" class="cursor-pointer"
                             @click="router.push({ name: 'Patient', params: { id } })">
@@ -50,16 +50,16 @@
             <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
             <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit || 0), $t('toman')].join(' ')"
                 :header="$t('deposit')" class="w-36" />
-            <Column field="status" :header="$t('status')">
+            <Column field="status" :header="$t('status')" class="whitespace-nowrap">
                 <template #body="{ data: { status } }">
                     <Tag v-bind="status" />
                 </template>
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
-            <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44" body-class="!pl-0">
+            <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44" body-class="!pl-0 whitespace-nowrap" frozen align-frozen="right">
                 <template #body="{ data }">
-                    <div class="flex gap-2 justify-end">
+                    <div class="flex flex-col gap-2 justify-end">
                         <template v-if="data.status.name == 'appointment-set'">
                             <SplitButton v-if="['super-admin', 'admin', 'reception'].includes(auth.user?.role?.name)"
                                 :label="$t('was-visit')" size="small" class="w-32 first:*:grow" :model="getMenu(data)"
@@ -230,8 +230,8 @@ const refund = (appointment) => {
         },
         accept: async () => {
             appointment.loading = true
-
-            const { statusText, data } = await store.update(appointment.id, { status: 15 });
+            const status = store.statuses.find(s => s.name === 'refunded').id
+            const { statusText, data } = await store.update(appointment.id, { status });
 
             appointment.loading = false
 

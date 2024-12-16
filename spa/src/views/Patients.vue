@@ -1,7 +1,7 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" class="[&_td]:cursor-pointer truncate" tableStyle="min-width: 50rem"
-            removable-sort row-hover @row-click="showPatient">
+        <DataTable :value="store.items" class="[&_td]:cursor-pointer whitespace-nowrap" tableStyle="min-width: 50rem"
+            row-hover scrollable @row-click="showPatient">
             <template #header>
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center gap-2">
@@ -23,12 +23,12 @@
                 <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
             </template>
             <Column field="id" :header="$t('id')" />
+            <Column :field="({ firstname, lastname }) => [firstname, lastname].join(' ')"
+                :header="$t('name-and-family')" frozen />
             <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="user.name"
                 :header="$t('phone-consultant')" />
-            <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)"
-                field="treatment_plans.0.user.name" :header="$t('on-site-consultant')" />
-            <Column :field="({ firstname, lastname }) => [firstname, lastname].join(' ')"
-                :header="$t('name-and-family')" />
+            <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="treatment_plans.0.user.name"
+                :header="$t('on-site-consultant')" />
             <Column :field="({ mobiles }) => mobiles.map(({ number }) => number).join(' | ')" :header="$t('mobile')"
                 body-class="ltr !text-left" />
             <Column :field="({ telephone }) => telephone || '-'" :header="$t('telephone')"
@@ -43,7 +43,8 @@
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
 
-            <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20">
+            <Column :header="$t('actions')" headerClass="[&>div]:justify-end [&>div]:pl-5 w-20" frozen
+                align-frozen="right">
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
                         <Button icon="pi pi-pencil" rounded text severity="secondary" @click="edit(data)" />

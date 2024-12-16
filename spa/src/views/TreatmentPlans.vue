@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" editMode="cell"
+        <DataTable :value="store.items" tableStyle="min-width: 50rem" scrollable class="whitespace-nowrap" editMode="cell"
             @cellEditComplete="onCellEditComplete">
             <template #header>
                 <div class="flex flex-col gap-4">
@@ -27,7 +27,7 @@
                 </template>
             </Column>
             <template v-if="$route.name != 'Patient'">
-                <Column :header="$t('patient-name')">
+                <Column :header="$t('patient-name')" frozen>
                     <template #body="{ data: { patient: { id, firstname, lastname } } }">
                         <span v-if="auth.user?.role?.name == 'on-site-consultant'" class="cursor-pointer"
                             @click="router.push({ name: 'Patient', params: { id } })">
@@ -72,7 +72,7 @@
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
-            <Column :header="$t('actions')" bodyClass="ltr" class="w-20">
+            <Column :header="$t('actions')" bodyClass="ltr" class="w-20" frozen align-frozen="right">
                 <template #body="{ data: { id } }">
                     <Button icon="pi pi-eye" rounded text
                         @click=" router.push({ name: 'TreatmentPlan', params: { id } })" />

@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" striped-rows>
+        <DataTable :value="store.items" tableStyle="min-width: 50rem" class="whitespace-nowrap" striped-rows>
             <template #header>
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center gap-2">
@@ -31,7 +31,7 @@
                 <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="patient.user.name"
                     :header="$t('consultant')" />
             </template>
-            <Column field="desc" :header="$t('desc')" />
+            <Column field="desc" :header="$t('desc')" body-class="whitespace-normal" class="w-80"/>
             <Column field="due_date" :header="$t('due-date')" bodyClass="ltr" class="w-44" />
             <Column field="status" :header="$t('status')" class="w-32">
                 <template #body="{ data: { status } }">
