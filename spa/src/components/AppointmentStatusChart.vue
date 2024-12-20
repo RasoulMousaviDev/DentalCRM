@@ -1,10 +1,10 @@
 <template>
-    <div class="card flex flex-col gap-8 justify-center w-[74%] [&:nth-child(2)]:w-full">
+    <div class="card flex flex-col gap-8 justify-center col-span-2 [&:nth-child(2)]:w-full">
         <span class="text-xl font-medium">
             {{ $t('reception-report') }}
         </span>
         <Chart type="bar" :data="chartData" :options="chartOptions" :plugins="plugins"
-            class="w-full h-80 px-4 mx-auto" />
+            class="w-full *:h-80 px-4 mx-auto" />
     </div>
 </template>
 
@@ -61,7 +61,7 @@ const setChartOptions = () => {
             datalabels: {
                 color: '#fff',
                 font: {
-                    size: 14,
+                    size: 12,
                     family: 'vazir'
                 },
                 formatter: (value, context) => {

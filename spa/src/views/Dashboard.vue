@@ -43,10 +43,10 @@
             </ul>
             <div class="flex flex-wrap gap-8">
                 <PatientGenderChart :data="store.charts.patientGenders" />
+                <CallStatusChart :data="store.charts.callStatuses" />
                 <PatientLeadSourceChart :data="store.charts.patientLeadSources" />
                 <PatientTreatmentChart :data="store.charts.patientTreatments" />
                 <PatientStatusChart :data="store.charts.patientStatuses" />
-                <CallStatusChart :data="store.charts.callStatuses" />
                 <AppointmentStatusChart :data="store.charts.appointmentsStatusCount" />
             </div>
         </template>

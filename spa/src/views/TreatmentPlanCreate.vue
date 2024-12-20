@@ -232,8 +232,9 @@
                                                 option,
                                                 "cost"
                                             ) *
-                                            (treatment.count[service] || treatment.tooths
-                                                .length)
+                                            (getService(key, service, 'manually') ? (treatment.count[service] || 1) :
+                                                treatment.tooths
+                                                    .length)
                                         ),
                                         $t("toman"),
                                     ].join(" ")
@@ -264,17 +265,53 @@
                         :optionLabel="(item) => $t(item)" class="ltr" :disabled="readonly" />
                 </div>
 
-                <ul v-if="
-                    form.payment_method == 'installments' &&
-                    form.months_count &&
-                    readonly
-                " class="flex flex-col gap-6 px-1 mb-2">
-                    <li v-for="(row, i) in rows.slice(0, 3)" class="flex justify-between items-center">
-                        <span class="text-sm opacity-80">{{
-                            row.title
-                        }}</span>
-                        <span>{{ row[form.months_count] }}</span>
+                <ul v-if="readonly" class="flex flex-col gap-6 px-1 mb-2">
+                    <template v-if="form.payment_method == 'installments' && form.months_count">
+
+                        <li class="flex justify-between items-center">
+                            <span class="text-sm opacity-80">
+                                {{ $t("installments") }}
+                            </span>
+                            <span>{{
+                                form.months_count
+                                }} {{ $t('months') }}</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-sm opacity-80">
+                                {{ $t("advance-payment") }}
+                            </span>
+                            <span>{{
+                                [
+                                    new Intl.NumberFormat().format(form.deposit_amount),
+                                    t("toman"),
+                                ].join(" ")
+                                }}</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="text-sm opacity-80">
+                                {{ $t("amount-of-each-check") }}
+                            </span>
+                            <span>{{ [
+                                new Intl.NumberFormat().format(Math.floor(((form.total_amount - form.discount_amount -
+                                    form.deposit_amount) /
+                                    form.months_count) / 1000) * 1000),
+                                t("toman"),
+                                ].join(" ") }}</span>
+                        </li>
+                    </template>
+
+                    <li class="flex justify-between items-center">
+                        <span class="text-sm opacity-80">
+                            {{ $t("start-date") }}
+                        </span>
+                        <span>{{ new Date(form.start_date).toLocaleString('fa', {
+                            year: 'numeric',
+                            month: 'numeric',
+                            day:
+                                'numeric'
+                        }) }}</span>
                     </li>
+
                 </ul>
                 <div class="flex flex-col gap-2">
                     <InputGroup class="ltr">

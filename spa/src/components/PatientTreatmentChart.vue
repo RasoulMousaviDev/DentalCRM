@@ -3,7 +3,7 @@
         <span class="text-xl font-medium">
             {{ $t('required-services') }}
         </span>
-        <Chart type="pie" :data="chartData" :options="chartOptions" :plugins="plugins" class="h-80 px-4 mx-auto" />
+        <Chart type="pie" :data="chartData" :options="chartOptions" :plugins="plugins" class="*:h-48 px-4 mx-auto" />
     </div>
 </template>
 
@@ -17,7 +17,7 @@ const store = useTreatmentsStore()
 store.index().then(() => {
     Object.entries(props.data).forEach(([id, count]) => {
         const item = store.items.find(i => i.id == id)
-        item.count = count
+        item.count = count || 0
     })
 })
 const chartOptions = ref(null);
@@ -31,7 +31,7 @@ const chartData = computed(() => ({
     labels: store.items.map(i => i.title),
     datasets: [
         {
-            data: store.items.map(i => i.count),
+            data: store.items.map(i => i.count || 0),
             backgroundColor
         }
     ]
@@ -61,11 +61,11 @@ const setChartOptions = () => {
             datalabels: {
                 color: '#fff',
                 font: {
-                    size: 16,
+                    size: 12,
                     family: 'vazir'
                 },
                 formatter: (value, context) => {
-                    const total = context.dataset.data.reduce((sum, currentValue) => sum + currentValue, 0);
+                    const total = context.dataset.data.reduce((sum, currentValue) => sum + (currentValue || 0), 0);
                     const percentage = ((value / total) * 100).toFixed(1);
                     return percentage + '%';
                 },

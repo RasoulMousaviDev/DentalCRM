@@ -1,9 +1,9 @@
 <template>
-    <div class="card flex flex-col gap-8 justify-center w-max">
+    <div class="card flex flex-col gap-8 justify-center w-max flex-1">
         <span class="text-xl font-medium">
             {{ $t('call-status') }}
         </span>
-        <Chart type="pie" :data="chartData" :options="chartOptions" :plugins="plugins" class="h-80 px-4 mx-auto" />
+        <Chart type="pie" :data="chartData" :options="chartOptions" :plugins="plugins" class="*:h-48 px-4 mx-auto" />
     </div>
 </template>
 
@@ -56,7 +56,7 @@ const setChartOptions = () => {
             datalabels: {
                 color: '#fff',
                 font: {
-                    size: 16,
+                    size: 12,
                     family: 'vazir'
                 },
                 formatter: (value, context) => {

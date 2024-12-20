@@ -3,7 +3,7 @@
         <span class="text-xl font-medium">
             {{ $t('gender') }}
         </span>
-        <Chart type="doughnut" :data="chartData" :options="chartOptions" :plugins="plugins" class="h-80 px-4 mx-auto" />
+        <Chart type="doughnut" :data="chartData" :options="chartOptions" :plugins="plugins" class="*:h-48 px-4 mx-auto" />
     </div>
 </template>
 
@@ -54,7 +54,7 @@ const setChartOptions = () => {
             datalabels: {
                 color: '#fff',
                 font: {
-                    size: 16,
+                    size: 12,
                     family: 'vazir'
                 },
                 formatter: (value, context) => {
