@@ -63,7 +63,6 @@
                     <small v-if="errors.password_confirmation" v-text="errors.password_confirmation[0]"
                         class="text-red-500" />
 
-
                     <Button :label="$t('save')" class="w-full mt-9" :loading="loading.resetting" type="submit" />
                 </form>
             </template>

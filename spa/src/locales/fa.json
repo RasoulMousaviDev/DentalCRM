@@ -5,6 +5,8 @@
     "mobile-or-email": "موبایل یا ایمیل",
     "password": "رمزعبور",
     "login": "ورود",
+    "login-by-password": "ورود با رمز عبور",
+    "login-by-otp": "ورود با رمز یک‌بار‌مصرف",
     "forgot-password": "فراموشی رمزعبور",
     "change-password": "تغییر رمزعبور",
     "change-password-desc": "برای تغییر رمز عبور، موبایل یا ایمیل خود را وارد کنید",
