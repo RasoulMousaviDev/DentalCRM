@@ -125,11 +125,10 @@ class AppointmentController extends Controller
 
         $appointment->refresh();
 
-        $status = $form['status'];
+        $status = Status::find($form['status']);
 
-        $appointment->patient()->update(compact('status'));
-
-        $status = Status::find($status);
+        if ($appointment->patient->status > $status->id && !$status->name !== 'canceled')
+            $appointment->patient()->update(['status' => $status->id]);
 
         if ($status->name === 'periodic-visit') {
             $form['status'] = Status::firstWhere('name', 'pending')->id;
