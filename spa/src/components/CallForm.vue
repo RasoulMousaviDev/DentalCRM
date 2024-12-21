@@ -183,9 +183,11 @@ watch(patient, async (v) => {
 })
 
 watch(() => form.patient.status, (v) => {
-    const status = patients.statuses.find(s => s.name === 'in-progress')
-    if (status?.id === v) form.follow_up = {}
-    else delete form.follow_up
+    const statuses = patients.statuses
+        .filter(({ name }) => ['no-status', 'not-needed'].includes(name))
+        .map(s => s.id)
+    if (statuses.includes(v)) delete form.follow_up
+    else form.follow_up = {}
 })
 
 watch(computed(() => Object.assign({}, form)), (value, old) => {
