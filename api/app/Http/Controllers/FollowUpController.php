@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IndexFollowUpRequest;
 use App\Models\FollowUp;
 use App\Models\Role;
+use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -17,6 +18,10 @@ class FollowUpController extends Controller
      */
     public function index(Request $request)
     {
+        FollowUp::where('due_date', '<', Carbon::now())->whereHas('status', function (Builder $query) {
+            $query->where('name', "pending");
+        })->update(['status' => Status::firstWhere('name', 'lost')->id]);
+
         $rows = $request->input('rows', 10);
 
         $searchableFields = ['firstname', 'lastname'];

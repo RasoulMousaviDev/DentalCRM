@@ -149,6 +149,7 @@ const form = reactive({
     province: '',
     city: '',
     lead_source: '',
+    insurance: '',
     status: '',
     desc: ''
 })

@@ -131,8 +131,11 @@ class CallController extends Controller
             $form = $request->undot()->get('follow_up');
             $form['status'] = Status::firstWhere('name', 'pending')->id;
             $patient->followUps()->create($form);
-            $response['follow_up'] = $patient->followUps()->with(['status:id,value,severity', 'patient:id,firstname,lastname,user'])
-                ->latest()->first();
+            $response['follow_up'] = $patient->followUps()->with([
+                'status:id,value,severity',
+                'patient:id,firstname,lastname,user',
+                'patient.user:id,name'
+            ])->latest()->first();
         }
 
         return response()->json($response);
