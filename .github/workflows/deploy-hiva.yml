@@ -13,10 +13,10 @@ jobs:
           node-version: "18"
       - name: update-chabokan
         env:
-          CHABOKAN_TOKEN: ${{ secrets.CHABOKAN_TOKEN }}
+          CHABOKAN_TOKEN: ${{ secrets.HIVA_CHABOKAN_TOKEN }}
         run: |
           npm install -g @chabokan.net/cli
           chabok login -t $CHABOKAN_TOKEN
           mv spa api
           cd api
-          chabok deploy -s clinic-crm
+          chabok deploy -s hiva-crm
