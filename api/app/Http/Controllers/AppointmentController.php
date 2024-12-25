@@ -38,9 +38,9 @@ class AppointmentController extends Controller
             'status:id,name,value,severity',
         ]);
 
-        if ($isAdmin) $appointments = $appointments
+        if ($isAdmin) $appointments = $appointments->with('patient.user:id,name')
             ->when($request->input('phone_consultant'), function ($query, $user) {
-                $query->with('patient.user:id,name')->whereHas('patient.user', function (Builder $query) use ($user) {
+                $query->whereHas('patient.user', function (Builder $query) use ($user) {
                     $query->where('name', 'like', "%{$user}%");
                 });
             })->when($request->input('on_site_consultant'), function ($query, $user) {
