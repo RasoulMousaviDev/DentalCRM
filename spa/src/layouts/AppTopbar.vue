@@ -120,11 +120,11 @@ const handleClick = (name) => {
 
 const alarms = useAlarmsStore()
 alarms.index()
-onMounted(() => setInterval(() => {
+onMounted(() => {
     if (['reception', 'phone-consultant', 'on-site-consultant'].includes(auth.user?.role?.name)) {
-        alarms.index()
+        const func = () => alarms.index().then(() => setTimeout(() => func(), 3000))
     }
-}, 3000))
+})
 </script>
 
 <template>

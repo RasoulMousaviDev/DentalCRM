@@ -125,18 +125,6 @@ class AppointmentController extends Controller
 
         $appointment->refresh();
 
-        $status = Status::find($form['status']);
-
-        if ($appointment->with('patient')->patient->status > $status->id && !$status->name !== 'canceled')
-            $appointment->patient()->update(['status' => $status->id]);
-
-        if ($status->name === 'periodic-visit') {
-            $form['status'] = Status::firstWhere('name', 'pending')->id;
-            $form['due_date'] = Carbon::now()->addMonth(3)->toString();
-            $form['desc'] = $status->value;
-            Patient::find($appointment->patient)->followUps()->create($form);
-        }
-
         $appointment->load([
             'treatments:id,title',
             'patient:id,firstname,lastname,user',
@@ -144,6 +132,20 @@ class AppointmentController extends Controller
             'status:id,name,value,severity',
             'patient.user:id,name',
         ]);
+
+        $status = Status::find($form['status']);
+
+        if ($appointment->patient->status->id > $status->id && !$status->name !== 'canceled')
+            $appointment->patient()->update(['status' => $status->id]);
+
+        if ($status->name === 'periodic-visit') {
+            $form['status'] = Status::firstWhere('name', 'pending')->id;
+            $form['due_date'] = Carbon::now()->addMonth(3)->toString();
+            $form['desc'] = $status->value;
+            Patient::find($appointment->patient->id)->followUps()->create($form);
+        }
+
+        
 
         return response()->json($appointment);
     }
