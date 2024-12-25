@@ -42,11 +42,24 @@ class PatientController extends Controller
 
         $patients = $isAdmin ? Patient::with('user:id,name') : $user->patients();
 
-        if ($isAdmin) $patients->when($request->input('user'), function ($query, $user) {
-            $query->whereHas('user', function (Builder $query) use ($user) {
-                $query->where('name', 'like', "%{$user}%");
+        $patients = $patients->with([
+            'mobiles',
+            'treatments:id,title',
+            'status:id,value,severity',
+            'treatmentPlans.user:id,name',
+
+        ]);
+
+        if ($isAdmin) $patients
+            ->when($request->input('phone_consultant'), function ($query, $user) {
+                $query->whereHas('user', function (Builder $query) use ($user) {
+                    $query->where('name', 'like', "%{$user}%");
+                });
+            })->when($request->input('on_site_consultant'), function ($query, $user) {
+                $query->whereHas('treatmentPlans.user', function (Builder $query) use ($user) {
+                    $query->where('name', 'like', "%{$user}%");
+                });
             });
-        });
 
         foreach ($searchableFields as $field) {
             $patients->when($request->input($field), function ($query, $value) use ($field) {
@@ -77,13 +90,7 @@ class PatientController extends Controller
             });
         });
 
-        $patients = $patients->with([
-            'mobiles',
-            'treatments:id,title',
-            'status:id,value,severity',
-            'treatmentPlans.user:id,name',
-
-        ])->latest()->paginate($rows);
+        $patients = $patients->latest()->paginate($rows);
 
         $response = $this->paginate($patients);
 

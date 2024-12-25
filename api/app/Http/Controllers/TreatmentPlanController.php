@@ -29,7 +29,7 @@ class TreatmentPlanController extends Controller
 
         $user = auth()->user();
 
-        $roles = Role::whereIn('name', ['super-admin', 'admin','on-site-consultant'])->pluck('id');
+        $roles = Role::whereIn('name', ['super-admin', 'admin', 'on-site-consultant'])->pluck('id');
 
         $isAdmin = collect($roles)->contains($user->role->id);
 
@@ -40,11 +40,16 @@ class TreatmentPlanController extends Controller
         ]);
 
 
-        if ($isAdmin) $treatmentPlans = $treatmentPlans->with('patient.user:id,name')->when($request->input('user'), function ($query, $user) {
-            $query->whereHas('patient.user', function (Builder $query) use ($user) {
-                $query->where('name', 'like', "%{$user}%");
+        if ($isAdmin) $treatmentPlans = $treatmentPlans
+            ->when($request->input('phone_consultant'), function ($query, $user) {
+                $query->with('patient.user:id,name')->whereHas('patient.user', function (Builder $query) use ($user) {
+                    $query->where('name', 'like', "%{$user}%");
+                });
+            })->when($request->input('on_site_consultant'), function ($query, $user) {
+                $query->whereHas('user', function (Builder $query) use ($user) {
+                    $query->where('name', 'like', "%{$user}%");
+                });
             });
-        });
         else $treatmentPlans = $treatmentPlans->whereHas('patient', function (Builder $query) use ($user) {
             $query->where('user', $user->id);
         });
@@ -140,7 +145,7 @@ class TreatmentPlanController extends Controller
             'patient:id,firstname,lastname,user',
             'patient.user:id,name',
             'user:id,name',
-            
+
         ]);
 
         return response()->json($treatmentPlan);

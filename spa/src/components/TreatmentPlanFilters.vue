@@ -5,10 +5,16 @@
                 <InputText v-model="filters.patient" fluid class="ltr" v-keyfilter.int />
                 <label>{{ $t('patient-id') }}</label>
             </FloatLabel>
-            <FloatLabel v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" variant="on">
-                <InputText v-model="filters.user" fluid />
-                <label>{{ $t('consultant') }}</label>
-            </FloatLabel>
+            <template v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)">
+                <FloatLabel variant="on">
+                    <InputText v-model="filters.phone_consultant" fluid />
+                    <label>{{ $t('phone-consultant') }}</label>
+                </FloatLabel>
+                <FloatLabel variant="on">
+                    <InputText v-model="filters.on_site_consultant" fluid />
+                    <label>{{ $t('on-site-consultant') }}</label>
+                </FloatLabel>
+            </template>
         </template>
         <FloatLabel variant="on">
             <InputText v-model="filters.firstname" fluid />

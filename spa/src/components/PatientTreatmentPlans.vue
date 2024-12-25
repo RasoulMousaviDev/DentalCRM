@@ -16,8 +16,6 @@
             </p>
         </template>
         <Column field="desc" :header="$t('desc')" body-class="truncate" />
-        <!-- <Column field="tooths_count" :header="$t('tooths-count')" class="w-32" />
-        <Column field="treatments_count" :header="$t('treatments-count')" class="w-32" /> -->
         <Column :field="({ months }) => months > 0 ? $t('installments-months', { months }) : $t('cash')"
             :header="$t('payment-type')" class="w-36" />
         <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit), $t('toman')].join(' ')"
