@@ -1,4 +1,4 @@
-name: deploy-chabokan
+name: deploy-dental
 on:
   push:
     branches: [main]
