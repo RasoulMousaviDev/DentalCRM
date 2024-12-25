@@ -127,7 +127,7 @@ class AppointmentController extends Controller
 
         $appointment->load([
             'treatments:id,title',
-            'patient:id,firstname,lastname,user',
+            'patient:id,firstname,lastname,user,status',
             'patient.treatmentPlans.user:id,name',
             'status:id,name,value,severity',
             'patient.user:id,name',
@@ -135,7 +135,7 @@ class AppointmentController extends Controller
 
         $status = Status::find($form['status']);
 
-        if ($appointment->patient->status->id > $status->id && !$status->name !== 'canceled')
+        if ($appointment->patient->status > $status->id && !$status->name !== 'canceled')
             $appointment->patient()->update(['status' => $status->id]);
 
         if ($status->name === 'periodic-visit') {
