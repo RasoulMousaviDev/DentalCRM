@@ -121,6 +121,12 @@ class AppointmentController extends Controller
     {
         $form = $request->only(['status', 'deposit']);
 
+        $appointment->update($form);
+
+        $appointment->refresh();
+
+        $appointment->load('patient');
+
         $status = Status::find($form['status']);
 
         if ($appointment->patient->status > $status->id && !$status->name !== 'canceled')
@@ -130,12 +136,8 @@ class AppointmentController extends Controller
             $form['status'] = Status::firstWhere('name', 'pending')->id;
             $form['due_date'] = Carbon::now()->addMonth(3)->toString();
             $form['desc'] = $status->value;
-            Patient::find($appointment->patient)->followUps()->create($form);
+            Patient::find($appointment->patient->id)->followUps()->create($form);
         }
-
-        $appointment->update($form);
-
-        $appointment->refresh();
 
         $appointment->load([
             'treatments:id,title',
