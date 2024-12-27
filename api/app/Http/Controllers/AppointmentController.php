@@ -135,11 +135,7 @@ class AppointmentController extends Controller
 
         $status = Status::find($form['status']);
 
-        Log::alert('patient status');
-        Log::alert($appointment->toArray()['patient']['status']);
-        Log::alert($status->id );
-        Log::alert($status->name );
-        if ($appointment->toArray()['patient']['status'] > $status->id && $status->name !== 'canceled')
+        if ($status->id > $appointment->toArray()['patient']['status'] && $status->name !== 'canceled')
             $appointment->patient()->update(['status' => $status->id]);
 
         if ($status->name === 'periodic-visit') {
