@@ -137,6 +137,8 @@ class AppointmentController extends Controller
 
         Log::alert('patient status');
         Log::alert($appointment->toArray()['patient']['status']);
+        Log::alert($status->id );
+        Log::alert($status->name );
         if ($appointment->toArray()['patient']['status'] > $status->id && $status->name !== 'canceled')
             $appointment->patient()->update(['status' => $status->id]);
 
