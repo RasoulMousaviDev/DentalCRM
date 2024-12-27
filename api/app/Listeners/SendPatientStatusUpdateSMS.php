@@ -19,7 +19,7 @@ class SendPatientStatusUpdateSMS
         $patient = $event->patient;
 
         if ($patient->isDirty('status')) {
-            $mobie = $patient->mobiles()->first()->number;
+            $mobile = $patient->mobiles()->first()->number;
 
             $smsTemplate = SMSTemplate::firstWhere([
                 'model' => 'patient',
@@ -51,8 +51,9 @@ class SendPatientStatusUpdateSMS
                 foreach ($matches[1] as $key)
                     $message = str_replace(":$key", data_get($patient, $key) ?? ":$key", $message);
 
+                Log::alert($mobile . ' <- ' . $message);
 
-                SendSMS::dispatch($mobie, $message);
+                SendSMS::dispatch($mobile, $message);
             }
         }
     }
