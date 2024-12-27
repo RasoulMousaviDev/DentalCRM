@@ -12,6 +12,7 @@ use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -134,6 +135,8 @@ class AppointmentController extends Controller
 
         $status = Status::find($form['status']);
 
+        Log::alert('patient status');
+        Log::alert($appointment->toArray()['patient']['status']);
         if ($appointment->toArray()['patient']['status'] > $status->id && !$status->name !== 'canceled')
             $appointment->patient()->update(['status' => $status->id]);
 
