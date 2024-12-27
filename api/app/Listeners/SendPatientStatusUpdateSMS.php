@@ -38,14 +38,19 @@ class SendPatientStatusUpdateSMS
                     'status'
                 ]);
 
-                $patient = $patient->toArray();
 
-                $message =  $smsTemplate->template;
+                $message = $smsTemplate->template;
 
                 preg_match_all('/:(\w+(\.\w+)*)/', $message, $matches);
 
+                if (in_array(':appointment', $message))
+                    $patient->appointment = $patient->appointments()->orderBy('updated_at','DESC')->first();
+
+                $patient = $patient->toArray();
+
                 foreach ($matches[1] as $key)
                     $message = str_replace(":$key", data_get($patient, $key) ?? ":$key", $message);
+
 
                 SendSMS::dispatch($mobie, $message);
             }
