@@ -43,8 +43,8 @@ class SendPatientStatusUpdateSMS
 
                 preg_match_all('/:(\w+(\.\w+)*)/', $message, $matches);
 
-                if (in_array(':appointment', $message))
-                    $patient->appointment = $patient->appointments()->orderBy('updated_at','DESC')->first();
+                if (str_contains($message, ':appointment'))
+                    $patient->appointment = $patient->appointments()->orderBy('updated_at', 'DESC')->first();
 
                 $patient = $patient->toArray();
 
