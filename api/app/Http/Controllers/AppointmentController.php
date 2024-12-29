@@ -85,6 +85,12 @@ class AppointmentController extends Controller
             });
         });
 
+        $appointments->when($request->input('mobile'), function ($query, $mobile) {
+            $query->whereHas('patient.mobiles', function (Builder $query) use ($mobile) {
+                $query->where('number', 'like', "%{$mobile}%");
+            });
+        });
+
         $appointments = $appointments->latest()->paginate($rows);
 
         $response = $this->paginate($appointments);

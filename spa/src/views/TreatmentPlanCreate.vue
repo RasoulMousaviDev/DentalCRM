@@ -340,7 +340,7 @@
                     </span>
                 </div>
             </div>
-            <div v-if="!readonly" class="flex gap-3 print:hidden">
+            <div v-if="!readonly && auth.user?.role?.name != 'phone-consultant'" class="flex gap-3 print:hidden">
                 <Button icon="pi pi-refresh" :label="$t('restart')" severity="warn" class="shrink-0"
                     @click="handleReset()" />
                 <Button icon="pi pi-save" :label="$t('save-information')" class="grow" severity="success"
@@ -361,6 +361,9 @@ import { usePatientsStore } from "@/stores/patients";
 import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import { useTreatmentPlansStore } from "@/stores/treatment-plans";
 import { useInstallmentPlansStore } from "@/stores/installment-plans";
+import { useAuthStore } from "@/stores/auth";
+
+const auth = useAuthStore()
 
 const treatRef = ref();
 

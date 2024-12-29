@@ -25,8 +25,12 @@
             <label>{{ $t('lastname') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <DatePicker v-model="due_date" selectionMode="range" :manualInput="false" fluid class="ltr" showButtonBar
-                dateFormat="yy/mm/dd" />
+            <InputText v-model="filters.mobile" fluid class="ltr" v-keyfilter.int />
+            <label>{{ $t('mobile') }} </label>
+        </FloatLabel>
+        <FloatLabel variant="on">
+            <DatePicker v-model="filters.due_date" selectionMode="range" :manualInput="false" fluid class="ltr"
+                showButtonBar dateFormat="yy/mm/dd" />
             <label>{{ $t('due-date') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
