@@ -117,7 +117,7 @@ class PatientController extends Controller
 
         $patient = auth()->user()->patients()->create($form);
 
-        $mobiles = $request->get('mobiles');
+        $mobiles = $request->get('mobiles', []);
 
         foreach ($mobiles as $mobile)
             $patient->mobiles()->create(['number' => $mobile]);
@@ -158,7 +158,7 @@ class PatientController extends Controller
 
         $patient->mobiles()->delete();
 
-        $mobiles = $request->get('mobiles');
+        $mobiles = $request->get('mobiles', []);
 
         foreach ($mobiles as $mobile)
             $patient->mobiles()->create(['number' => $mobile]);
