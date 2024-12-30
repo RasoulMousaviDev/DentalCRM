@@ -24,9 +24,8 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <Select v-model="form.mobile" :options="patients.item?.mobiles" optionLabel="number"
-                    optionValue="number" fluid :loading="patients.fetching" :invalid="errors.mobile" panel-class="ltr"
-                    class="text-left *:!pl-0" />
+                <Select v-model="form.mobile" :options="mobiles" optionLabel="number" optionValue="number" fluid
+                    :loading="patients.fetching" :invalid="errors.mobile" panel-class="ltr" class="text-left *:!pl-0" />
                 <label>{{ $t('mobile') }}</label>
             </FloatLabel>
             <small v-if="errors.mobile" v-text="errors.mobile[0]" class="text-red-500" />
@@ -130,6 +129,16 @@ holidays.index()
 const patients = usePatientsStore()
 patients.index()
 const patientStatuses = computed(() => patients.statuses.filter(s => ['no-status', 'in-progress', 'not-needed'].includes(s.name)))
+
+const mobiles = computed(() => {
+    if (patients.item) {
+        const numbers = patients.item.mobiles
+        if (patients.item.telephone)
+            numbers.push(patients.item.telephone)
+        return numbers
+    }
+    return []
+})
 
 
 const handleSubmit = async () => {
