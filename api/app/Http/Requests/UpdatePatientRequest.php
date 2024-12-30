@@ -21,7 +21,7 @@ class UpdatePatientRequest extends FormRequest
             'birthday' => 'required_unless:status,1,2,null|nullable|date',
             'gender' => 'required|in:male,female',
             'mobiles' => ['array', function ($attribute, $value, $fail) {
-                if (is_null($this->phone) && empty($value)) {
+                if (is_null($this->telephone) && empty($value)) {
                     $fail(__('validation.required'));
                 }
             }],

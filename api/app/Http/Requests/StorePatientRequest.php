@@ -24,7 +24,7 @@ class StorePatientRequest extends FormRequest
             'insurance' => 'required_unless:status,1,2,null|nullable|boolean',
             'gender' => 'required|in:male,female',
             'mobiles' => ['array', function ($attribute, $value, $fail) {
-                if (is_null($this->phone) && empty($value)) {
+                if (is_null($this->telephone) && empty($value)) {
                     $fail(__('validation.required'));
                 }
             }],
