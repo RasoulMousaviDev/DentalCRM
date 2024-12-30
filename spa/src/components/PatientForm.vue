@@ -75,9 +75,11 @@
         <div class="flex flex-col gap-1 col-span-2">
             <FloatLabel variant="on">
                 <MultiSelect v-model="form.treatments" display="chip" :options="treatments.items"
-                    :loading="treatments.fetching" optionLabel="title" optionValue="id" :showToggleAll="false" fluid />
+                    :loading="treatments.fetching" optionLabel="title" optionValue="id" :showToggleAll="false" fluid
+                    :invalid="errors.treatments" />
                 <label> {{ $t('treatments') }}</label>
             </FloatLabel>
+            <small v-if="errors.treatments" v-text="errors.treatments[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
