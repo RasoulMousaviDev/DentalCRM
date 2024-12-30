@@ -15,21 +15,20 @@ class UpdatePatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstname' => 'required|string',
-            'lastname' => 'required|string',
+            'status' => 'required|exists:statuses,id',
+            'firstname' => 'required_unless:status,1,null|nullable|string',
+            'lastname' => 'required_unless:status,1,null|nullable|string',
             'birthday' => 'required_unless:status,1,null|nullable|date',
             'gender' => 'required|in:male,female',
             'mobiles' => 'required|array|min:1',
             'mobiles.*' => 'required|numeric|digits:11|starts_with:09|unique:patient_mobiles,number,' . $this->patient->id . ',patient',
             'telephone' => 'required_unless:status,1,null|nullable|numeric|digits:11|starts_with:0|unique:patients,telephone,' . $this->patient->id,
-            'province' => 'required|exists:provinces,id',
-            'city' => 'required|exists:cities,id',
+            'province' => 'required_unless:status,1,2,null|exists:provinces,id',
+            'insurance' => 'required_unless:status,1,2,null|boolean',
             'lead_source' => 'required|exists:lead_sources,id',
-            'status' => 'required|exists:statuses,id',
-            'desc' => 'nullable|string',
-            'treatments' => 'nullable|array',
+            'treatments' => 'required_unless:status,1,null|array',
             'treatments.*' => 'required|exists:treatments,id',
-            'insurance' => 'required|boolean'
+            'desc' => 'nullable|string',
         ];
     }
 }
