@@ -191,8 +191,12 @@ class PatientController extends Controller
     public function destroy(Patient $patient)
     {
         $patient->mobiles()->delete();
-
         $patient->treatments()->detach();
+        $patient->calls()->detach();
+        $patient->followUps()->detach();
+        $patient->appointments()->detach();
+        $patient->treatmentPlans()->detach();
+        $patient->photos()->detach();
 
         $patient->delete();
 
