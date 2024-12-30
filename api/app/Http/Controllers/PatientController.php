@@ -190,13 +190,13 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        $patient->mobiles()->delete();
         $patient->treatments()->detach();
-        $patient->calls()->detach();
-        $patient->followUps()->detach();
-        $patient->appointments()->detach();
-        $patient->treatmentPlans()->detach();
-        $patient->photos()->detach();
+        $patient->mobiles()->delete();
+        $patient->calls()->delete();
+        $patient->followUps()->delete();
+        $patient->appointments()->delete();
+        $patient->treatmentPlans()->delete();
+        $patient->photos()->delete();
 
         $patient->delete();
 
