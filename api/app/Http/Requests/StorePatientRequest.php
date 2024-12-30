@@ -23,7 +23,7 @@ class StorePatientRequest extends FormRequest
             'city' => 'required_unless:status,1,2,null|exists:cities,id',
             'insurance' => 'required_unless:status,1,2,null|nullable|boolean',
             'gender' => 'required|in:male,female',
-            'mobiles' => 'required|array|min:1',
+            'mobiles' => 'required_if:telephone,null|array|min:1',
             'mobiles.*' => 'required|numeric|digits:11|starts_with:09|unique:patient_mobiles,number',
             'lead_source' => 'required|exists:lead_sources,id',
             'treatments' => 'required_unless:status,1,null|array',

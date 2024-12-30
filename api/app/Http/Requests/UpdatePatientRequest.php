@@ -20,7 +20,7 @@ class UpdatePatientRequest extends FormRequest
             'lastname' => 'required_unless:status,1,null|nullable|string',
             'birthday' => 'required_unless:status,1,2,null|nullable|date',
             'gender' => 'required|in:male,female',
-            'mobiles' => 'required|array|min:1',
+            'mobiles' => 'required_if:telephone,null|array|min:1',
             'mobiles.*' => 'required|numeric|digits:11|starts_with:09|unique:patient_mobiles,number,' . $this->patient->id . ',patient',
             'telephone' => 'required_unless:status,1,2,null|nullable|numeric|digits:11|starts_with:0|unique:patients,telephone,' . $this->patient->id,
             'province' => 'required_unless:status,1,2,null|exists:provinces,id',
