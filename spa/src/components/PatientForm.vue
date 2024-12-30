@@ -163,7 +163,7 @@ const loading = ref(false)
 const store = usePatientsStore()
 const statuses = computed(() => store.statuses.filter(s => {
     if (auth.user?.role?.name === 'reception')
-        return ['in-person-visit', 'online-visit'].includes(s.name)
+        return ['in-person-visit'].includes(s.name)
     else return ['no-status', 'in-progress', 'not-needed'].includes(s.name)
 }))
 const provinces = useProvincesStore()

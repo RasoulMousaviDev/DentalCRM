@@ -39,7 +39,7 @@
                         </span>
                     </template>
                 </Column>
-                <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="patient.user.name"
+                <Column v-if="['super-admin', 'admin', 'reception'].includes(auth.user?.role?.name)" field="patient.user.name"
                     :header="$t('phone-consultant')" />
                 <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)"
                     field="patient.treatment_plans.0.user.name" :header="$t('on-site-consultant')" />
@@ -57,7 +57,8 @@
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
-            <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44" body-class="!pl-0 whitespace-nowrap" frozen align-frozen="right">
+            <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44"
+                body-class="!pl-0 whitespace-nowrap" frozen align-frozen="right">
                 <template #body="{ data }">
                     <div class="flex flex-col gap-2 justify-end">
                         <template v-if="data.status.name == 'appointment-set'">
