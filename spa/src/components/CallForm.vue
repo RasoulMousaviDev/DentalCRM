@@ -184,7 +184,7 @@ watch(patient, async (v) => {
 
 watch(() => form.patient.status, (v) => {
     const statuses = patients.statuses
-        .filter(({ name }) => ['no-status', 'not-needed'].includes(name))
+        .filter(({ name }) => ['not-needed'].includes(name))
         .map(s => s.id)
     if (statuses.includes(v)) delete form.follow_up
     else form.follow_up = {}

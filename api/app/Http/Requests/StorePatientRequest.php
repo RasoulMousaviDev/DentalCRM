@@ -21,7 +21,7 @@ class StorePatientRequest extends FormRequest
             'province' => 'required_unless:status,1,2,null|exists:provinces,id',
             'telephone' => 'required_unless:status,1,2,null|nullable|numeric|digits:11|starts_with:0|unique:patients,telephone',
             'city' => 'required_unless:status,1,2,null|exists:cities,id',
-            'insurance' => 'required_unless:status,1,2,null|boolean',
+            'insurance' => 'required_unless:status,1,2,null|nullable|boolean',
             'gender' => 'required|in:male,female',
             'mobiles' => 'required|array|min:1',
             'mobiles.*' => 'required|numeric|digits:11|starts_with:09|unique:patient_mobiles,number',
