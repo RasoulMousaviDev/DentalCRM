@@ -13,7 +13,7 @@ abstract class Controller
                 'first' => $paginator->perPage() * ($paginator->currentPage() - 1),
                 'rows' => $paginator->perPage(),
                 'page' => $paginator->currentPage(),
-                'rowsPerPageOptions' => [1, 5, 10, 20],
+                'rowsPerPageOptions' => [5, 10, 20, 50],
                 'currentPageReportTemplate' => __('messages.paginatorTemplate'),
                 'template' => 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown',
             ]

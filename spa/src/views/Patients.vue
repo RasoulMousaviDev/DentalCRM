@@ -22,6 +22,11 @@
             <template #footer>
                 <Paginator v-if="store.pagiantor.totalRecords" v-bind="store.pagiantor" @page="store.paginate" />
             </template>
+            <Column :header="$t('row')" class="w-20">
+                <template #body="{ index }">
+                    {{ store.pagiantor.totalRecords - ((store.pagiantor.page - 1) * store.pagiantor.rows) - index }}
+                </template>
+            </Column>
             <Column field="id" :header="$t('id')" />
             <Column :field="({ firstname, lastname }) => [firstname, lastname].join(' ')"
                 :header="$t('name-and-family')" frozen />
