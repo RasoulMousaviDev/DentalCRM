@@ -197,7 +197,6 @@ class PatientController extends Controller
         $patient->appointments()->delete();
         $patient->treatmentPlans()->delete();
         $patient->photos()->delete();
-
         $patient->delete();
 
         return response()->json(['message' => __('messages.deleted-successfully')]);
