@@ -134,7 +134,7 @@ const mobiles = computed(() => {
     if (patients.item) {
         const numbers = patients.item.mobiles
         if (patients.item.telephone)
-            numbers.push(patients.item.telephone)
+            numbers.push({ number: patients.item.telephone })
         return numbers
     }
     return []
