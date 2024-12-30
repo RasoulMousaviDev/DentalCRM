@@ -194,7 +194,10 @@ class PatientController extends Controller
         $patient->mobiles()->delete();
         $patient->calls()->delete();
         $patient->followUps()->delete();
-        $patient->appointments()->delete();
+        foreach ($patient->appointments as $appointment) {
+            $appointment->treatments()->detach();
+            $appointment->delete();
+        }
         $patient->treatmentPlans()->delete();
         $patient->photos()->delete();
         $patient->delete();
