@@ -124,6 +124,7 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/auth';
 import { useCitiesStore } from '@/stores/cities';
 import { useGendersStore } from '@/stores/genders';
 import { useLeadSourcesStore } from '@/stores/lead-sources';
@@ -131,6 +132,8 @@ import { usePatientsStore } from '@/stores/patients';
 import { useProvincesStore } from '@/stores/provinces';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
+
+const auth = useAuthStore()
 
 const { toast } = inject('service')
 
@@ -158,8 +161,14 @@ const errors = ref({})
 const loading = ref(false)
 
 const store = usePatientsStore()
-const statuses = computed(() => store.statuses.filter(s => ['no-status', 'in-progress', 'not-needed'].includes(s.name)))
+const statuses = computed(() => store.statuses.filter(s => {
+    if (auth.user?.role?.name === 'reception')
+        return ['in-person-visit', 'online-visit'].includes(s.name)
+    else return ['no-status', 'in-progress', 'not-needed'].includes(s.name)
+}))
 const provinces = useProvincesStore()
+if (provinces.items.length < 1)
+    provinces.index()
 const cities = useCitiesStore()
 const leadSources = useLeadSourcesStore()
 const treatments = useTreatmentsStore()

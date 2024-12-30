@@ -5,7 +5,6 @@ import App from "./App.vue";
 import router from "./router";
 
 import PrimeVue from "primevue/config";
-// import Aura from "./assets/theme";
 import Aura from "@primevue/themes/aura";
 
 import Axios from "axios";
