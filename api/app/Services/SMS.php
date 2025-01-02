@@ -19,11 +19,11 @@ class SMS
         try {
             $recId = [0];
             $status = 0x0;
-            $request = new SoapClient(env('SMS_API'), ['encoding' => 'UTF-8']);
+            $request = new SoapClient(env('SMS_API', ''), ['encoding' => 'UTF-8']);
             $request = $request->SendSMS($parameters = [
-                'userName' => env('SMS_USERNAME', 'empty'),
-                'password' => env('SMS_PASSWORD', 'empty'),
-                'fromNumber' => env('SMS_NUMBER', 'empty'),
+                'userName' => env('SMS_USERNAME', ''),
+                'password' => env('SMS_PASSWORD', ''),
+                'fromNumber' => env('SMS_NUMBER', ''),
                 'toNumbers' => $mobiles,
                 'messageContent' => $text,
                 'isFlash' => false,
