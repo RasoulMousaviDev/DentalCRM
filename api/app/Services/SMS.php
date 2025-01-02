@@ -19,7 +19,7 @@ class SMS
         try {
             $recId = [0];
             $status = 0x0;
-            $request = new SoapClient('http://payamak-service.ir/SendService.svc?wsdl', ['encoding' => 'UTF-8']);
+            $request = new SoapClient(env('SMS_API'), ['encoding' => 'UTF-8']);
             $request = $request->SendSMS($parameters = [
                 'userName' => env('SMS_USERNAME', 'empty'),
                 'password' => env('SMS_PASSWORD', 'empty'),

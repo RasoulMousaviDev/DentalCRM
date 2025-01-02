@@ -3,8 +3,8 @@
 return [
     "login" => [
         "incorrect" => [
-            'email' => "email or password incorrect.",
-            'mobile' => "mobile or password incorrect.",
+            'email' => "ایمیل یا رمزعبور صحیح نمی باشد.",
+            'mobile' => "موبایل یا رمزعبور صحیح نمی باشد.",
         ]
     ],
     "toManyAttempts" => "Too many login attempts. Please try again later.",
