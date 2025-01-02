@@ -4,13 +4,13 @@
             <FloatLabel variant="on">
                 <Select v-model="filters.phone_consultant"
                     :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
-                    option-label="name" option-value="name" fluid />
+                    option-label="name" option-value="name" fluid show-clear />
                 <label>{{ $t('phone-consultant') }}</label>
             </FloatLabel>
             <FloatLabel variant="on">
                 <Select v-model="filters.on_site_consultant"
                     :options="users.items.filter((user) => user.roles.some((role) => role.name == 'on-site-consultant'))"
-                    option-label="name" option-value="name" fluid />
+                    option-label="name" option-value="name" fluid show-clear />
                 <label>{{ $t('on-site-consultant') }}</label>
             </FloatLabel>
         </template>
