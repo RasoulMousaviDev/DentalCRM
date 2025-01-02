@@ -16,8 +16,8 @@ class StoreInstallmentPlanRequest extends FormRequest
     {
         return [
             'months_count' => 'required|integer|unique:installment_plans,months_count',
-            'deposit_percent' => 'required|integer|between:1,100',
-            'interest_percent' => 'required|integer|between:1,100',
+            'deposit_percent' => 'required|integer|between:0,100',
+            'interest_percent' => 'required|integer|between:0,100',
             'status' => 'required|boolean'
         ];
     }
