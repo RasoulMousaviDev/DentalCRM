@@ -1,10 +1,7 @@
 <template>
     <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
         <template v-if="$route.name != 'Patient'">
-            <FloatLabel variant="on">
-                <InputText v-model="filters.patient" fluid class="ltr" v-keyfilter.int />
-                <label>{{ $t('patient-id') }}</label>
-            </FloatLabel>
+            
             <template v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)">
                 <FloatLabel variant="on">
                     <InputText v-model="filters.phone_consultant" fluid />

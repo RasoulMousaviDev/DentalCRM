@@ -1,9 +1,5 @@
 <template>
     <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
-        <FloatLabel variant="on">
-            <InputText v-model="filters.id" fluid class="ltr" v-keyfilter.int />
-            <label>{{ $t('id') }}</label>
-        </FloatLabel>
         <template v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)">
             <FloatLabel variant="on">
                 <InputText v-model="filters.phone_consultant" fluid />

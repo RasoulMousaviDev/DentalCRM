@@ -72,10 +72,10 @@ const auth = useAuthStore()
 
 const store = useDashboardStore()
 
-const fdate = new MyDate();
-fdate.setMonth(fdate.getMonth() - 1)
+const d = new Date()
+d.setMonth(d.getMonth() - 1)
 
-const form = reactive({ from: fdate, to: new MyDate() })
+const form = reactive({ from: new MyDate(d.getTime()), to: new MyDate() })
 
 store.getCharts(form)
 

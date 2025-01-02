@@ -27,7 +27,6 @@
                     {{ store.pagiantor.totalRecords - ((store.pagiantor.page - 1) * store.pagiantor.rows) - index }}
                 </template>
             </Column>
-            <Column field="id" :header="$t('id')" />
             <Column :field="({ firstname, lastname }) => [firstname, lastname].join(' ')"
                 :header="$t('name-and-family')" frozen />
             <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="user.name"

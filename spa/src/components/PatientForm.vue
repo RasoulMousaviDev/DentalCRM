@@ -173,6 +173,8 @@ if (provinces.items.length < 1)
     provinces.index()
 const cities = useCitiesStore()
 const leadSources = useLeadSourcesStore()
+if (leadSources.items.length < 1)
+    leadSources.index()
 const treatments = useTreatmentsStore()
 const genders = useGendersStore()
 

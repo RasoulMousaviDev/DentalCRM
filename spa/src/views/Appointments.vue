@@ -46,9 +46,8 @@
             </template>
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" />
-            <Column field="desc" :header="$t('desc')" body-class="truncate" />
-            <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
-            <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit || 0), $t('toman')].join(' ')"
+                <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
+                <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit || 0), $t('toman')].join(' ')"
                 :header="$t('deposit')" class="w-36" />
             <Column field="status" :header="$t('status')" class="whitespace-nowrap">
                 <template #body="{ data: { status } }">
@@ -57,6 +56,7 @@
             </Column>
             <Column field="created_at" :header="$t('created_at')" bodyClass="ltr" class="w-44" />
             <Column field="updated_at" :header="$t('updated_at')" bodyClass="ltr" class="w-44" />
+            <Column field="desc" :header="$t('desc')" body-class="truncate" />
             <Column :header="$t('actions')" headerClass="[&>div]:justify-center w-44"
                 body-class="!pl-0 whitespace-nowrap" frozen align-frozen="right">
                 <template #body="{ data }">

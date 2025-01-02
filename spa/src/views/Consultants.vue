@@ -37,9 +37,12 @@
                 </template>
                 <template #body="{ data, }">
                     <div class="flex gap-2 items-center py-1">
-                        <span class="py-1 rounded px-3 border-b-2 border-green-500 bg-[var(--surface-ground)]">{{ data[key].visited }}</span>
-                        <span class="py-1 rounded px-3 border-b-2 border-blue-500 bg-[var(--surface-ground)]">{{ data[key].total }}</span>
-                        <span class="py-1 rounded px-3 border-b-2 border-red-500 bg-[var(--surface-ground)]">{{ data[key].refunded }}</span>
+                        <span class="py-1 rounded px-3 border-b-2 border-green-500 bg-[var(--surface-ground)]">{{
+                            data[key].visited }}</span>
+                        <span class="py-1 rounded px-3 border-b-2 border-blue-500 bg-[var(--surface-ground)]">{{
+                            data[key].total }}</span>
+                        <span class="py-1 rounded px-3 border-b-2 border-red-500 bg-[var(--surface-ground)]">{{
+                            data[key].refunded }}</span>
                     </div>
                 </template>
             </Column>
@@ -53,11 +56,13 @@ import MyDate from '../utils/MyDate'
 import { useConsultantsStore } from '@/stores/consultants';
 import { reactive } from 'vue';
 
-const fdate = new MyDate();
-fdate.setDate(fdate.getDate() - 7)
+const today = new Date()
+const day = today.getDay() + 1;
+const oneDay = 24 * 60 * 60 * 1000;
+
 const date = reactive({
-    from: fdate,
-    to: new MyDate(),
+    from:  new MyDate(today.getTime() - (day * oneDay)),
+    to: new MyDate(today.getTime() + ((6 - day) * oneDay)),
 })
 
 const store = useConsultantsStore()
