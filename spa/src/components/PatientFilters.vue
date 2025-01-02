@@ -2,11 +2,15 @@
     <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
         <template v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)">
             <FloatLabel variant="on">
-                <InputText v-model="filters.phone_consultant" fluid />
+                <Select v-model="filters.phone_consultant"
+                    :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
+                    option-label="name" option-value="name" fluid />
                 <label>{{ $t('phone-consultant') }}</label>
             </FloatLabel>
             <FloatLabel variant="on">
-                <InputText v-model="filters.on_site_consultant" fluid />
+                <Select v-model="filters.on_site_consultant"
+                    :options="users.items.filter((user) => user.roles.some((role) => role.name == 'on-site-consultant'))"
+                    option-label="name" option-value="name" fluid />
                 <label>{{ $t('on-site-consultant') }}</label>
             </FloatLabel>
         </template>
@@ -96,6 +100,7 @@ import { useLeadSourcesStore } from '@/stores/lead-sources';
 import { usePatientsStore } from '@/stores/patients';
 import { useProvincesStore } from '@/stores/provinces';
 import { useTreatmentsStore } from '@/stores/treatments';
+import { useUsersStore } from '@/stores/users';
 import { onBeforeUnmount, onMounted, reactive, watch } from 'vue';
 
 const filters = reactive({})
@@ -107,6 +112,9 @@ const cities = useCitiesStore()
 const genders = useGendersStore()
 const treatments = useTreatmentsStore()
 const auth = useAuthStore()
+const users = useUsersStore()
+users.pagiantor.rows = 1000
+users.index()
 
 treatments.index()
 provinces.index()
@@ -127,7 +135,10 @@ watch(() => filters.province, (v) => cities.index(v))
 
 onMounted(() => Object.assign(filters, store.filters))
 
-onBeforeUnmount(() => store.filters = {})
+onBeforeUnmount(() => {
+    store.filters = {}
+    users.pagiantor.rows = 10
+})
 </script>
 
 <style lang="scss" scoped></style>

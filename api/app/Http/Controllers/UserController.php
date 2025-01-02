@@ -61,7 +61,7 @@ class UserController extends Controller
         }
 
 
-        $users = $users->with('roles:id,title')->latest()->paginate($rows);
+        $users = $users->with('roles:id,name,title')->latest()->paginate($rows);
 
         return response()->json($this->paginate($users));
     }
