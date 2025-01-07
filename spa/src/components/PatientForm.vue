@@ -72,7 +72,17 @@
             </FloatLabel>
             <small v-if="errors.city" v-text="errors.city[0]" class="text-red-500" />
         </div>
-        <div class="flex flex-col gap-1 col-span-2">
+        <div v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <Select v-model="form.user"
+                    :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
+                    optionLabel="name" optionValue="id" fluid :loading="users.fetching" :invalid="errors.user" />
+                <label> {{ $t('phone-consultant') }}</label>
+            </FloatLabel>
+            <small v-if="errors.user" v-text="errors.user[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-1 col-span-2"
+            :class="{ '!col-span-1': ['super-admin', 'admin'].includes(auth.user?.role?.name) }">
             <FloatLabel variant="on">
                 <MultiSelect v-model="form.treatments" display="chip" :options="treatments.items"
                     :loading="treatments.fetching" optionLabel="title" optionValue="id" :showToggleAll="false" fluid
@@ -133,9 +143,14 @@ import { useLeadSourcesStore } from '@/stores/lead-sources';
 import { usePatientsStore } from '@/stores/patients';
 import { useProvincesStore } from '@/stores/provinces';
 import { useTreatmentsStore } from '@/stores/treatments';
+import { useUsersStore } from '@/stores/users';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 
 const auth = useAuthStore()
+
+const users = useUsersStore()
+users.pagiantor.rows = 1000
+users.index()
 
 const { toast } = inject('service')
 
@@ -151,6 +166,7 @@ const form = reactive({
     telephone: '',
     mobiles: [],
     treatments: [],
+    user: '',
     province: '',
     city: '',
     lead_source: '',

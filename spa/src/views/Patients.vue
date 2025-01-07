@@ -89,6 +89,7 @@ const edit = async (data) => {
     patient.mobiles = patient.mobiles.map(({ number }) => number)
     patient.treatments = patient.treatments.map(({ id }) => id)
     patient.status = patient.status.id
+    patient.user = patient.user.id
 
     dialog.open(PatientForm, {
         props: { header: t('editPatient'), modal: true },

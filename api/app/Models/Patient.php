@@ -29,7 +29,8 @@ class Patient extends Model
         'lead_source',
         'status',
         'desc',
-        'insurance'
+        'insurance',
+        'user'
     ];
 
     protected $casts = [

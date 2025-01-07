@@ -34,6 +34,7 @@ class UpdatePatientRequest extends FormRequest
             'treatments' => 'required_unless:status,1,null|array',
             'treatments.*' => 'required|exists:treatments,id',
             'desc' => 'nullable|string',
+            'user' => 'nullable|exists:users,id'
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
 use App\Models\Role;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -112,10 +113,16 @@ class PatientController extends Controller
             'lead_source',
             'status',
             'desc',
-            'insurance'
+            'insurance',
+            'user'
         ]);
 
-        $patient = auth()->user()->patients()->create($form);
+        $user =  auth()->user();
+
+        if (isset($form['user']))
+            $user = User::find($form['user']);
+
+        $patient = $user->patients()->create($form);
 
         $mobiles = $request->get('mobiles', []);
 
