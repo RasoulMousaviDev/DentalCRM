@@ -37,8 +37,7 @@ class FollowUpController extends Controller
         $isAdmin = collect($roles)->contains($user->role->id);
 
         $followUps = FollowUp::with([
-            'patient:id,firstname,lastname',
-            'patient.mobiles:number',
+            'patient:id,firstname,lastname,mobiles',
             'status:id,value,severity'
         ]);
 
