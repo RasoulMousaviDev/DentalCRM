@@ -535,13 +535,13 @@ const getOption = (t, s, o, k) => {
 
 const getToothsPostion = (tooths) => {
     const postions = [[], [], [], []];
-    tooths.forEach((tooth) => {
-        tooth = +tooth;
-        tooth < 8 && postions[0].push(8 - tooth);
-        tooth > 7 && tooth < 15 && postions[1].push(tooth - 7);
-        tooth > 14 && tooth < 22 && postions[2].push(22 - tooth);
-        tooth > 21 && postions[3].push(tooth - 21);
-    });
+    // tooths.forEach((tooth) => {
+    //     tooth = +tooth;
+    //     tooth < 8 && postions[0].push(8 - tooth);
+    //     tooth > 7 && tooth < 15 && postions[1].push(tooth - 7);
+    //     tooth > 14 && tooth < 22 && postions[2].push(22 - tooth);
+    //     tooth > 21 && postions[3].push(tooth - 21);
+    // });
 
     return postions;
 };
@@ -638,8 +638,8 @@ watch(
             if (value[key] != old[key]) delete errors.value[key];
             if (key == "treatments_details") {
                 Object.entries(value[key]).forEach(([k, v]) => {
-                    if (v.tooths.length > 0)
-                        delete errors.value[`treatments_details.${k}.tooths`];
+                    // if (v.tooths.length > 0)
+                        // delete errors.value[`treatments_details.${k}.tooths`];
                 });
             }
         });

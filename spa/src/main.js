@@ -44,6 +44,8 @@ import InputGroupAddon from "primevue/inputgroupaddon";
 import Paginator from "primevue/paginator";
 import Listbox from "primevue/listbox";
 import Chart from "primevue/chart";
+import Badge from 'primevue/badge';
+import OverlayBadge from 'primevue/overlaybadge';
 
 import KeyFilter from "primevue/keyfilter";
 import StyleClass from "primevue/styleclass";
@@ -125,6 +127,8 @@ app.component("TieredMenu", TieredMenu);
 app.component("FloatLabel", FloatLabel);
 app.component("SplitButton", SplitButton);
 app.component("ToggleSwitch", ToggleSwitch);
+app.component("Badge", Badge);
+app.component("OverlayBadge", OverlayBadge);
 
 app.directive("keyfilter", KeyFilter);
 app.directive("styleclass", StyleClass);
