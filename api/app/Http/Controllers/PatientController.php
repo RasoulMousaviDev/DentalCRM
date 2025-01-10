@@ -29,7 +29,6 @@ class PatientController extends Controller
             'province',
             'city',
             'lead_source',
-            'status',
             'insurance'
         ];
 
@@ -89,6 +88,10 @@ class PatientController extends Controller
             $query->whereHas('mobiles', function (Builder $query) use ($mobile) {
                 $query->where('number', 'like', "%{$mobile}%");
             });
+        });
+
+        $patients->when($request->input('status'), function ($query, $value) {
+            $query->whereIn('status', $value);
         });
 
         $patients = $patients->latest()->paginate($rows);

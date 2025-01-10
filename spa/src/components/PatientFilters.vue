@@ -66,14 +66,14 @@
             <label> {{ $t('insurance') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <Select v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear>
+            <MultiSelect v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear>
                 <template #value="{ value }">
-                    <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
+                    <Tag v-for="s in value" class="text-xs" v-bind="store.statuses.find(({ id }) => s == id)" />
                 </template>
                 <template #option="{ option }">
                     <Tag v-bind="option" class="text-xs" />
                 </template>
-            </Select>
+            </MultiSelect>
             <label> {{ $t('patient-status') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
@@ -136,7 +136,6 @@ watch(() => filters.province, (v) => cities.index(v))
 onMounted(() => Object.assign(filters, store.filters))
 
 onBeforeUnmount(() => {
-    store.filters = {}
     users.pagiantor.rows = 10
 })
 </script>
