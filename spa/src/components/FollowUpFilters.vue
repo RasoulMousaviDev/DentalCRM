@@ -1,7 +1,6 @@
 <template>
     <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
         <template v-if="$route.name != 'Patient'">
-            
             <FloatLabel v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" variant="on">
                 <InputText v-model="filters.user" fluid />
                 <label>{{ $t('consultant') }}</label>
@@ -16,7 +15,7 @@
             <label>{{ $t('lastname') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <DatePicker v-model="due_date" selectionMode="range" :manualInput="false" fluid class="ltr" showButtonBar
+            <DatePicker v-model="filters.due_date" selectionMode="range" :manualInput="false" fluid class="ltr" showButtonBar
                 dateFormat="yy/mm/dd" />
             <label>{{ $t('due-date') }}</label>
         </FloatLabel>

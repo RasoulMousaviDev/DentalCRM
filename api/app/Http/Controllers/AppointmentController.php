@@ -94,7 +94,7 @@ class AppointmentController extends Controller
             });
         });
 
-        $appointments = $appointments->latest()->paginate($rows);
+        $appointments = $appointments->orderBy('due_date', 'desc')->paginate($rows);
 
         $response = $this->paginate($appointments);
 
