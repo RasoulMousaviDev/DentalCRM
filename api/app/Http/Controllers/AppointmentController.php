@@ -34,7 +34,8 @@ class AppointmentController extends Controller
 
         $appointments = Appointment::with([
             'treatments:id,title',
-            'patient:id,firstname,lastname,mobiles',
+            'patient:id,firstname,lastname',
+            'patient.mobiles',
             'patient.treatmentPlans.user:id,name',
             'status:id,name,value,severity',
         ]);

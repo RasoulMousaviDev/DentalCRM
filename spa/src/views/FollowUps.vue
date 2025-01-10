@@ -31,6 +31,8 @@
                 <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" field="patient.user.name"
                     :header="$t('consultant')" />
             </template>
+            <Column :field="({ patient: { mobiles, telephone } }) => mobiles.map(({ number }) => number).join(' | ') || telephone"
+                :header="$t('mobile')" body-class="ltr !text-left" />
             <Column field="desc" :header="$t('desc')" body-class="whitespace-normal" class="w-80"/>
             <Column field="due_date" :header="$t('due-date')" bodyClass="ltr" class="w-44" />
             <Column field="status" :header="$t('status')" class="w-32">

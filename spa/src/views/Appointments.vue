@@ -39,15 +39,17 @@
                         </span>
                     </template>
                 </Column>
-                <Column v-if="['super-admin', 'admin', 'reception'].includes(auth.user?.role?.name)" field="patient.user.name"
-                    :header="$t('phone-consultant')" />
+                <Column v-if="['super-admin', 'admin', 'reception'].includes(auth.user?.role?.name)"
+                    field="patient.user.name" :header="$t('phone-consultant')" />
                 <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)"
                     field="patient.treatment_plans.0.user.name" :header="$t('on-site-consultant')" />
             </template>
+            <Column :field="({ patient: { mobiles, telephone } }) => mobiles.map(({ number }) => number).join(' | ') || telephone"
+                :header="$t('mobile')" body-class="ltr !text-left" />
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" />
-                <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
-                <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit || 0), $t('toman')].join(' ')"
+            <Column field="due_date" :header="$t('appointment-date')" bodyClass="ltr" class="w-44" />
+            <Column :field="({ deposit }) => [new Intl.NumberFormat().format(deposit || 0), $t('toman')].join(' ')"
                 :header="$t('deposit')" class="w-36" />
             <Column field="status" :header="$t('status')" class="whitespace-nowrap">
                 <template #body="{ data: { status } }">
