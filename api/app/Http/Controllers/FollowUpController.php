@@ -38,6 +38,7 @@ class FollowUpController extends Controller
 
         $followUps = FollowUp::with([
             'patient:id,firstname,lastname',
+            'patient.mobiles:number',
             'status:id,value,severity'
         ]);
 
