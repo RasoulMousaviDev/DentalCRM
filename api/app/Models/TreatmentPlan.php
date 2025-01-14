@@ -33,7 +33,7 @@ class TreatmentPlan extends Model
         'created_at' => JDate::class,
         'updated_at' => JDate::class,
         'start_date' => 'timestamp',
-        'treatments_details' => 'object'
+        'tooths' => 'object'
     ];
 
     public function user(): BelongsTo
