@@ -1,17 +1,17 @@
 <template>
     <div class="max-w-full flex gap-8 print:gap-0 relative">
         <div class="max-w-[calc(100%_-_24rem)] print:!max-w-0 grow flex flex-col gap-8">
-            <SelectTooth v-model="tooth" />
+            <SelectTooth v-model="tooth" :errors="errors.tooths"/>
             <SelectTreatment v-if="tooth" v-model="treatment" :tooth="form.tooths[tooth]" />
             <Services v-if="treatment" v-model="form.tooths[tooth][treatment]" :treatment="treatment" />
-            <template v-if="form.payment.method == 'installments'">
-                <SelectInstallment v-model="form.payment" />
+            <template v-if="form.payment.method == 'installments' && form.payment.total_amount > 0">
+                <SelectInstallment v-model="form.payment" :errors="errors['payment.months_count']" />
                 <ChecksDate v-if="form.payment.months_count" v-model="form.payment" />
             </template>
         </div>
         <div class="w-96 shrink-0">
             <div class="sticky top-24 flex flex-col gap-8">
-                <SelectPatient v-model="form.patient" />
+                <SelectPatient v-model="form.patient" :errors="errors['patient.id']" />
                 <RequestedServices :tooths="form.tooths" @total-amount="form.payment.total_amount = $event" />
                 <SelectPaymentMethod v-model="form.payment" />
 
@@ -113,10 +113,8 @@ const handleSubmit = async () => {
             router.replace({ name: "Patient", params: { id: patient } });
         else router.replace({ name: "TreatmentPlans" });
     }
-    else if (status === 422) Object.entries(data.errors).forEach(([key, [error]], i) => {
-        toast.add({ severity: 'error', summary: 'Error', detail: `${t(key.replace('_', '-'))} ${error}`, life: 2000 + 1000 * (i + 1), })
-    })
-
+    else if (status === 422)
+        errors.value = data.errors
     else
         toast.add({ severity: "error", summary: "Error", detail: data.message, life: 5000, });
 };

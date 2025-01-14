@@ -24,7 +24,9 @@ class StoreTreatmentPlanRequest extends FormRequest
             'payment.total_amount' => 'required|numeric',
             'payment.discount_amount' => 'nullable|numeric',
             'tooths' => 'required|array|min:1',
-            'tooths.*.tooths' => 'required|array|min:1',
+            'tooths.*' => 'required|array|min:1',
+            'tooths.*.*' => 'required|array|min:1',
         ];
     }
+
 }

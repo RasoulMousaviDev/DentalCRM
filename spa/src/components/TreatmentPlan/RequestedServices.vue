@@ -5,15 +5,15 @@
                 {{ $t("requested-services") }}
             </span>
         </div>
-        <ul class="flex flex-col gap-4 my-4 pr-2 border-r [&_li]:w-full divide-y">
-            <li v-for="({ tooth, treatments }, i) in tooths" :key="i">
+        <ul class="flex flex-col gap-4 pr-2 [&_li]:w-full divide-y">
+            <li v-for="({ tooth, treatments }, i) in tooths" :key="i" class="mt-4 border-r">
                 <div class="inline-flex flex-col gap-3 w-full">
                     <div class="flex gap-4 items-center">
                         <span class="w-20">{{ tooth.direction }}</span>
                         <Tag severity="secondary" :value="tooth.position" />
                     </div>
-                    <ul class="flex flex-col gap-4 pr-2 border-r grow">
-                        <li v-for="({ treatment, services }, j) in treatments" :key="j">
+                    <ul class="flex flex-col gap-4 pr-2 grow">
+                        <li v-for="({ treatment, services }, j) in treatments" :key="j" class="border-r">
                             <div class="inline-flex flex-col gap-3 w-full">
                                 <span class="font-bold"> {{ treatment.title }}</span>
                                 <ul class="flex flex-col gap-4 pr-2 grow">
