@@ -105,8 +105,8 @@ class TreatmentPlanController extends Controller
         $form = [
             'user' => auth()->id(),
             'payment_method' => $payment['method'],
-            'months_count' => $payment['months_count'],
-            'deposit_amount' => $payment['deposit_amount'],
+            'months_count' => $payment['months_count'] ?? 0,
+            'deposit_amount' => $payment['deposit_amount'] ?? 0,
             'total_amount' => $payment['total_amount'],
             'discount_amount' => $payment['discount_amount'],
             'start_date' => $payment['start_date'],

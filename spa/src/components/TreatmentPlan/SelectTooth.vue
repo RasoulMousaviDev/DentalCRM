@@ -1,6 +1,7 @@
 <template>
-    <div class="card flex flex-col justify-center items-center border border-transparent h-[30rem]"
-        :class="{ 'border-red-500': !!errors }">
+    <div class="card flex flex-col justify-center items-center border border-transparent h-[30rem] relative"
+        :class="{ '!border-red-500': errors }">
+        <small v-if=" errors" class="absolute top-4 left-4 text-red-500">{{ errors[0] }}</small>
         <svg class="select-none jaws" xmlns="http://www.w3.org/2000/svg" data-name="Layer 2"
             viewBox="0 0 3741.73 2125.98" :disabled="disabled" @click="select">
             <path class="cls-9"

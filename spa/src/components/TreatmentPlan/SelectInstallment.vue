@@ -27,9 +27,6 @@ const { t } = inject('service')
 const model = defineModel()
 
 const installmentPlans = useInstallmentPlansStore()
-if (installmentPlans.items.length < 1)
-    installmentPlans.index();
-
 
 const rows = computed(() => {
     const list = [

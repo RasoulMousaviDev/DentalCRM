@@ -1,5 +1,5 @@
 <template>
-    <div class="card flex flex-col gap-4">
+    <div class="card flex flex-col gap-4 border border-transparent" :class="{ '!border-red-500': errors }">
         <div class="text-lg font-bold flex gap-4">
             <span>{{ $t("required-services") }} </span>
             <hr class="grow" />
@@ -17,7 +17,7 @@ import { computed } from 'vue';
 import SelectService from './SelectService.vue'
 import { useTreatmentsStore } from '@/stores/treatments';
 
-const props = defineProps({ treatment: Number, readonly: Boolean })
+const props = defineProps({ treatment: Number, readonly: Boolean, errors: String })
 
 const model = defineModel()
 

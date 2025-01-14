@@ -2,8 +2,10 @@
     <div class="max-w-full flex gap-8 print:gap-0 relative">
         <div class="max-w-[calc(100%_-_24rem)] print:!max-w-0 grow flex flex-col gap-8">
             <SelectTooth v-model="tooth" :errors="errors.tooths" :readonly="readonly" />
-            <SelectTreatment v-if="tooth" v-model="treatment" :tooth="form.tooths[tooth]" />
-            <Services v-if="treatment" v-model="form.tooths[tooth][treatment]" :treatment="treatment" />
+            <SelectTreatment v-if="tooth" v-model="treatment" :tooth="form.tooths[tooth]"
+                :errors="errors[`tooths.${tooth}`]" />
+            <Services v-if="treatment" v-model="form.tooths[tooth][treatment]" :treatment="treatment"
+                :errors="errors[`tooths.${tooth}.${treatment}`]" />
             <template v-if="form.payment.method == 'installments' && form.payment.total_amount > 0">
                 <SelectInstallment v-model="form.payment" :errors="errors['payment.months_count']" />
                 <ChecksDate v-if="form.payment.months_count" v-model="form.payment" />
@@ -42,6 +44,7 @@ import { useTreatmentPlansStore } from '@/stores/treatment-plans';
 import { useTreatmentsStore } from '@/stores/treatments';
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue';
 import { usePatientsStore } from '@/stores/patients';
+import { useInstallmentPlansStore } from '@/stores/installment-plans';
 
 const auth = useAuthStore()
 
@@ -69,13 +72,16 @@ const form = reactive({
         interest_percent: 0
     },
 })
-
+const errors = ref({})
 const tooth = ref()
 const treatment = ref()
 
 const treatments = useTreatmentsStore();
 if (treatments.items.length < 1)
     treatments.index();
+const installmentPlans = useInstallmentPlansStore()
+if (installmentPlans.items.length < 1)
+    installmentPlans.index();
 
 watch(tooth, (v) => {
     Object.entries(form.tooths).forEach(([tooth, value]) => {
@@ -88,7 +94,6 @@ watch(tooth, (v) => {
         form.tooths[v] = {}
 
     treatment.value = null
-    delete errors.value.tooths
 })
 
 watch(treatment, (v) => {
@@ -100,6 +105,9 @@ watch(treatment, (v) => {
 })
 
 watch(() => form.patient.id, () => delete errors.value['patient.id'])
+watch(() => form.tooths, () => Object.keys(errors.value).forEach((k) => {
+    if (k.includes('tooths')) delete errors.value[k]
+}), { deep: true})
 watch(() => form.payment.months_count, () => delete errors.value['payment.months_count'])
 
 const loading = ref(true);
@@ -107,6 +115,8 @@ const loading = ref(true);
 const store = useTreatmentPlansStore();
 
 const handleSubmit = async () => {
+    errors.value = {}
+
     loading.value = true;
 
     const { status, statusText, data } = await store.store(form);

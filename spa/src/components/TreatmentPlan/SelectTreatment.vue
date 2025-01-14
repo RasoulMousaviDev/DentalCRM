@@ -1,5 +1,5 @@
 <template>
-    <div class="card !p-4 flex gap-2 items-center">
+    <div class="card !p-4 flex gap-2 items-center border border-transparent" :class="{ '!border-red-500': errors }">
         <Button icon="pi pi-chevron-right" text rounded @click="() => treatRef.scrollTo(0, 0)" />
         <div ref="treatRef" class="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth">
             <ul class="flex gap-4 p-2">
@@ -19,7 +19,7 @@
 import { useTreatmentsStore } from '@/stores/treatments';
 import { ref } from 'vue';
 
-const props = defineProps({ tooth: Object })
+const props = defineProps({ tooth: Object, errors: String })
 
 const model = defineModel()
 

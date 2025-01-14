@@ -1,5 +1,5 @@
 <template>
-    <div class="card !p-6 flex flex-col gap-5 [&_small]:-mb-6">
+    <div class="card !p-6 flex flex-col gap-5">
         <div class="flex justify-between items-center border-b pb-4">
             <span class="text-lg font-bold">
                 {{ $t("visit-type") }}
@@ -27,6 +27,7 @@
             </Select>
             <label> {{ $t("patient") }}</label>
         </FloatLabel>
+        <small v-if="errors" class="text-red-500 -my-4">{{ errors[0] }}</small>
         <FloatLabel variant="on">
             <Textarea v-model="model.desc" fluid rows="5" cols="30" :readonly="readonly" />
             <label> {{ $t("desc") }}</label>
