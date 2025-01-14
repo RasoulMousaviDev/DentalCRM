@@ -22,9 +22,9 @@ return new class extends Migration
             $table->integer('total_amount')->default(0);
             $table->integer('discount_amount')->default(0);
             $table->timestamp('start_date')->nullable();
-            $table->json('treatments_details');
+            $table->json('tooths');
             $table->string('desc')->nullable();
-            $table->foreignId('status')->default(19)->constrained('statuses');
+            $table->foreignId('status')->constrained('statuses');
             $table->timestamps();
         });
     }

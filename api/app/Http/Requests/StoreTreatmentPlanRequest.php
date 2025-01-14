@@ -14,17 +14,17 @@ class StoreTreatmentPlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient' => 'required|exists:patients,id',
-            'payment_method' => 'required|in:cash,installments',
-            'visit_type' => 'required|in:in-person,online',
-            'months_count' => 'required_if:payment_method,installments|integer|in:3,6,9,12',
-            'deposit_amount' => 'required_if:payment_method,installments|numeric|between:100000,100000000',
-            'start_date' => 'required_if:payment_method,installments|date',
-            'total_amount' => 'required|numeric',
-            'discount_amount' => 'nullable|numeric',
-            'treatments_details' => 'required|array|min:1',
-            'treatments_details.*.tooths' => 'required|array|min:1',
-            'desc' => 'nullable|string',
+            'patient.id' => 'required|exists:patients,id',
+            'patient.visit_type' => 'required|in:in-person,online',
+            'patient.desc' => 'nullable|string',
+            'payment.method' => 'required|in:cash,installments',
+            'payment.months_count' => 'required_if:payment.method,installments|integer|in:3,6,9,12',
+            'payment.deposit_amount' => 'required_if:payment.method,installments|numeric|between:100000,100000000',
+            'payment.start_date' => 'required_if:payment.method,installments|date',
+            'payment.total_amount' => 'required|numeric',
+            'payment.discount_amount' => 'nullable|numeric',
+            'tooths' => 'required|array|min:1',
+            'tooths.*.tooths' => 'required|array|min:1',
         ];
     }
 }

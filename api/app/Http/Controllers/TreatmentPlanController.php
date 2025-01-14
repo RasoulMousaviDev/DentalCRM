@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTreatmentPlanRequest;
 use App\Http\Requests\UpdateTreatmentPlanRequest;
 use App\Models\Patient;
 use App\Models\Role;
+use App\Models\Status;
 use App\Models\TreatmentPlan;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -93,20 +94,29 @@ class TreatmentPlanController extends Controller
      */
     public function store(StoreTreatmentPlanRequest $request)
     {
-        $form = $request->only([
-            'payment_method',
-            'months_count',
-            'deposit_amount',
-            'total_amount',
-            'discount_amount',
-            'start_date',
-            'treatments_details',
-            'desc',
+        $body = $request->only([
+            'patient',
+            'payment',
+            'tooths',
         ]);
 
-        $patient = Patient::find($request->get('patient'));
+        $payment = $body['payment'];
+        $patient = $body['patient'];
+        $form = [
+            'user' => auth()->id(),
+            'payment_method' => $payment['method'],
+            'months_count' => $payment['months_count'],
+            'deposit_amount' => $payment['deposit_amount'],
+            'total_amount' => $payment['total_amount'],
+            'discount_amount' => $payment['discount_amount'],
+            'start_date' => $payment['start_date'],
+            'desc' => $patient['desc'],
+            'visit_type' => $patient['visit_type'],
+            'tooths' => $body['tooths'],
+            'status' => Status::firstWhere('name', 'valid')->id,
+        ];
 
-        $form['user'] = auth()->id();
+        $patient = Patient::find($patient['id']);
 
         $patient->treatmentPlans()->create($form)->save();
 
@@ -125,11 +135,27 @@ class TreatmentPlanController extends Controller
     {
         $treatmentPlan->load([
             'status:id,value,severity',
-            // 'patient:id,firstname,lastname,user',
-            // 'patient.user:id,name'
         ]);
 
-        return response()->json($treatmentPlan);
+        $data = [
+            'payment' => [
+                'method' => $treatmentPlan->payment_method,
+                'months_count' => $treatmentPlan->months_count,
+                'deposit_amount' => $treatmentPlan->deposit_amount,
+                'total_amount' => $treatmentPlan->total_amount,
+                'discount_amount' => $treatmentPlan->discount_amount,
+                'start_date' => $treatmentPlan->start_date,
+            ],
+            'patient' => [
+                'id' => $treatmentPlan->patient,
+                'visit_type' => $treatmentPlan->visit_type,
+                'desc' => $treatmentPlan->desc
+            ],
+            'tooths' => $treatmentPlan->tooths,
+            'status' => $treatmentPlan->status
+        ];
+
+        return response()->json($data);
     }
 
     public function update(UpdateTreatmentPlanRequest $request, TreatmentPlan $treatmentPlan)

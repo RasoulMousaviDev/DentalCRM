@@ -55,7 +55,8 @@ const readonly = ref(!!id);
 const form = reactive({
     patient: {
         id: +patient || null,
-        visit_type: "in-person"
+        visit_type: "in-person",
+        desc: ""
     },
     tooths: {},
     payment: {
