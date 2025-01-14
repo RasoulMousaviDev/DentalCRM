@@ -1,5 +1,5 @@
 <template>
-    <div class="card border border-transparent">
+    <div class="card border border-transparent" :class="{ 'border-red-500': !!errors }">
         <DataTable :value="rows" class="last:[&_tr]:!bg-[var(--surface-ground)] [&_th]:!bg-[var(--surface-ground)]">
             <Column field="title" :header="$t('installment-terms')" :footer="$t('choice')" footer-class="!text-right" />
             <Column v-for="(plan, i) in installmentPlans.items" :key="i" :field="plan.id"
@@ -19,6 +19,8 @@
 import { useInstallmentPlansStore } from '@/stores/installment-plans';
 import { formatNumber } from '@/utils/format-number';
 import { computed, inject } from 'vue';
+
+const props = defineProps({ errors: { type: String } })
 
 const { t } = inject('service')
 

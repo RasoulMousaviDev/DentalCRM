@@ -16,7 +16,7 @@
                         [firstname, lastname].join(' ')
                         " fluid :disabled="readonly"
                 panel-class="[&_.p-iconfield]:ltr [&_input:not(.p-filled)]:!text-right"
-                :filter-placeholder="$t('search-patient')" @filter="patients.search($event.value)">
+                :filter-placeholder="$t('search-patient')" :invalid="errors" @filter="patients.search($event.value)">
                 <template #empty>
                     <i></i>
                 </template>
@@ -36,9 +36,8 @@
 
 <script setup>
 import { usePatientsStore } from '@/stores/patients';
-import { reactive } from 'vue';
 
-defineProps({ readonly: Boolean })
+defineProps({ readonly: Boolean, errors: { type: String } })
 
 const model = defineModel()
 

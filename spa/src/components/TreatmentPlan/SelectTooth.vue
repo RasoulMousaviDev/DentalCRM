@@ -1,5 +1,6 @@
 <template>
-    <div class="card flex flex-col justify-center items-center border border-transparent h-[30rem]">
+    <div class="card flex flex-col justify-center items-center border border-transparent h-[30rem]"
+        :class="{ 'border-red-500': !!errors }">
         <svg class="select-none jaws" xmlns="http://www.w3.org/2000/svg" data-name="Layer 2"
             viewBox="0 0 3741.73 2125.98" :disabled="disabled" @click="select">
             <path class="cls-9"
@@ -255,7 +256,7 @@
 </template>
 
 <script setup>
-const props = defineProps({ disabled: { type: Boolean, default: false } })
+const props = defineProps({ disabled: { type: Boolean, default: false }, errors: { type: String } })
 
 const model = defineModel()
 

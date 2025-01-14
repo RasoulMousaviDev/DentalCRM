@@ -87,6 +87,7 @@ watch(tooth, (v) => {
         form.tooths[v] = {}
 
     treatment.value = null
+    delete errors.value.tooths
 })
 
 watch(treatment, (v) => {
@@ -96,6 +97,9 @@ watch(treatment, (v) => {
     if (v && !form.tooths[tooth.value].hasOwnProperty(v.id))
         form.tooths[tooth.value][v] = {}
 })
+
+watch(() => form.patient.id , () => delete errors.value['patient.id'])
+watch(() => form.payment.months_count , () => delete errors.value['payment.months_count'])
 
 const loading = ref(true);
 
@@ -139,7 +143,6 @@ onMounted(async () => {
         if (data.patient.id)
             await patients.show(data.patient.id);
         Object.assign(form, data);
-        currentTab.value = Object.keys(data.treatments_details)[0];
     } else if (patient) {
         const p = patients.items.find((item) => item.id == patient);
         if (!p) {
