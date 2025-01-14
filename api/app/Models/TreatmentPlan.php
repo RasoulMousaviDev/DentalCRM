@@ -23,7 +23,7 @@ class TreatmentPlan extends Model
         'total_amount',
         'discount_amount',
         'start_date',
-        'treatments_details',
+        'tooths',
         'visit_type',
         'desc',
         'status',
