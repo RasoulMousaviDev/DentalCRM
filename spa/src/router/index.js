@@ -63,7 +63,7 @@ const router = createRouter({
                     name: "TreatmentPlanCreate",
                     path: "/treatment-plans/create",
                     alias: "/treatment-plans/:id",
-                    component: () => import("@/views/TreatmentPlanCreate.vue"),
+                    component: () => import("@/views/TreatmentPlanCreate2.vue"),
                 },
                 {
                     name: "TreatmentPlan",
