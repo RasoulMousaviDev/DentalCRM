@@ -113,7 +113,7 @@ body>div>div:not(.layout-main-container){
 }
 
 .printable{
-    @apply print:w-screen print:shadow-none print:min-h-[96vh];
+    @apply print:w-screen print:shadow-none;
 }
 
 .layout-main-container{

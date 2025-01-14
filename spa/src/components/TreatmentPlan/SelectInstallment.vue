@@ -20,7 +20,7 @@ import { useInstallmentPlansStore } from '@/stores/installment-plans';
 import { formatNumber } from '@/utils/format-number';
 import { computed, inject } from 'vue';
 
-const props = defineProps({ errors: { type: String } })
+const props = defineProps({ errors: { type: String }, readonly: { type: Boolean, default: false} })
 
 const { t } = inject('service')
 

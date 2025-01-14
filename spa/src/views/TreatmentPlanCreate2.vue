@@ -7,8 +7,9 @@
             <Services v-if="treatment" v-model="form.tooths[tooth][treatment]" :treatment="treatment"
                 :errors="errors[`tooths.${tooth}.${treatment}`]" />
             <template v-if="form.payment.method == 'installments' && form.payment.total_amount > 0">
-                <SelectInstallment v-model="form.payment" :errors="errors['payment.months_count']" />
-                <ChecksDate v-if="form.payment.months_count" v-model="form.payment" />
+                <SelectInstallment v-model="form.payment" :errors="errors['payment.months_count']"
+                    :readonly="readonly" />
+                <ChecksDate v-if="form.payment.months_count" v-model="form.payment" :readonly="readonly" />
             </template>
         </div>
         <div class="w-96 shrink-0">
@@ -107,7 +108,7 @@ watch(treatment, (v) => {
 watch(() => form.patient.id, () => delete errors.value['patient.id'])
 watch(() => form.tooths, () => Object.keys(errors.value).forEach((k) => {
     if (k.includes('tooths')) delete errors.value[k]
-}), { deep: true})
+}), { deep: true })
 watch(() => form.payment.months_count, () => delete errors.value['payment.months_count'])
 
 const loading = ref(true);
@@ -151,9 +152,11 @@ const patients = usePatientsStore()
 onMounted(async () => {
     if (readonly.value) {
         const { data } = await store.show(id);
-        if (data.patient.id)
-            await patients.show(data.patient.id);
+        patients.filters.id = data.patient.id
+        await patients.index();
         Object.assign(form, data);
+        form.payment.final_amount = computed(() => form.payment.total_amount - form.payment.discount_amount)
+        form.payment.start_date = new MyDate(form.payment.start_date)
     } else if (patient) {
         const p = patients.items.find((item) => item.id == patient);
         if (!p) {

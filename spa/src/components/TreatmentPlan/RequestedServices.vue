@@ -84,9 +84,12 @@ const tooths = computed(() => {
                 if (value) {
                     const [option, count] = value.split(':')
 
-                    const { options: _options } = _services.find(({ id }) => service == id)
+                    const { options: _options, title: serviceTitle } = _services.find(({ id }) => service == id)
 
                     let { title, cost } = _options.find(({ id }) => option == id)
+
+                    if(title.length < 3)
+                        title = `${serviceTitle} ( ${title} )`
 
                     cost *= count
 

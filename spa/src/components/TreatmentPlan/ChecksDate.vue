@@ -9,7 +9,7 @@
                     dateFormat="yy/mm/dd" :min-date="new MyDate()" :readonly="readonly" />
                 <InputGroupAddon>{{
                     $t("treatment-start-date")
-                }}</InputGroupAddon>
+                    }}</InputGroupAddon>
             </InputGroup>
         </div>
         <DataTable :value="checks" class="[&_th]:!bg-[var(--surface-ground)]">
@@ -33,7 +33,9 @@
 import { useInstallmentPlansStore } from '@/stores/installment-plans';
 import MyDate from '@/utils/MyDate';
 import { formatNumber } from '@/utils/format-number';
-import { computed, inject, reactive, ref, watch } from 'vue';
+import { computed, inject, reactive, readonly, ref, watch } from 'vue';
+
+defineProps({ readonly: { type: Boolean, default: false } })
 
 const { t } = inject('service')
 

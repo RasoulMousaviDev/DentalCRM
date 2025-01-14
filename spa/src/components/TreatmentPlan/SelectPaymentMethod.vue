@@ -1,5 +1,5 @@
 <template>
-    <div class="card !p-6 flex flex-col gap-6">
+    <div class="card !p-6 flex flex-col gap-6 printable">
         <div class="flex justify-between items-center border-b pb-4">
             <span class="text-lg font-bold">
                 {{ $t("payment-method") }}
@@ -23,7 +23,7 @@
                     <span>{{
                         [formatNumber(Math.floor(((model.final_amount - model.deposit_amount) / model.months_count) /
                             1000) * 1000), $t("toman"),].join(" ")
-                        }}</span>
+                    }}</span>
                 </li>
             </template>
 
@@ -57,6 +57,8 @@
 <script setup>
 import { formatNumber } from '@/utils/format-number';
 import { computed } from 'vue';
+
+defineProps({ readonly: { type: Boolean, default: false } })
 
 const model = defineModel()
 

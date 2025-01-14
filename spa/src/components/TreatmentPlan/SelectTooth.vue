@@ -257,12 +257,12 @@
 </template>
 
 <script setup>
-const props = defineProps({ disabled: { type: Boolean, default: false }, errors: { type: String } })
+const props = defineProps({ readonly: { type: Boolean, default: false }, errors: { type: String } })
 
 const model = defineModel()
 
 const select = (e) => {
-    if (!props.disabled) {
+    if (!props.readonly) {
         const number = e.target.getAttribute('number');
         if (number) {
             if (model.value == number)

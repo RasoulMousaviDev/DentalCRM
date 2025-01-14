@@ -68,7 +68,7 @@ const router = createRouter({
                 {
                     name: "TreatmentPlan",
                     path: "/treatment-plans/:id",
-                    component: () => import("@/views/TreatmentPlanCreate.vue"),
+                    component: () => import("@/views/TreatmentPlanCreate2.vue"),
                 },
                 {
                     name: "SMSTemplates",
