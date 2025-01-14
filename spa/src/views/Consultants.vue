@@ -8,13 +8,11 @@
                     </hr>
                     <div class="flex gap-3">
                         <InputGroup class="ltr !w-[19rem]">
-                            <DatePicker v-model="date.from" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd"
-                                :max-date="new MyDate()" />
+                            <DatePicker v-model="date.from" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd" />
                             <InputGroupAddon>{{ $t('from') }}</InputGroupAddon>
                         </InputGroup>
                         <InputGroup class="ltr !w-[19rem]">
-                            <DatePicker v-model="date.to" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd"
-                                :max-date="new MyDate()" :min-date="date.from" />
+                            <DatePicker v-model="date.to" inputClass="ltr" panelClass="ltr" dateFormat="yy/mm/dd" />
                             <InputGroupAddon>{{ $t('to') }}</InputGroupAddon>
                         </InputGroup>
                         <Button :label="$t('search')" :loading="store.fetching" @click="store.index(date)" />
