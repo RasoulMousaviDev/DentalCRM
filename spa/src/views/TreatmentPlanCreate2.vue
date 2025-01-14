@@ -1,7 +1,7 @@
 <template>
     <div class="max-w-full flex gap-8 print:gap-0 relative">
         <div class="max-w-[calc(100%_-_24rem)] print:!max-w-0 grow flex flex-col gap-8">
-            <SelectTooth v-model="tooth" :errors="errors.tooths"/>
+            <SelectTooth v-model="tooth" :errors="errors.tooths" :readonly="readonly" />
             <SelectTreatment v-if="tooth" v-model="treatment" :tooth="form.tooths[tooth]" />
             <Services v-if="treatment" v-model="form.tooths[tooth][treatment]" :treatment="treatment" />
             <template v-if="form.payment.method == 'installments' && form.payment.total_amount > 0">
@@ -11,9 +11,10 @@
         </div>
         <div class="w-96 shrink-0">
             <div class="sticky top-24 flex flex-col gap-8">
-                <SelectPatient v-model="form.patient" :errors="errors['patient.id']" />
-                <RequestedServices :tooths="form.tooths" @total-amount="form.payment.total_amount = $event" />
-                <SelectPaymentMethod v-model="form.payment" />
+                <SelectPatient v-model="form.patient" :errors="errors['patient.id']" :readonly="readonly" />
+                <RequestedServices :tooths="form.tooths" @total-amount="form.payment.total_amount = $event"
+                    :readonly="readonly" />
+                <SelectPaymentMethod v-model="form.payment" :readonly="readonly" />
 
                 <div v-if="!readonly && auth.user?.role?.name != 'phone-consultant'" class="flex gap-3 print:hidden">
                     <Button icon="pi pi-refresh" :label="$t('restart')" severity="warn" class="shrink-0"
@@ -98,8 +99,8 @@ watch(treatment, (v) => {
         form.tooths[tooth.value][v] = {}
 })
 
-watch(() => form.patient.id , () => delete errors.value['patient.id'])
-watch(() => form.payment.months_count , () => delete errors.value['payment.months_count'])
+watch(() => form.patient.id, () => delete errors.value['patient.id'])
+watch(() => form.payment.months_count, () => delete errors.value['payment.months_count'])
 
 const loading = ref(true);
 
