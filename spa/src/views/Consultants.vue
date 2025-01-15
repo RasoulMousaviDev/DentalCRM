@@ -40,7 +40,7 @@
                         <span class="py-1 rounded px-3 border-b-2 border-blue-500 bg-[var(--surface-ground)]">{{
                             data[key].total }}</span>
                         <span class="py-1 rounded px-3 border-b-2 border-red-500 bg-[var(--surface-ground)]">{{
-                            data[key].refunded }}</span>
+                            data[key].canceled }}</span>
                     </div>
                 </template>
             </Column>
