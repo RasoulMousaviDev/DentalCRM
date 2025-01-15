@@ -43,7 +43,7 @@ class ConsultantController extends Controller
                 $data[$key] = [
                     'total' => 0,
                     'visited' => 0,
-                    'refunded' => 0,
+                    'canceled' => 0,
                 ];
             }
 
@@ -55,10 +55,10 @@ class ConsultantController extends Controller
                     $data[$appointmentDate]['total']++;
 
                     $status = $appointment->toArray()['status'];
-                    if ($status['name'] == 'visited') {
+                    if (in_array($status['name'], ['in-person-visit', 'online-visit', 'under-treatment', 'treatment-completed', 'periodic-visit'])) {
                         $data[$appointmentDate]['visited']++;
-                    } elseif ($status['name'] == 'refunded') {
-                        $data[$appointmentDate]['refunded']++;
+                    } elseif (in_array($status['name'], ['canceled', 'refunded'])) {
+                        $data[$appointmentDate]['canceled']++;
                     }
                 }
             }
@@ -71,7 +71,7 @@ class ConsultantController extends Controller
             $sum[$key] = [
                 'total' => 0,
                 'visited' => 0,
-                'refunded' => 0,
+                'canceled' => 0,
             ];
         }
 
