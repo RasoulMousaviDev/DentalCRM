@@ -166,6 +166,7 @@ const destroy = (option) => {
 
 watch(selectedService, (v) => {
     if (v) {
+        options.items = []
         options.service = v.id
         options.index()
     }

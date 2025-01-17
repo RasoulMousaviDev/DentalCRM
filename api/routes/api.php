@@ -71,6 +71,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/{patient}', 'show');
         Route::patch('/{patient}', 'update');
         Route::delete('/{patient}', 'destroy');
+        Route::post('/transfer', 'transfer');
     });
 
     Route::get('alarms', [AlarmController::class, 'index']);

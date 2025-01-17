@@ -57,7 +57,7 @@
 <script setup>
 import { usePatientsStore } from '@/stores/patients'
 import { useUsersStore } from '@/stores/users'
-import { inject, ref } from 'vue'
+import { computed, inject, reactive, ref, watch } from 'vue'
 
 const dialogRef = inject('dialogRef')
 
@@ -81,7 +81,6 @@ const handleSubmit = async () => {
 
     if (statusText === 'OK'){
         toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 5000 });
-        store.index()
         dialogRef.value.close();
     }
     else if (status === 422)

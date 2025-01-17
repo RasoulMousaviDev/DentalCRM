@@ -71,6 +71,16 @@ export const usePatientsStore = defineStore("patients", {
 
             return res;
         },
+        async transfer(form) {
+            const res = await this.axios.post("/patients/transfer", form);
+
+            if (res.statusText === "OK") {
+                this.items = []
+                this.index()
+            };
+
+            return res;
+        },
         paginate({ rows, page }) {
             this.pagiantor.rows = rows;
             this.pagiantor.page = page + 1;
