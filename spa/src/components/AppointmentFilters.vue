@@ -82,6 +82,7 @@ treatments.index()
 const store = useAppointmentsStore()
 
 const handleSubmit = async () => {
+    store.pagiantor.page = 1
     store.filters = filters
     store.index()
 }

@@ -68,6 +68,7 @@ import PatientForm from '@/components/PatientForm.vue';
 import { usePatientsStore } from '@/stores/patients';
 import { useAuthStore } from '@/stores/auth';
 import { inject, watch } from 'vue';
+import PatientTransfer from '@/components/PatientTransfer.vue';
 
 const { dialog, confirm, toast, router, t } = inject('service')
 
@@ -126,6 +127,15 @@ const destroy = (patient) => {
             }
         }
     });
+}
+
+
+const transfer = async () => {
+    dialog.open(PatientTransfer, {
+        props: {
+            header: t('transferPatients'), modal: true
+        },
+    })
 }
 
 const showPatient = ({ data: { id } }) => router.push({ name: 'Patient', params: { id } })

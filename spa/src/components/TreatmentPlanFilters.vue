@@ -74,6 +74,7 @@ const filters = reactive({ patient })
 const store = useTreatmentPlansStore()
 
 const handleSubmit = async () => {
+    store.pagiantor.page = 1
     store.filters = filters
     store.index()
 }

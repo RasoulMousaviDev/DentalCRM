@@ -121,6 +121,7 @@ provinces.index()
 leadSources.index()
 
 const handleSubmit = async () => {
+    store.pagiantor.page = 1
     store.filters = filters
     store.index()
 }

@@ -62,6 +62,7 @@ const roles = useRolesStore()
 const store = useUsersStore()
 
 const handleSubmit = async () => {
+    store.pagiantor.page = 1
     store.filters = filters
     store.index()
 }

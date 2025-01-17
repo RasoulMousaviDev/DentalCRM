@@ -56,6 +56,7 @@ const filters = reactive({ patient })
 const store = useCallsStore()
 
 const handleSubmit = async () => {
+    store.pagiantor.page = 1
     store.filters = filters
     store.index()
 }
