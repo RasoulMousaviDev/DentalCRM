@@ -8,5 +8,6 @@ return [
     "call-stored" => 'تماس ثبت شد',
     "patient-status-changed" => " تماس با تغییر وضعیت از :from به :to ثبت شد",
     "appointment-canceled" => "نوبت بیمار لغو شد.",
-    "diposit-refunded" => "بیعانه با موفقیت عودت داده شد"
+    "diposit-refunded" => "بیعانه با موفقیت عودت داده شد",
+    "transferred-successfully" => "با موفقیت انتقال داده شد."
 ];

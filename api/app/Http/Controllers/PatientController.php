@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePatientRequest;
+use App\Http\Requests\TransferPatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
 use App\Models\Role;
@@ -213,5 +214,30 @@ class PatientController extends Controller
         $patient->delete();
 
         return response()->json(['message' => __('messages.deleted-successfully')]);
+    }
+
+    public function transfer(TransferPatientRequest $request)
+    {
+        $from = $request->get('from');
+        
+        $to = $request->get('to');
+
+        $patients = Patient::where('user', $from)
+            ->when($request->input('status'), function ($query, $status) {
+                $query->where('status', $status);
+            })->when($request->input('created_at'), function ($query, $dates) {
+                $value = collect($dates)->map(fn($d, $i) => Carbon::parse($d)
+                    ->setTimezone('Asia/Tehran')
+                    ->{$i ? 'endOfDay' : 'startOfDay'}()
+                    ->format('Y-m-d H:i:s'));
+
+                $query->whereBetween('created_at', $value);
+            })->when($request->input('count'), function ($query, $count) {
+                $query->limit($count);
+            });
+
+        $patients->update('user', $to);
+
+        return response()->json(['message' => __('messages.transferred-successfully')]);
     }
 }

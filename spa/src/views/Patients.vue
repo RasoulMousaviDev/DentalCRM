@@ -9,6 +9,7 @@
                         <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
                         <hr class="grow !ml-2">
                         </hr>
+                        <Button icon="pi pi-arrow-right-arrow-left" :label="$t('transfer')" severity="info" @click="transfer()" />
                         <Button icon="pi pi-plus" :label="$t('new-patient')" severity="success" @click="create()" />
                     </div>
                     <PatientFilters />

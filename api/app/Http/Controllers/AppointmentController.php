@@ -76,7 +76,9 @@ class AppointmentController extends Controller
                     ->{$i ? 'endOfDay' : 'startOfDay'}()
                     ->format('Y-m-d H:i:s'));
 
-                $query->whereBetween($field, $value);
+                $query->whereBetween($field, $value)->when($field === 'due_date', function ($query) {
+                    $query->orderBy('due_date');
+                });
             });
         }
 
