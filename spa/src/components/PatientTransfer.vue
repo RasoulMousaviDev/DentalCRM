@@ -79,8 +79,11 @@ const handleSubmit = async () => {
 
     loading.value = false
 
-    if (statusText === 'OK')
+    if (statusText === 'OK'){
+        toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 5000 });
+        store.index()
         dialogRef.value.close();
+    }
     else if (status === 422)
         errors.value = data.errors
     else
