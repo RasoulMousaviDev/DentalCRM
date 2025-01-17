@@ -22,8 +22,8 @@ class TransferPatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'from' => 'required|exists:user,id',
-            'to' => 'required|exists:user,id|different:from',
+            'from' => 'required|exists:users,id',
+            'to' => 'required|exists:users,id|different:from',
             'status' => 'nullable|exists:statuses,id',
             'count' => 'nullable|numeric|min:1',
             'created_at' => 'nullable|array',

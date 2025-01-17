@@ -5,7 +5,7 @@
                 <Select v-model="form.from"
                     :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
                     option-label="name" option-value="id" fluid show-clear />
-                <label>{{ $t('from') }}</label>
+                <label>{{ $t('from-consultant') }}</label>
             </FloatLabel>
             <small v-if="errors.from" v-text="errors.from[0]" class="text-red-500" />
         </div>
@@ -14,7 +14,7 @@
                 <Select v-model="form.to"
                     :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
                     option-label="name" option-value="id" fluid show-clear />
-                <label>{{ $t('to') }}</label>
+                <label>{{ $t('to-consultant') }}</label>
             </FloatLabel>
             <small v-if="errors.to" v-text="errors.to[0]" class="text-red-500" />
         </div>
@@ -57,6 +57,7 @@
 <script setup>
 import { usePatientsStore } from '@/stores/patients'
 import { useUsersStore } from '@/stores/users'
+import MyDate from '@/utils/MyDate'
 import { computed, inject, reactive, ref, watch } from 'vue'
 
 const dialogRef = inject('dialogRef')

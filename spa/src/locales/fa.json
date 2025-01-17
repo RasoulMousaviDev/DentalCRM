@@ -278,5 +278,7 @@
     "searching": "درحال جستجو",
     "count": "تعداد",
     "transfer": "انتقال",
-    "transferPatients": "انتقال بیماران"
+    "transferPatients": "انتقال بیماران",
+    "from-consultant": "از مشاور",
+    "to-consultant": "به مشاور"
 }
