@@ -20,14 +20,14 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <InputNumber v-model="form.count" fluid :invalid="errors.count" />
+                <InputNumber v-model="form.count" fluid :invalid="errors.count" class="ltr"/>
                 <label>{{ $t('count') }}</label>
             </FloatLabel>
             <small v-if="errors.count" v-text="errors.count[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <MultiSelect v-model="form.status" :options="store.statuses" optionValue="id" fluid
+                <Select v-model="form.status" :options="store.statuses" optionValue="id" fluid
                     :invalid="errors.status">
                     <template #value="{ value }">
                         <Tag v-for="s in value" class="text-xs" v-bind="store.statuses.find(({ id }) => s == id)" />
@@ -35,7 +35,7 @@
                     <template #option="{ option }">
                         <Tag v-bind="option" class="text-xs" />
                     </template>
-                </MultiSelect>
+                </Select>
                 <label> {{ $t('status') }}</label>
             </FloatLabel>
             <small v-if="errors.status" v-text="errors.status[0]" class="text-red-500" />
@@ -71,8 +71,6 @@ const loading = ref(false)
 
 const store = usePatientsStore()
 const users = useUsersStore()
-users.pagiantor.rows = 1000
-users.index()
 
 const handleSubmit = async () => {
     loading.value = true

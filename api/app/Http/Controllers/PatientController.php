@@ -219,7 +219,7 @@ class PatientController extends Controller
     public function transfer(TransferPatientRequest $request)
     {
         $from = $request->get('from');
-        
+
         $to = $request->get('to');
 
         $patients = Patient::where('user', $from)
@@ -236,7 +236,7 @@ class PatientController extends Controller
                 $query->limit($count);
             });
 
-        $patients->update('user', $to);
+        $patients->update(['user' => $to]);
 
         return response()->json(['message' => __('messages.transferred-successfully')]);
     }
