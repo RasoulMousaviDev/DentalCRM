@@ -4,7 +4,7 @@
             <FloatLabel variant="on">
                 <Select v-model="form.from"
                     :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
-                    option-label="name" option-value="id" fluid show-clear />
+                    option-label="name" option-value="id" fluid :invalid="errors.from" />
                 <label>{{ $t('from-consultant') }}</label>
             </FloatLabel>
             <small v-if="errors.from" v-text="errors.from[0]" class="text-red-500" />
@@ -13,21 +13,22 @@
             <FloatLabel variant="on">
                 <Select v-model="form.to"
                     :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
-                    option-label="name" option-value="id" fluid show-clear />
+                    option-label="name" option-value="id" fluid :invalid="errors.to" />
                 <label>{{ $t('to-consultant') }}</label>
             </FloatLabel>
             <small v-if="errors.to" v-text="errors.to[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <InputNumber v-model="form.count" fluid />
+                <InputNumber v-model="form.count" fluid :invalid="errors.count" />
                 <label>{{ $t('count') }}</label>
             </FloatLabel>
             <small v-if="errors.count" v-text="errors.count[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <MultiSelect v-model="form.status" :options="store.statuses" optionValue="id" fluid show-clear>
+                <MultiSelect v-model="form.status" :options="store.statuses" optionValue="id" fluid
+                    :invalid="errors.status">
                     <template #value="{ value }">
                         <Tag v-for="s in value" class="text-xs" v-bind="store.statuses.find(({ id }) => s == id)" />
                     </template>
@@ -42,7 +43,7 @@
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <DatePicker v-model="form.created_at" selectionMode="range" :manualInput="false" class="ltr w-full"
-                    showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />
+                    showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" :invalid="errors.created_at" />
                 <label> {{ $t('created_at') }}</label>
             </FloatLabel>
             <small v-if="errors.created_at" v-text="errors.created_at[0]" class="text-red-500" />
@@ -80,7 +81,7 @@ const handleSubmit = async () => {
 
     loading.value = false
 
-    if (statusText === 'OK'){
+    if (statusText === 'OK') {
         toast.add({ severity: 'success', summary: 'Success', detail: data.message, life: 5000 });
         dialogRef.value.close();
     }
