@@ -76,6 +76,14 @@
             </MultiSelect>
             <label> {{ $t('patient-status') }}</label>
         </FloatLabel>
+        <label class="flex items-center gap-3 w-52 p-inputtext cursor-pointer">
+            <Checkbox v-model="filters.no_call" binary />
+            <span> {{ $t('no-call') }} </span>
+        </label>
+        <label class="flex items-center gap-3 w-52 p-inputtext cursor-pointer">
+            <Checkbox v-model="filters.no_pending_follow_up" binary />
+            <span> {{ $t('no-pending-follow-up') }} </span>
+        </label>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" class="ltr w-full"
                 showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />

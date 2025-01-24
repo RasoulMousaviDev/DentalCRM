@@ -25,7 +25,8 @@ class ModelStatusSeeder extends Seeder
         $patientStatuses = Status::whereIn('name', [
             'no-status',
             'in-progress',
-            'appointment-set',
+            'appointment-in-person',
+            'appointment-online',
             'in-person-visit',
             'online-visit',
             'deposit-paid',
@@ -49,7 +50,8 @@ class ModelStatusSeeder extends Seeder
         $appointment = Model::firstWhere('name', Appointment::class);
 
         $appointmentStatuses = Status::whereIn('name', [
-            'appointment-set',
+            'appointment-in-person',
+            'appointment-online',
             'in-person-visit',
             'online-visit',
             'deposit-paid',

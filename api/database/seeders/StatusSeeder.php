@@ -17,7 +17,7 @@ class StatusSeeder extends Seeder
             // Patient statuses
             ['name' => 'no-status', 'value' => 'بدون وضعیت', 'severity' => 'secondary'],
             ['name' => 'in-progress', 'value' => 'درحال پیگیری', 'severity' => 'info'],
-            ['name' => 'appointment-set', 'value' => 'نوبت داده شد', 'severity' => 'warn'],
+            ['name' => 'appointment-in-person', 'value' => 'نوبت حضوری دارد', 'severity' => 'warn'],
             ['name' => 'in-person-visit', 'value' => 'ویزیت حضوری شد', 'severity' => 'info'],
             ['name' => 'online-visit', 'value' => 'ویزیت آنلاین شد', 'severity' => 'info'],
             ['name' => 'deposit-paid', 'value' => 'بیعانه داده شد', 'severity' => 'success'],
@@ -38,6 +38,8 @@ class StatusSeeder extends Seeder
             // Treatment plan statuses
             ['name' => 'valid', 'value' => 'معتبر', 'severity' => 'success'],
             ['name' => 'invalid', 'value' => 'نامعتبر', 'severity' => 'danger'],
+            // Patient new status
+            ['name' => 'appointment-online', 'value' => 'نوبت آنلاین دارد', 'severity' => 'info'],
         ]);
     }
 }

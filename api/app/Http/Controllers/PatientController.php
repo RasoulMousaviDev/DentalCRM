@@ -7,6 +7,7 @@ use App\Http\Requests\TransferPatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
 use App\Models\Role;
+use App\Models\Status;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -94,6 +95,19 @@ class PatientController extends Controller
         $patients->when($request->input('status'), function ($query, $value) {
             $query->whereIn('status', $value);
         });
+
+
+        $patients->when($request->input('no_call'), function ($query, $value) {
+            if ($value) $query->doesntHave('calls');
+        });
+
+        $patients->when($request->input('no_pending_follow_up'), function ($query, $value) {
+            if ($value) $query->whereDoesntHave('followUps', function ($query) {
+                $status = Status::firstWhere('name', 'pending');
+                $query->where('status', $status->id);
+            });
+        });
+
 
         $patients = $patients->latest()->paginate($rows);
 

@@ -18,6 +18,7 @@ class StoreAppointmentRequest extends FormRequest
             'patient' => 'required|exists:patients,id',
             'treatments' => 'required|array',
             'treatments.*' => 'required|exists:treatments,id',
+            'status' => 'required|exists:statuses,id',
             'due_date' => 'required|date',
             'desc' => 'nullable|string'
         ];

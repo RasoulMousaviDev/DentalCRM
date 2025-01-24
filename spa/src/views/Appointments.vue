@@ -63,7 +63,7 @@
                 body-class="!pl-0 whitespace-nowrap" frozen align-frozen="right">
                 <template #body="{ data }">
                     <div class="flex flex-col gap-2 justify-end">
-                        <template v-if="data.status.name == 'appointment-set'">
+                        <template v-if="data.status.name.startsWith('appointment')">
                             <SplitButton v-if="['super-admin', 'admin', 'reception'].includes(auth.user?.role?.name)"
                                 :label="$t('was-visit')" size="small" class="w-32 first:*:grow" :model="getMenu(data)"
                                 :loading="data.loading"

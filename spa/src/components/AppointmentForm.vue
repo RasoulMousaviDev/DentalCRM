@@ -44,6 +44,20 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
+                <Select v-model="form.status" :options="statuses" optionValue="id" fluid show-clear>
+                    <template #value="{ value }">
+                        <Tag v-if="value" class="text-xs" v-bind="statuses.find(({ id }) => value == id)" />
+                    </template>
+                    <template #option="{ option: { value, severity } }">
+                        <Tag :value="$t(value)" :severity="severity" class="text-xs" />
+                    </template>
+                </Select>
+                <label> {{ $t('status') }}</label>
+            </FloatLabel>
+            <small v-if="errors.status" v-text="errors.status[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
                 <Textarea v-model="form.desc" fluid rows="5" cols="30" />
                 <label> {{ $t('desc') }}</label>
             </FloatLabel>
@@ -87,6 +101,8 @@ const holidays = useHolidaysStore()
 holidays.index()
 
 const appointment = useAppointmentsStore()
+
+const statuses = computed(() => appointment.statuses.filter(s => s.name.startsWith('appointment')))
 
 const handleSubmit = async () => {
     loading.value = true

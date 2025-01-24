@@ -107,9 +107,7 @@ class AppointmentController extends Controller
 
     public function store(StoreAppointmentRequest $request)
     {
-        $form = $request->only(['due_date', 'desc']);
-
-        $form['status'] = Status::firstWhere('name', 'appointment-set')->id;
+        $form = $request->only(['due_date', 'desc', 'status']);
 
         $patient = Patient::find($request->get('patient'));
 
@@ -127,9 +125,9 @@ class AppointmentController extends Controller
             'patient.user:id,name',
         ])->latest()->first();
 
-        $status = Status::firstWhere('name', 'appointment-set')->id;
+        $form = $request->only(['status']);
 
-        $patient->update(compact('status'));
+        $patient->update($form);
 
         return response()->json($appointment);
     }

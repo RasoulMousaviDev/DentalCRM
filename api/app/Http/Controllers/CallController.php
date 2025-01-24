@@ -42,11 +42,16 @@ class CallController extends Controller
             'status:id,value,severity'
         ]);
 
-        if ($isAdmin) $calls =  $calls->with('patient.user:id,name')->when($request->input('consultant'), function ($query, $user) {
-            $query->whereHas('patient.user', function (Builder $query) use ($user) {
-                $query->where('name', 'like', "%{$user}%");
+        if ($isAdmin) $calls = $calls->with('patient.user:id,name')
+            ->when($request->input('phone_consultant'), function ($query, $user) {
+                $query->whereHas('patient.user', function (Builder $query) use ($user) {
+                    $query->where('name', 'like', "%{$user}%");
+                });
+            })->when($request->input('on_site_consultant'), function ($query, $user) {
+                $query->whereHas('patient.treatmentPlans.user', function (Builder $query) use ($user) {
+                    $query->where('name', 'like', "%{$user}%");
+                });
             });
-        });
         else $calls = $calls->whereHas('patient', function (Builder $query) use ($user) {
             $query->where('user', $user->id);
         });

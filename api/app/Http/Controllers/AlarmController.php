@@ -61,7 +61,7 @@ class AlarmController extends Controller
             return response()->json(['items' => compact('visits')]);
         } else if ($role == 'reception') {
             $appointments = Appointment::whereHas('status', function (Builder $query) {
-                $query->where('name', 'appointment-set');
+                $query->whereIn('name', ['appointment-in-person', 'appointment-online']);
             })->count();
 
             $visits = Appointment::whereHas('status', function (Builder $query) {

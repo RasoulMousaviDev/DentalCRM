@@ -20,17 +20,16 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <InputNumber v-model="form.count" fluid :invalid="errors.count" class="ltr"/>
+                <InputNumber v-model="form.count" fluid :invalid="errors.count" class="ltr" />
                 <label>{{ $t('count') }}</label>
             </FloatLabel>
             <small v-if="errors.count" v-text="errors.count[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <Select v-model="form.status" :options="store.statuses" optionValue="id" fluid
-                    :invalid="errors.status">
+                <Select v-model="form.status" :options="store.statuses" optionValue="id" fluid :invalid="errors.status" show-clear>
                     <template #value="{ value }">
-                        <Tag v-for="s in value" class="text-xs" v-bind="store.statuses.find(({ id }) => s == id)" />
+                        <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
                     </template>
                     <template #option="{ option }">
                         <Tag v-bind="option" class="text-xs" />
@@ -50,7 +49,8 @@
         </div>
         <div class="flex justify-between gap-2 mt-4">
             <Button :label="$t('back')" severity="secondary" @click="dialogRef.close()" />
-            <Button icon="pi pi-save" :label="$t('save')" type="submit" severity="success" :loading="loading" />
+            <Button icon="pi pi-arrow-right-arrow-left" :label="$t('transfer')" severity="info" type="submit"
+                :loading="loading" />
         </div>
     </form>
 </template>

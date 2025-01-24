@@ -42,11 +42,16 @@ class FollowUpController extends Controller
             'status:id,value,severity'
         ]);
 
-        if ($isAdmin) $followUps = $followUps->with('patient.user:id,name')->when($request->input('consultant'), function ($query, $user) {
-            $query->whereHas('patient.user', function (Builder $query) use ($user) {
-                $query->where('name', 'like', "%{$user}%");
+        if ($isAdmin) $followUps = $followUps->with('patient.user:id,name')
+            ->when($request->input('phone_consultant'), function ($query, $user) {
+                $query->whereHas('patient.user', function (Builder $query) use ($user) {
+                    $query->where('name', 'like', "%{$user}%");
+                });
+            })->when($request->input('on_site_consultant'), function ($query, $user) {
+                $query->whereHas('patient.treatmentPlans.user', function (Builder $query) use ($user) {
+                    $query->where('name', 'like', "%{$user}%");
+                });
             });
-        });
         else $followUps = $followUps->whereHas('patient', function (Builder $query) use ($user) {
             $query->where('user', $user->id);
         });

@@ -1,10 +1,11 @@
 <template>
     <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
         <template v-if="$route.name != 'Patient'">
-            
             <FloatLabel v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" variant="on">
-                <InputText v-model="filters.user" fluid />
-                <label>{{ $t('consultant') }}</label>
+                <Select v-model="filters.phone_consultant"
+                    :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
+                    option-label="name" option-value="name" fluid show-clear />
+                <label>{{ $t('phone-consultant') }}</label>
             </FloatLabel>
         </template>
         <FloatLabel variant="on">
@@ -43,9 +44,14 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
 import { useCallsStore } from '@/stores/calls';
+import { useUsersStore } from '@/stores/users';
 import { inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
 
 const auth = useAuthStore()
+
+const users = useUsersStore()
+users.pagiantor.rows = 1000
+users.index()
 
 const { route } = inject('service')
 

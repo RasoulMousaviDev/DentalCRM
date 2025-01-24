@@ -1,14 +1,17 @@
 <template>
     <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
         <template v-if="$route.name != 'Patient'">
-            
             <template v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)">
                 <FloatLabel variant="on">
-                    <InputText v-model="filters.phone_consultant" fluid />
+                    <Select v-model="filters.phone_consultant"
+                        :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
+                        option-label="name" option-value="name" fluid show-clear />
                     <label>{{ $t('phone-consultant') }}</label>
                 </FloatLabel>
                 <FloatLabel variant="on">
-                    <InputText v-model="filters.on_site_consultant" fluid />
+                    <Select v-model="filters.on_site_consultant"
+                        :options="users.items.filter((user) => user.roles.some((role) => role.name == 'on-site-consultant'))"
+                        option-label="name" option-value="name" fluid show-clear />
                     <label>{{ $t('on-site-consultant') }}</label>
                 </FloatLabel>
             </template>
@@ -66,9 +69,14 @@ import MyDate from '../utils/MyDate'
 import { useAppointmentsStore } from '@/stores/appointments';
 import { useAuthStore } from '@/stores/auth';
 import { useTreatmentsStore } from '@/stores/treatments';
+import { useUsersStore } from '@/stores/users';
 import { inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
 
 const auth = useAuthStore()
+
+const users = useUsersStore()
+users.pagiantor.rows = 1000
+users.index()
 
 const { route } = inject('service')
 
