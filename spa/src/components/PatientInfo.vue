@@ -6,7 +6,7 @@
                 {{ $t('patient-info') }}
             </span>
             <Button icon="pi pi-pencil" outlined severity="secondary" @click="edit(data)" />
-            <Button icon="pi pi-trash" outlined severity="danger" :loading="loading" @click="destroy(data.id)" />
+            <Button  v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" icon="pi pi-trash" outlined severity="danger" :loading="loading" @click="destroy(data.id)" />
         </div>
         <ul v-if="data" class="grid grid-cols-5 border-t translate-y-4">
             <li v-for="(key, i) in keys" :key="key" class="flex items-center justify-between gap-2 px-4 py-3"
@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/auth';
 import { usePatientsStore } from '@/stores/patients';
 import { defineAsyncComponent, inject, reactive, ref } from 'vue';
 
@@ -44,6 +45,7 @@ const props = defineProps(['data'])
 const { dialog, confirm, toast, router, t } = inject('service')
 
 const store = usePatientsStore()
+const auth = useAuthStore()
 
 const keys = reactive([
     'firstname', 'lastname', 'birthday', 'gender', 'created_at', 'province', 'city',

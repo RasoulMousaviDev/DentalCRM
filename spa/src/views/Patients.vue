@@ -55,8 +55,8 @@
                 <template #body="{ data }">
                     <div class="flex gap-2 justify-end">
                         <Button icon="pi pi-pencil" rounded text severity="secondary" @click="edit(data)" />
-                        <Button icon="pi pi-trash" rounded text severity="danger" :loading="data.loading"
-                            @click="destroy(data)" />
+                        <Button v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" icon="pi pi-trash"
+                            rounded text severity="danger" :loading="data.loading" @click="destroy(data)" />
                     </div>
                 </template>
             </Column>
