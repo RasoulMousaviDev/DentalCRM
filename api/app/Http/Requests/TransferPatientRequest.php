@@ -24,7 +24,10 @@ class TransferPatientRequest extends FormRequest
         return [
             'from' => 'required|exists:users,id',
             'to' => 'required|exists:users,id|different:from',
-            'status' => 'nullable|exists:statuses,id',
+            'status' => 'required|array',
+            'status.*' => 'required|exists:statuses,id',
+            'lead_source' => 'required|array',
+            'lead_source' => 'required|exists:lead_sources,id',
             'count' => 'nullable|numeric|min:1',
             'created_at' => 'nullable|array',
             'created_at.*' => 'required|date'

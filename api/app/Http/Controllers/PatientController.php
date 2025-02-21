@@ -238,7 +238,9 @@ class PatientController extends Controller
 
         $patients = Patient::where('user', $from)
             ->when($request->input('status'), function ($query, $status) {
-                $query->where('status', $status);
+                    $query->whereIn('status', $status);
+            })->when($request->input('lead_source'), function ($query, $lead_source) {
+                    $query->whereIn('lead_source', $lead_source);
             })->when($request->input('created_at'), function ($query, $dates) {
                 $value = collect($dates)->map(fn($d, $i) => Carbon::parse($d)
                     ->setTimezone('Asia/Tehran')

@@ -27,17 +27,24 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <Select v-model="form.status" :options="store.statuses" optionValue="id" fluid :invalid="errors.status" show-clear>
+                <MultiSelect v-model="form.status" :options="store.statuses" optionValue="id" fluid show-clear>
                     <template #value="{ value }">
-                        <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
+                        <Tag v-for="s in value" class="text-xs" v-bind="store.statuses.find(({ id }) => s == id)" />
                     </template>
                     <template #option="{ option }">
                         <Tag v-bind="option" class="text-xs" />
                     </template>
-                </Select>
+                </MultiSelect>
                 <label> {{ $t('status') }}</label>
             </FloatLabel>
-            <small v-if="errors.status" v-text="errors.status[0]" class="text-red-500" />
+            <small v-if="errors.statuses" v-text="errors.statuses[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <MultiSelect v-model="form.lead_source" :options="leadSources.items" optionLabel="title" optionValue="id" fluid show-clear />
+                <label> {{ $t('lead-source') }}</label>
+            </FloatLabel>
+            <small v-if="errors.lead_source" v-text="errors.lead_source[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
@@ -56,6 +63,7 @@
 </template>
 
 <script setup>
+import { useLeadSourcesStore } from '@/stores/lead-sources'
 import { usePatientsStore } from '@/stores/patients'
 import { useUsersStore } from '@/stores/users'
 import MyDate from '@/utils/MyDate'
@@ -65,11 +73,12 @@ const dialogRef = inject('dialogRef')
 
 const { toast } = inject('service')
 
-const form = reactive({ from: null, to: null, status: null, count: null, created_at: null })
+const form = reactive({ from: null, to: null, status: null, lead_source: null, count: null, created_at: null })
 const errors = ref({})
 const loading = ref(false)
 
 const store = usePatientsStore()
+const leadSources = useLeadSourcesStore()
 const users = useUsersStore()
 
 const handleSubmit = async () => {
