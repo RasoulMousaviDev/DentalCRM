@@ -56,7 +56,7 @@ const setChartOptions = () => {
                 display: false
             },
             tooltip: {
-                enabled: false
+                enabled: true
             },
             datalabels: {
                 color: '#fff',
