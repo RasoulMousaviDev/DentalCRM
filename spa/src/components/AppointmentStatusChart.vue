@@ -67,8 +67,9 @@ const setChartOptions = () => {
                 formatter: (value, context) => {
                     return `${value}`;
                 },
-                align: 'end',
-                textAlign: 'right',
+                align: 'start',
+                textAlign: 'left',
+                offset: -20,
             }
         },
         scales: {
