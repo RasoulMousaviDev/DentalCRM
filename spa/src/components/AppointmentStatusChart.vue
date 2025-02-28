@@ -56,10 +56,10 @@ const setChartOptions = () => {
                 display: false
             },
             tooltip: {
-                enabled: true
+                enabled: false
             },
             datalabels: {
-                color: '#fff',
+                color: '#000',
                 font: {
                     size: 12,
                     family: 'vazir'
@@ -67,9 +67,11 @@ const setChartOptions = () => {
                 formatter: (value, context) => {
                     return `${value}`;
                 },
-                align: 'start',
+                align: 'end',
                 textAlign: 'left',
-                offset: -20,
+                offset: -450,
+                anchor: "end"
+
             }
         },
         scales: {
@@ -95,7 +97,7 @@ const setChartOptions = () => {
                     color: surfaceBorder,
                     drawBorder: false
                 }
-            }
+            },
         }
     };
 }

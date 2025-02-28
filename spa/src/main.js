@@ -68,8 +68,8 @@ pinia.use(({ store }) => {
     store.axios = axios;
 });
 
-// const baseURL = "https://dental-crm.ir/api";
- const baseURL = "/api";
+const baseURL = "https://dental-crm.ir/api";
+//  const baseURL = "/api";
 
 const axios = Axios.create({ baseURL });
 
