@@ -69,7 +69,7 @@ const setChartOptions = () => {
                 },
                 align: 'end',
                 textAlign: 'left',
-                offset: -450,
+                offset: -440,
                 anchor: "end"
 
             }
