@@ -112,7 +112,7 @@ class Patient extends Model
     {
         return Attribute::make(
             get: fn($value) => $value,
-            set: fn($value) => date('Y/m/d', strtotime($value))
+            set: fn($value) => $value ? date('Y/m/d', strtotime($value)): null
         );
     }
 }
