@@ -75,11 +75,21 @@ export const usePatientsStore = defineStore("patients", {
             const res = await this.axios.post("/patients/transfer", form);
 
             if (res.statusText === "OK") {
-                this.items = []
-                this.index()
-            };
+                this.items = [];
+                this.index();
+            }
 
             return res;
+        },
+        async export() {
+            const page = 1;
+            const rows = 100000000;
+
+            const { statusText, data } = await this.axios.get("/patients", {
+                params: { page, rows, ...this.filters },
+            });
+
+            if (statusText === "OK") return data.items;
         },
         paginate({ rows, page }) {
             this.pagiantor.rows = rows;

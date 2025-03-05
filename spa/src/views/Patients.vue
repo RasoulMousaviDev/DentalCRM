@@ -9,6 +9,8 @@
                         <Button icon="pi pi-refresh" rounded text :loading="store.fetching" @click="store.index()" />
                         <hr class="grow !ml-2">
                         </hr>
+                        <Button icon="pi pi-file-excel" :label="$t('export')" severity="help" :loading="loading"
+                            @click="exportExcel()" v-if="auth.user?.role?.name === 'super-admin'" />
                         <Button v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)"
                             icon="pi pi-arrow-right-arrow-left" :label="$t('transfer')" severity="info"
                             @click="transfer()" />
@@ -65,18 +67,26 @@
 </template>
 
 <script setup>
+import * as XLSX from 'xlsx';
 import PatientFilters from '@/components/PatientFilters.vue';
 import PatientForm from '@/components/PatientForm.vue';
 import { usePatientsStore } from '@/stores/patients';
 import { useAuthStore } from '@/stores/auth';
-import { inject, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import PatientTransfer from '@/components/PatientTransfer.vue';
+import { useProvincesStore } from '@/stores/provinces';
+import { useLeadSourcesStore } from '@/stores/lead-sources';
+import { useCitiesStore } from '@/stores/cities';
 
 const { dialog, confirm, toast, router, t } = inject('service')
 
 const store = usePatientsStore()
 
 const auth = useAuthStore()
+
+const leadSources = useLeadSourcesStore()
+const provinces = useProvincesStore()
+const cities = useCitiesStore()
 
 store.index()
 
@@ -138,6 +148,53 @@ const transfer = async () => {
             header: t('transferPatients'), modal: true
         },
     })
+}
+
+const loading = ref(false)
+
+const exportExcel = async () => {
+    loading.value = true
+
+    const data = await store.export()
+
+    if (data.length) {
+        const mapData = data.map((d) => {
+            return {
+                [t('id')]: d.id,
+                [t('firstname')]: d.firstname,
+                [t('lastname')]: d.lastname,
+                [t('gender')]: t(d.gender),
+                [t('birthday')]: d.birthday,
+                [t('telephone')]: d.telephone,
+                [t('mobile')]: d.mobiles.map((mobile) => mobile.number).join(','),
+                [t('province')]: provinces.items.find(({ id }) => id === d.province)?.title,
+                [t('city')]: cities.items.find(({ id }) => id === d.city)?.title,
+                [t('treatments')]: d.treatments.map(({ title }) => title).join(',') || '-',
+                [t('insurance')]: d.insurance,
+                [t('lead-source')]: leadSources.items.find(({ id }) => id === d.lead_source),
+                [t('desc')]: d.desc,
+                [t('phone-consultant')]: d.user.name,
+                [t('on-site-consultant')]: d.treatment_plans[0]?.user.name,
+                [t('status')]: d.status.value,
+                [t('created_at')]: d.created_at,
+                [t('updated_at')]: d.updated_at,
+            }
+        })
+        const ws = XLSX.utils.json_to_sheet(mapData);
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        const fileName = 'exported_data.xlsx';
+
+        XLSX.writeFile(wb, fileName);
+
+        toast.add({ severity: 'success', summary: 'Success', detail: t("export-success"), life: 5000 });
+    } else {
+        toast.add({ severity: 'error', summary: 'Error', detail: t('export-failed'), life: 5000 });
+    }
+
+    loading.value = false
 }
 
 const showPatient = ({ data: { id } }) => router.push({ name: 'Patient', params: { id } })

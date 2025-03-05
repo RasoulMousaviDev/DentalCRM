@@ -282,5 +282,6 @@
     "from-consultant": "از مشاور",
     "to-consultant": "به مشاور",
     "no-call": "بدون تماس",
-    "no-pending-follow-up": "بدون وظیفه فعال"
+    "no-pending-follow-up": "بدون وظیفه فعال",
+    "export": "خروجی اکسل"
 }
