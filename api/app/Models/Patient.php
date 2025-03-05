@@ -111,8 +111,8 @@ class Patient extends Model
     public function birthday(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value,
-            set: fn($value) => $value ? date('Y/m/d', strtotime($value)): null
+            get: fn($value) => str_starts_with($value, '1970') ? '' : $value,
+            set: fn($value) => $value ? date('Y/m/d', strtotime($value)) : null
         );
     }
 }
