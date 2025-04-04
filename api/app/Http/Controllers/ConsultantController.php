@@ -23,7 +23,7 @@ class ConsultantController extends Controller
         $consultants = User::with([
             'patients.appointments.status:id,name'
         ])->whereHas('roles', function ($query) {
-            $query->whereIn('name', ['phone-consultant', 'on-site-consultant']);
+            $query->where('name', 'phone-consultant')->where('status', true);
         })->with(['patients.appointments' => function ($query) use ($period) {
             $query->whereBetween('due_date', $period);
         }])->get();

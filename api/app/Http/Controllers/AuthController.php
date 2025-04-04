@@ -77,7 +77,7 @@ class AuthController extends Controller
 
     protected function respondWithToken($token)
     {
-        $ttl = auth()->factory()->getTTL() * 60;
+        $ttl = auth('api')->factory()->getTTL() * 60;
         $expires_at = Carbon::now()->addSeconds($ttl)->toString();
 
         return response()->json(compact('token', 'expires_at'));

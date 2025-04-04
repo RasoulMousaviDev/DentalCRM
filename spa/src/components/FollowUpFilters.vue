@@ -3,7 +3,7 @@
         <template v-if="$route.name != 'Patient'">
             <FloatLabel v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)" variant="on">
                 <Select v-model="filters.phone_consultant"
-                    :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant'))"
+                    :options="users.items.filter((user) => user.roles.some((role) => role.name == 'phone-consultant') && user.status)"
                     option-label="name" option-value="name" fluid show-clear />
                 <label>{{ $t('phone-consultant') }}</label>
             </FloatLabel>

@@ -121,7 +121,11 @@ class CallController extends Controller
 
         if ($request->has('follow_up_id')) {
             $status = Status::firstWhere('name', 'done');
-            FollowUp::find($request->get('follow_up_id'))->update(['status' => $status->id]);
+            $followUp = FollowUp::find($request->get('follow_up_id'));
+            $patient->followUps()
+                ->whereNot('status', $status->id)
+                ->where('due_date', '<=', $followUp->getRawOriginal('due_date'))
+                ->update(['status' => $status->id]);
         }
 
         $call = $patient->calls()

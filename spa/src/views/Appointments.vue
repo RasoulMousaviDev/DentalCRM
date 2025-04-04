@@ -1,6 +1,7 @@
 <template>
     <div class="card">
-        <DataTable :value="store.items" tableStyle="min-width: 50rem" scrollable class="whitespace-nowrap">
+        <DataTable :value="store.items" tableStyle="min-width: 50rem" scrollable class="[&_td]:cursor-pointer whitespace-nowrap" row-hover
+            @row-click="showPatient">
             <template #header>
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center gap-2">
@@ -44,7 +45,8 @@
                 <Column v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)"
                     field="patient.treatment_plans.0.user.name" :header="$t('on-site-consultant')" />
             </template>
-            <Column :field="({ patient: { mobiles, telephone } }) => mobiles.map(({ number }) => number).join(' | ') || telephone"
+            <Column
+                :field="({ patient: { mobiles, telephone } }) => mobiles.map(({ number }) => number).join(' | ') || telephone"
                 :header="$t('mobile')" body-class="ltr !text-left" />
             <Column :field="({ treatments }) => treatments.map(({ title }) => title).join(' | ')"
                 :header="$t('treatments')" />
@@ -342,6 +344,9 @@ const periodicVisit = (appointment) => {
         }
     });
 }
+
+const showPatient = ({ data: { id } }) => router.push({ name: 'Patient', params: { id } })
+
 </script>
 
 <style lang="scss"></style>
