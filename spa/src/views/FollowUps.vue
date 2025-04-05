@@ -63,7 +63,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useFollowUpsStore } from '@/stores/follow-ups';
 import { inject } from 'vue';
 
-const { route, dialog, t } = inject('service')
+const { router, route, dialog, t } = inject('service')
 
 const store = useFollowUpsStore()
 if (route.name == 'Patient')
