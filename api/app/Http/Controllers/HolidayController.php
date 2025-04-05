@@ -11,6 +11,6 @@ class HolidayController extends Controller
     {
         $holidays = Holiday::all();
 
-        return response()->json(['items' => $holidays]);
+        return response()->json(['items' => []]);
     }
 }
