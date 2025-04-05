@@ -81,6 +81,8 @@ const done = async (id) => {
         data: id
     })
 }
+
+const showPatient = ({ data: { patient: { id } } }) => router.push({ name: 'Patient', params: { id } })
 </script>
 
 <style lang="scss" scoped></style>
