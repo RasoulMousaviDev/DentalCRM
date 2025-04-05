@@ -345,7 +345,7 @@ const periodicVisit = (appointment) => {
     });
 }
 
-const showPatient = ({ data: { id } }) => router.push({ name: 'Patient', params: { id } })
+const showPatient = ({ data: { patient: { id } } }) => router.push({ name: 'Patient', params: { id } })
 
 </script>
 
