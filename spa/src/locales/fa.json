@@ -283,5 +283,9 @@
     "to-consultant": "به مشاور",
     "no-call": "بدون تماس",
     "no-pending-follow-up": "بدون وظیفه فعال",
-    "export": "خروجی اکسل"
+    "export": "خروجی اکسل",
+    "no-phone-consultant": "بدون مشاور تلفنی",
+    "no-treatment-plan": "بدون طرح درمان",
+    "history": "تاریخچه",
+    "has-late-follow-up": "دارای وظیفه دیر هنگام"
 }

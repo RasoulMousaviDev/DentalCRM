@@ -26,7 +26,7 @@ class UpdatePatientRequest extends FormRequest
                 }
             }],
             'mobiles.*' => 'required|numeric|digits:11|starts_with:09|unique:patient_mobiles,number,' . $this->patient->id . ',patient',
-            'telephone' => 'required_if:status,3,4,5,6|nullable|numeric|digits:11|starts_with:0|unique:patients,telephone,' . $this->patient->id,
+            'telephone' => 'nullable|numeric|digits:11|starts_with:0|unique:patients,telephone,' . $this->patient->id,
             'province' => 'required_unless:status,1,2,11,null|exists:provinces,id',
             'city' => 'required_unless:status,1,2,11,null|exists:cities,id',
             'insurance' => 'required_unless:status,1,2,11,null|nullable|boolean',

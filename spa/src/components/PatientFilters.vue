@@ -76,6 +76,18 @@
             </MultiSelect>
             <label> {{ $t('patient-status') }}</label>
         </FloatLabel>
+        <FloatLabel variant="on">
+            <Select v-model="filters.call_status" :options="callStore.statuses" optionValue="id"
+                :loading="callStore.fetching" fluid show-clear>
+                <template #value="{ value }">
+                    <Tag v-if="value" class="text-xs" v-bind="callStore.statuses.find(({ id }) => value == id)" />
+                </template>
+                <template #option="{ option }">
+                    <Tag v-bind="option" class="text-xs" />
+                </template>
+            </Select>
+            <label> {{ $t('call-status') }}</label>
+        </FloatLabel>
         <label class="flex items-center gap-3 w-52 p-inputtext cursor-pointer">
             <Checkbox v-model="filters.no_call" binary />
             <span> {{ $t('no-call') }} </span>
@@ -83,6 +95,20 @@
         <label class="flex items-center gap-3 w-52 p-inputtext cursor-pointer">
             <Checkbox v-model="filters.no_pending_follow_up" binary />
             <span> {{ $t('no-pending-follow-up') }} </span>
+        </label>
+        <template v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)">
+            <label class="flex items-center gap-3 w-52 p-inputtext cursor-pointer">
+                <Checkbox v-model="filters.no_phone_consultant" binary />
+                <span> {{ $t('no-phone-consultant') }} </span>
+            </label>
+        </template>
+        <label class="flex items-center gap-3 w-52 p-inputtext cursor-pointer">
+            <Checkbox v-model="filters.no_treatment_plan" binary />
+            <span> {{ $t('no-treatment-plan') }} </span>
+        </label>
+        <label class="flex items-center gap-3 w-52 p-inputtext cursor-pointer">
+            <Checkbox v-model="filters.has_late_follow_up" binary />
+            <span> {{ $t('has-late-follow-up') }} </span>
         </label>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" class="ltr w-full"
@@ -102,6 +128,7 @@
 <script setup>
 import MyDate from '../utils/MyDate'
 import { useAuthStore } from '@/stores/auth';
+import { useCallsStore } from '@/stores/calls';
 import { useCitiesStore } from '@/stores/cities';
 import { useGendersStore } from '@/stores/genders';
 import { useLeadSourcesStore } from '@/stores/lead-sources';
@@ -120,6 +147,8 @@ const cities = useCitiesStore()
 const genders = useGendersStore()
 const treatments = useTreatmentsStore()
 const auth = useAuthStore()
+const callStore = useCallsStore()
+callStore.index()
 const users = useUsersStore()
 users.pagiantor.rows = 1000
 users.index()

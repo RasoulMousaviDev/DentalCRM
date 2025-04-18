@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52">
+    <form @submit.prevent="handleSubmit()" class="flex flex-wrap w-full gap-4 [&>span]:w-52 *:*:w-full">
         <FloatLabel variant="on">
             <InputText v-model="filters.id" fluid class="ltr" v-keyfilter.int />
             <label>{{ $t('id') }}</label>

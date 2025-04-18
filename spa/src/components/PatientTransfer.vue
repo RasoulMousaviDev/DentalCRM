@@ -1,5 +1,6 @@
 <template>
-    <form @submit.prevent="handleSubmit()" class="flex flex-col gap-8 [&_small]:-mb-6 w-full md:w-[30rem] pt-2">
+    <form @submit.prevent="handleSubmit()"
+        class="grid grid-cols-2 gap-x-4 gap-y-8 [&_small]:-mb-6 w-full md:w-[30rem] pt-2">
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
                 <Select v-model="form.from"
@@ -20,13 +21,6 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <InputNumber v-model="form.count" fluid :invalid="errors.count" class="ltr" />
-                <label>{{ $t('count') }}</label>
-            </FloatLabel>
-            <small v-if="errors.count" v-text="errors.count[0]" class="text-red-500" />
-        </div>
-        <div class="flex flex-col gap-1">
-            <FloatLabel variant="on">
                 <MultiSelect v-model="form.status" :options="store.statuses" optionValue="id" fluid show-clear>
                     <template #value="{ value }">
                         <Tag v-for="s in value" class="text-xs" v-bind="store.statuses.find(({ id }) => s == id)" />
@@ -41,10 +35,18 @@
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
-                <MultiSelect v-model="form.lead_source" :options="leadSources.items" optionLabel="title" optionValue="id" fluid show-clear />
+                <MultiSelect v-model="form.lead_source" :options="leadSources.items" optionLabel="title"
+                    optionValue="id" fluid show-clear />
                 <label> {{ $t('lead-source') }}</label>
             </FloatLabel>
             <small v-if="errors.lead_source" v-text="errors.lead_source[0]" class="text-red-500" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <FloatLabel variant="on">
+                <InputNumber v-model="form.count" fluid :invalid="errors.count" class="ltr" />
+                <label>{{ $t('count') }}</label>
+            </FloatLabel>
+            <small v-if="errors.count" v-text="errors.count[0]" class="text-red-500" />
         </div>
         <div class="flex flex-col gap-1">
             <FloatLabel variant="on">
@@ -54,8 +56,17 @@
             </FloatLabel>
             <small v-if="errors.created_at" v-text="errors.created_at[0]" class="text-red-500" />
         </div>
-        <div class="flex justify-between gap-2 mt-4">
+        <label class="flex items-center gap-3 p-inputtext cursor-pointer">
+            <Checkbox v-model="form.no_pending_follow_up" binary />
+            <span> {{ $t('no-pending-follow-up') }} </span>
+        </label>
+        <label class="flex items-center gap-3 p-inputtext cursor-pointer">
+            <Checkbox v-model="form.no_phone_consultant" binary />
+            <span> {{ $t('no-phone-consultant') }} </span>
+        </label>
+        <div class="flex gap-2 mt-4 col-span-2">
             <Button :label="$t('back')" severity="secondary" @click="dialogRef.close()" />
+            <Button class="mr-auto" icon="pi pi-history"  :label="$t('history')" severity="warn" @click="dialogRef.close()" />
             <Button icon="pi pi-arrow-right-arrow-left" :label="$t('transfer')" severity="info" type="submit"
                 :loading="loading" />
         </div>
@@ -73,7 +84,15 @@ const dialogRef = inject('dialogRef')
 
 const { toast } = inject('service')
 
-const form = reactive({ from: null, to: null, status: null, lead_source: null, count: null, created_at: null })
+const form = reactive({
+    from: null,
+    to: null,
+    status: null,
+    lead_source: null,
+    count: null,
+    created_at: null,
+    no_pending_follow_up: null
+})
 const errors = ref({})
 const loading = ref(false)
 

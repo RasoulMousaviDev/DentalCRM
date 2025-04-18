@@ -61,6 +61,13 @@ class PatientController extends Controller
                 $query->whereHas('treatmentPlans.user', function (Builder $query) use ($user) {
                     $query->where('name', 'like', "%{$user}%");
                 });
+            })->when($request->input('no_phone_consultant'), function ($query, $value) {
+                if ($value) $query->whereHas('user.roles', function (Builder $query) {
+                    $role = Role::firstWhere('name', "phone-consultant");
+                    $query->whereNot('id', $role->id);
+                });
+            })->when($request->input('no_treatment_plan'), function ($query, $value) {
+                if ($value) $query->doesntHave('treatmentPlans');
             });
 
         foreach ($searchableFields as $field) {
@@ -101,10 +108,25 @@ class PatientController extends Controller
             if ($value) $query->doesntHave('calls');
         });
 
+        $patients->when($request->input('call_status'), function ($query, $value) {
+            if ($value) $query->whereDoesntHave('calls', function ($query) use ($value) {
+                $query->where('status', $value);
+            });
+        });
+
         $patients->when($request->input('no_pending_follow_up'), function ($query, $value) {
             if ($value) $query->whereDoesntHave('followUps', function ($query) {
                 $status = Status::firstWhere('name', 'pending');
                 $query->where('status', $status->id);
+            });
+        });
+
+        $patients->when($request->input('has_late_follow_up'), function ($query, $value) {
+            if ($value) $query->whereHas('followUps', function ($query) {
+                $status = Status::firstWhere('name', 'pending');
+                $date = Carbon::setTimezone('Asia/Tehran')->addMonth(1)->format('Y-m-d H:i:s');
+                
+                $query->where('status', $status->id)->where('due_date', '>', $date);
             });
         });
 
@@ -232,25 +254,34 @@ class PatientController extends Controller
 
     public function transfer(TransferPatientRequest $request)
     {
-        $from = $request->get('from');
-
         $to = $request->get('to');
 
-        $patients = Patient::where('user', $from)
-            ->when($request->input('status'), function ($query, $status) {
-                    $query->whereIn('status', $status);
-            })->when($request->input('lead_source'), function ($query, $lead_source) {
-                    $query->whereIn('lead_source', $lead_source);
-            })->when($request->input('created_at'), function ($query, $dates) {
-                $value = collect($dates)->map(fn($d, $i) => Carbon::parse($d)
-                    ->setTimezone('Asia/Tehran')
-                    ->{$i ? 'endOfDay' : 'startOfDay'}()
-                    ->format('Y-m-d H:i:s'));
+        $patients = Patient::when($request->input('from'), function ($query, $from) {
+            $query->where('user', $from);
+        })->when($request->input('status'), function ($query, $status) {
+            $query->whereIn('status', $status);
+        })->when($request->input('lead_source'), function ($query, $lead_source) {
+            $query->whereIn('lead_source', $lead_source);
+        })->when($request->input('created_at'), function ($query, $dates) {
+            $value = collect($dates)->map(fn($d, $i) => Carbon::parse($d)
+                ->setTimezone('Asia/Tehran')
+                ->{$i ? 'endOfDay' : 'startOfDay'}()
+                ->format('Y-m-d H:i:s'));
 
-                $query->whereBetween('created_at', $value);
-            })->when($request->input('count'), function ($query, $count) {
-                $query->limit($count);
+            $query->whereBetween('created_at', $value);
+        })->when($request->input('count'), function ($query, $count) {
+            $query->limit($count);
+        })->when($request->input('no_pending_follow_up'), function ($query, $value) {
+            if ($value) $query->whereDoesntHave('followUps', function ($query) {
+                $status = Status::firstWhere('name', 'pending');
+                $query->where('status', $status->id);
             });
+        })->when($request->input('no_phone_consultant'), function ($query, $value) {
+            if ($value) $query->whereHas('user.roles', function (Builder $query) {
+                $role = Role::firstWhere('name', "phone-consultant");
+                $query->whereNot('id', $role->id);
+            });
+        });
 
         $patients->update(['user' => $to]);
 

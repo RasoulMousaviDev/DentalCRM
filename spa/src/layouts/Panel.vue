@@ -4,7 +4,9 @@
         <AppSidebar />
         <div class="layout-main-container">
             <div class="layout-main">
-                <RouterView />
+                <KeepAlive :max="1">
+                    <RouterView />
+                </KeepAlive>
             </div>
             <AppFooter />
         </div>

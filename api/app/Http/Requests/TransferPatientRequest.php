@@ -22,13 +22,15 @@ class TransferPatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'from' => 'required|exists:users,id',
+            'from' => 'required_unless:no_phone_consultant,true|exists:users,id',
             'to' => 'required|exists:users,id|different:from',
             'status' => 'required|array',
             'status.*' => 'required|exists:statuses,id',
             'lead_source' => 'required|array',
             'lead_source' => 'required|exists:lead_sources,id',
             'count' => 'nullable|numeric|min:1',
+            'no_pending_follow_up' => 'nullable|boolean',
+            'no_phone_consultant' => 'nullable|boolean',
             'created_at' => 'nullable|array',
             'created_at.*' => 'required|date'
         ];
