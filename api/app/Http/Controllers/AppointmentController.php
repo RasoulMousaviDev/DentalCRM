@@ -54,6 +54,10 @@ class AppointmentController extends Controller
                     $role = Role::firstWhere('name', "phone-consultant");
                     $query->whereNot('id', $role->id);
                 });
+            })->when($request->input('no_treatment_plan'), function ($query, $value) {
+                $query->whereHas('patient', function (Builder $query) use ($value) {
+                    if ($value) $query->doesntHave('treatmentPlans');
+                });
             });
         else $appointments = $appointments->whereHas('patient', function (Builder $query) use ($user) {
             $query->where('user', $user->id);

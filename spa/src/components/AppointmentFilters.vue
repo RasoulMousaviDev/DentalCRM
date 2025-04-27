@@ -54,6 +54,10 @@
             <Checkbox v-model="filters.no_phone_consultant" binary />
             <span> {{ $t('no-phone-consultant') }} </span>
         </label>
+        <label class="flex items-center gap-3 w-52 p-inputtext cursor-pointer">
+            <Checkbox v-model="filters.no_treatment_plan" binary />
+            <span> {{ $t('no-treatment-plan') }} </span>
+        </label>
         <FloatLabel variant="on">
             <DatePicker v-model="filters.created_at" selectionMode="range" :manualInput="false" fluid class="ltr"
                 showButtonBar dateFormat="yy/mm/dd" :max-date="new MyDate()" />

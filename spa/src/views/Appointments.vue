@@ -67,7 +67,7 @@
                     <div class="flex flex-col gap-2 justify-end">
                         <template v-if="data.status.name.startsWith('appointment')">
                             <SplitButton v-if="['super-admin', 'admin', 'reception'].includes(auth.user?.role?.name)"
-                                :label="$t('was-visit')" size="small" class="w-32 first:*:grow" :model="getMenu(data)"
+                                :label="$t('was-visit')" size="small" class="w-32 first:*:grow ltr" :model="getMenu(data)"
                                 :loading="data.loading"
                                 @click="visit(data, store.statuses.find(s => s.name == 'in-person-visit'))" />
                             <Button

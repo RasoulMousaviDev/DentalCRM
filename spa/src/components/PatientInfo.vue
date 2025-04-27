@@ -60,6 +60,7 @@ const loading = ref(false)
 const edit = async (data) => {
     const patient = Object.assign({}, data)
     patient.mobiles = patient.mobiles.map(({ number }) => number)
+    patient.treatments = patient.treatments.map(({ id }) => id)
     patient.province = patient.province.id
     patient.city = patient.city.id
     patient.status = patient.status.id
@@ -67,7 +68,7 @@ const edit = async (data) => {
 
     dialog.open(PatientForm, {
         props: { header: t('editPatient'), modal: true },
-        data: { patient }, onClose: () => store.show(patient.id)
+        data: { patient }, onClose: (v) => v.data && store.show(patient.id)
     })
 }
 

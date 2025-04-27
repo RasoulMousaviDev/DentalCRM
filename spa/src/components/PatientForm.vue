@@ -129,7 +129,7 @@
             <small v-if="errors.status" v-text="errors.status[0]" class="text-red-500" />
         </div>
         <div class="flex justify-between col-span-3 gap-2 mt-4">
-            <Button :label="$t('back')" severity="secondary" @click="dialogRef.close()" />
+            <Button :label="$t('back')" severity="secondary" @click="dialogRef.close(false)" />
             <Button icon="pi pi-save" :label="$t('save')" type="submit" severity="success" :loading="loading" />
         </div>
     </form>
@@ -208,7 +208,7 @@ const handleSubmit = async () => {
     loading.value = false
 
     if (statusText === 'OK')
-        dialogRef.value.close();
+        dialogRef.value.close(true);
     else if (status === 422)
         errors.value = data.errors
     else
