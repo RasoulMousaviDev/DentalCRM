@@ -22,7 +22,7 @@ class AppointmentController extends Controller
 
         $searchableFields = ['firstname', 'lastname'];
 
-        $filterableFields = ['patient', 'status'];
+        $filterableFields = ['patient'];
 
         $dateFields = ['due_date', 'created_at', 'updated_at'];
 
@@ -90,6 +90,10 @@ class AppointmentController extends Controller
                 });
             });
         }
+
+        $appointments->when($request->input('status'), function ($query, $value) {
+            $query->whereIn('status', $value);
+        });
 
         $appointments->when($request->input('treatment'), function ($query, $treatment) {
             $query->whereHas('treatment', function (Builder $query) use ($treatment) {

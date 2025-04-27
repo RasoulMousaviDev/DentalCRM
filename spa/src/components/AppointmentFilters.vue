@@ -39,14 +39,14 @@
             <label>{{ $t('treatment') }}</label>
         </FloatLabel>
         <FloatLabel variant="on">
-            <Select v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear>
+            <MultiSelect v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear>
                 <template #value="{ value }">
                     <Tag v-if="value" class="text-xs" v-bind="store.statuses.find(({ id }) => value == id)" />
                 </template>
                 <template #option="{ option: { value, severity } }">
                     <Tag :value="$t(value)" :severity="severity" class="text-xs" />
                 </template>
-            </Select>
+            </MultiSelect>
             <label> {{ $t('status') }}</label>
         </FloatLabel>
         <label v-if="['super-admin', 'admin'].includes(auth.user?.role?.name)"
