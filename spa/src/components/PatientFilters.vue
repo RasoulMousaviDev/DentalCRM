@@ -67,7 +67,7 @@
         </FloatLabel>
         <FloatLabel variant="on">
             <MultiSelect v-model="filters.status" :options="store.statuses" optionValue="id" fluid show-clear
-                :select-all="false">
+                :show-toggle-all="false">
                 <template #value="{ value }">
                     <Tag v-for="s in value" class="text-xs" v-bind="store.statuses.find(({ id }) => s == id)" />
                 </template>
