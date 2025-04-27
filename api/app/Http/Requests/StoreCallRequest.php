@@ -18,7 +18,7 @@ class StoreCallRequest extends FormRequest
 
         return [
             'status' => 'required|exists:statuses,id',
-            'mobile' => 'required|numeric|digits:11',
+            'mobile' => 'required|numeric',
             'desc' => 'required|string',
             'patient.id' => 'required|exists:patients,id',
             'patient.status' => 'required|exists:statuses,id',

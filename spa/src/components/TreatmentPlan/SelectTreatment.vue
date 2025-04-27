@@ -6,7 +6,7 @@
                 <li v-for="({ id, title }, i) in treatments.items.filter((item) => item.status)" :key="i"
                     class="shrink-0 py-1.5">
                     <Button :label="title" :severity="model == id ? 'primary' : 'secondary'"
-                        :badge="Object.keys(props.tooth[`${id}`] || {}).length" badge-class="absolute -top-2 -right-2" badge-severity="danger"
+                        :badge="Object.entries(props.tooth[`${id}`] || {}).filter(([,v]) => v).length" badge-class="absolute -top-2 -right-2" badge-severity="danger"
                         @click="model = id" />
                 </li>
             </ul>

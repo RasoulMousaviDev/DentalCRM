@@ -85,12 +85,16 @@ if (installmentPlans.items.length < 1)
     installmentPlans.index();
 
 watch(tooth, (v) => {
-    Object.entries(form.tooths).forEach(([tooth, value]) => {
-        // Object.entries(value).forEach(([service, v]) => {
-        //     if (Object.keys(v).length < 1) delete form.tooths[tooth][service]
-        // })
-        if (Object.keys(value).length < 1) delete form.tooths[tooth]
+    Object.entries(form.tooths || {}).forEach(([tooth, v0]) => {
+        Object.entries(v0 || {}).forEach(([service, v1]) => {
+            Object.entries(v1 || {}).forEach(([option, v2]) => {
+                if (v2 === undefined) delete form.tooths[tooth][service][option]
+            })
+            if (Object.keys(v1 || {}).length < 1) delete form.tooths[tooth][service]
+        })
+        if (Object.keys(v0 || {}).length < 1) delete form.tooths[tooth]
     })
+
     if (v && !form.tooths.hasOwnProperty(v))
         form.tooths[v] = {}
 
@@ -98,11 +102,16 @@ watch(tooth, (v) => {
 })
 
 watch(treatment, (v) => {
-    Object.entries(form.tooths[tooth.value]).forEach(([key, value]) => {
-        if (Object.keys(value).length < 1) delete form.tooths[tooth.value][key]
-    })
-    if (v && !form.tooths[tooth.value].hasOwnProperty(v.id))
-        form.tooths[tooth.value][v] = {}
+    if (v) {
+        Object.entries(form.tooths[tooth.value] || {}).forEach(([key, value]) => {
+            if (Object.keys(value).length < 1) delete form.tooths[tooth.value][key]
+        })
+
+        if (!form.tooths[tooth.value].hasOwnProperty(v)){
+            form.tooths[tooth.value][v] = {}
+            
+        }
+    }
 })
 
 watch(() => form.patient.id, () => delete errors.value['patient.id'])

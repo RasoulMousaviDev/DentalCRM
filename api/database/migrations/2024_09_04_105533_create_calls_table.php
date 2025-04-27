@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient')->constrained('patients');
             $table->foreignId('status')->constrained('statuses');
-            $table->string('mobile', 11);
+            $table->string('mobile', 20);
             $table->string('desc');
             $table->string('log');
             $table->timestamps();

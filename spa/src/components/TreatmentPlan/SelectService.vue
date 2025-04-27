@@ -23,7 +23,7 @@
 
 <script setup>
 import { formatNumber } from '@/utils/format-number';
-import { onMounted, ref, watchEffect } from 'vue';
+import { onBeforeMount, ref, watchEffect } from 'vue';
 
 const props = defineProps({ data: Object, readonly: Boolean })
 
@@ -35,10 +35,10 @@ const count = ref(1)
 
 watchEffect(() => model.value = service.value ? [service.value, count.value].join(':') : undefined)
 
-onMounted(() => {
+onBeforeMount(() => {
     if (model.value) {
         const [s, c] = model.value.split(':')
-        service.value = s
+        service.value = +s
         count.value = c
     }
 })
